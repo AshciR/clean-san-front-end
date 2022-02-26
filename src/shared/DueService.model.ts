@@ -13,7 +13,7 @@ interface DueService {
     history: Array<ServiceHistory>;
 };
 
-const createDueService = ({ id: id, client, contract, dueDate, currentStatus, history }: DueService): DueService => ({
+const createDueService = ({ id, client, contract, dueDate, currentStatus, history }: DueService): DueService => ({
     id: id,
     client: client,
     contract: contract,

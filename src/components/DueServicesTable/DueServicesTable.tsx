@@ -1,8 +1,26 @@
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
+import { DateTime } from 'luxon';
 import React, { FC } from 'react';
 import DueService from '../../shared/DueService.model';
 import styles from './DueServicesTable.module.scss';
 
+
+const generateDueServicesRow = (dueServices: Array<DueService>) => {
+
+  return dueServices.map(service => {
+
+    return (
+      <TableRow key={service.id}>
+        <TableCell>{service.id}</TableCell>
+        <TableCell align='right'>{service.client.name}</TableCell>
+        <TableCell align='right'>{service.contract.serviceFrequency}</TableCell>
+        <TableCell align='right'>{service.dueDate.toLocaleString(DateTime.DATE_MED)}</TableCell>
+        <TableCell align='right'>{service.currentStatus}</TableCell>
+      </TableRow>
+    );
+
+  });
+};
 
 interface DueServicesTableProps {
   dueServices: Array<DueService>
@@ -11,6 +29,8 @@ interface DueServicesTableProps {
 const DueServicesTable: FC<DueServicesTableProps> = ({ dueServices }: DueServicesTableProps) => (
 
   <div className={styles.DueServicesTable} data-testid="DueServicesTable">
+    <Typography variant='h3'>Due Services</Typography>
+    
     <TableContainer>
       <Table aria-label="due services table">
         <TableHead>
@@ -23,35 +43,7 @@ const DueServicesTable: FC<DueServicesTableProps> = ({ dueServices }: DueService
           </TableRow>
         </TableHead>
         <TableBody>
-
-          {console.log(dueServices)}
-
-          {
-            dueServices.map(service => {
-
-              { console.log(service) }
-
-              <TableRow key={service.id}>
-
-                {console.log('id ' + service.id)}
-                <TableCell>{service.id}</TableCell>
-
-                {console.log('name ' + service.client.name)}
-                <TableCell align='right'>{service.client.name}</TableCell>
-
-                {console.log('frequency ' + service.contract.serviceFrequency)}
-                <TableCell align='right'>{service.contract.serviceFrequency}</TableCell>
-
-                {console.log('dueDate ' + service.dueDate)}
-                <TableCell align='right'>Today</TableCell>
-
-                {console.log('status ' + service.currentStatus)}
-                <TableCell align='right'>{service.currentStatus}</TableCell>
-
-              </TableRow>;
-            })
-          }
-
+          {generateDueServicesRow(dueServices)}
         </TableBody>
       </Table>
     </TableContainer>
