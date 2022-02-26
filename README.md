@@ -1,6 +1,11 @@
-# Getting Started with Create React App
-
+# Clean San Service Application Backend APIs
+This project is the frontend for the Clean San Service web application.
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+
+## Creating new components
+To create new components, run
+`npx generate-react-cli component <component-name>`
+It'll use the configurations found in `generate-react-cli.json` by default
 
 ## Available Scripts
 
