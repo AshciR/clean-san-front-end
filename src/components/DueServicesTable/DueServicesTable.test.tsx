@@ -5,7 +5,7 @@ import DueServicesTable from './DueServicesTable';
 
 describe('<DueServicesTable />', () => {
   test('it should mount', () => {
-    render(<DueServicesTable />);
+    render(<DueServicesTable dueServices={[]} />);
     
     const dueServicesTable = screen.getByTestId('DueServicesTable');
 
