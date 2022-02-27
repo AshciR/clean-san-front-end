@@ -12,8 +12,8 @@ const service3: DueService = {
     dueDate: service2.dueDate.minus({ months: 1 }),
 };
 
-const mockDueServices: Array<DueService> = [
+const MOCK_DUE_SERVICES: Array<DueService> = [
     service1, service2, service3
 ];
 
-export default mockDueServices;
+export default MOCK_DUE_SERVICES;
