@@ -30,20 +30,20 @@ describe('<DueServicesTable />', () => {
 
   const assertRowContent = (row: HTMLElement, service: DueService) => {
 
-    const firstRowIdColumn = row.getElementsByTagName('td')[0];
-    expect(firstRowIdColumn.textContent).toBe(service.id.toString());
+    const idColumn = row.getElementsByTagName('td')[0];
+    expect(idColumn.textContent).toBe(service.id.toString());
 
-    const firstRowClientColumn = row.getElementsByTagName('td')[1];
-    expect(firstRowClientColumn.textContent).toBe(service.client.name);
+    const clientColumn = row.getElementsByTagName('td')[1];
+    expect(clientColumn.textContent).toBe(service.client.name);
 
-    const firstRosFrequencyColumn = row.getElementsByTagName('td')[2];
-    expect(firstRosFrequencyColumn.textContent).toBe(service.contract.serviceFrequency);
+    const frequencyColumn = row.getElementsByTagName('td')[2];
+    expect(frequencyColumn.textContent).toBe(service.contract.serviceFrequency);
 
-    const firstRowDueDateColumn = row.getElementsByTagName('td')[3];
-    expect(firstRowDueDateColumn.textContent).toBe(service.dueDate.toLocaleString(DateTime.DATE_MED));
+    const dueDateColumn = row.getElementsByTagName('td')[3];
+    expect(dueDateColumn.textContent).toBe(service.dueDate.toLocaleString(DateTime.DATE_MED));
 
-    const firstRowStatusColumn = row.getElementsByTagName('td')[4];
-    expect(firstRowStatusColumn.textContent).toBe(service.currentStatus);
+    const statusColumn = row.getElementsByTagName('td')[4];
+    expect(statusColumn.textContent).toBe(service.currentStatus);
 
   }
 
