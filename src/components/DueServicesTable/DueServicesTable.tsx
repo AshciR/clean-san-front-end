@@ -32,21 +32,14 @@ const DueServicesTable: FC<DueServicesTableProps> = ({ dueServices }: DueService
   </div>
 );
 
-const generateDueServicesRow = (dueServices: Array<DueService>) => {
-
-  return dueServices.map(service => {
-
-    return (
-      <TableRow key={service.id} data-testid="due-service-table-row">
-        <TableCell>{service.id}</TableCell>
-        <TableCell align='right'>{service.client.name}</TableCell>
-        <TableCell align='right'>{service.contract.serviceFrequency}</TableCell>
-        <TableCell align='right'>{service.dueDate.toLocaleString(DateTime.DATE_MED)}</TableCell>
-        <TableCell align='right'>{service.currentStatus}</TableCell>
-      </TableRow>
-    );
-
-  });
-};
+const generateDueServicesRow = (dueServices: Array<DueService>) => dueServices.map(service => (
+  <TableRow key={service.id} data-testid="due-service-table-row">
+    <TableCell>{service.id}</TableCell>
+    <TableCell align='right'>{service.client.name}</TableCell>
+    <TableCell align='right'>{service.contract.serviceFrequency}</TableCell>
+    <TableCell align='right'>{service.dueDate.toLocaleString(DateTime.DATE_MED)}</TableCell>
+    <TableCell align='right'>{service.currentStatus}</TableCell>
+  </TableRow>
+));
 
 export default DueServicesTable;
