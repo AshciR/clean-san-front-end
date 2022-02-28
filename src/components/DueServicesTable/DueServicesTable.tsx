@@ -26,7 +26,7 @@ const DueServicesTable: FC<DueServicesTableProps> = ({ dueServices }: DueService
         </TableHead>
         <TableBody>
           {dueServices.map(service =>
-            <DueServiceRow service={service} />)
+            <DueServiceRow key={service.id} service={service} />)
           }
         </TableBody>
       </Table>
@@ -39,7 +39,7 @@ interface DueServiceRowProps {
 };
 
 const DueServiceRow = ({ service }: DueServiceRowProps) => (
-  <TableRow key={service.id} data-testid="due-service-table-row">
+  <TableRow data-testid="due-service-table-row">
     <TableCell>{service.id}</TableCell>
     <TableCell align='right'>{service.client.name}</TableCell>
     <TableCell align='right'>{service.contract.serviceFrequency}</TableCell>
