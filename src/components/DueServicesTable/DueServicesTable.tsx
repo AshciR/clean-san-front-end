@@ -12,7 +12,7 @@ const DueServicesTable: FC<DueServicesTableProps> = ({ dueServices }: DueService
 
   <div className={styles.DueServicesTable} data-testid="due-services-table">
     <Typography variant='h3'>Due Services</Typography>
-    
+
     <TableContainer>
       <Table aria-label="due services table">
         <TableHead>
@@ -25,14 +25,20 @@ const DueServicesTable: FC<DueServicesTableProps> = ({ dueServices }: DueService
           </TableRow>
         </TableHead>
         <TableBody>
-          {generateDueServicesRow(dueServices)}
+          {dueServices.map(service =>
+            <DueServiceRow service={service} />)
+          }
         </TableBody>
       </Table>
     </TableContainer>
   </div>
 );
 
-const generateDueServicesRow = (dueServices: Array<DueService>) => dueServices.map(service => (
+interface DueServiceRowProps {
+  service: DueService
+};
+
+const DueServiceRow = ({ service }: DueServiceRowProps) => (
   <TableRow key={service.id} data-testid="due-service-table-row">
     <TableCell>{service.id}</TableCell>
     <TableCell align='right'>{service.client.name}</TableCell>
@@ -40,6 +46,6 @@ const generateDueServicesRow = (dueServices: Array<DueService>) => dueServices.m
     <TableCell align='right'>{service.dueDate.toLocaleString(DateTime.DATE_MED)}</TableCell>
     <TableCell align='right'>{service.currentStatus}</TableCell>
   </TableRow>
-));
+)
 
 export default DueServicesTable;
