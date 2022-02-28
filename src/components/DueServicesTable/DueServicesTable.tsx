@@ -25,9 +25,7 @@ const DueServicesTable: FC<DueServicesTableProps> = ({ dueServices }: DueService
           </TableRow>
         </TableHead>
         <TableBody>
-          {dueServices.map(service =>
-            <DueServiceRow key={service.id} service={service} />)
-          }
+          {dueServices.map(service => <DueServiceRow key={service.id} service={service} />)}
         </TableBody>
       </Table>
     </TableContainer>
