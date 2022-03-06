@@ -8,29 +8,38 @@ interface DueServicesTableProps {
   dueServices: Array<DueService>
 };
 
-const DueServicesTable: FC<DueServicesTableProps> = ({ dueServices }: DueServicesTableProps) => (
+const DueServicesTable: FC<DueServicesTableProps> = ({ dueServices }: DueServicesTableProps) => {
 
-  <div className={styles.DueServicesTable} data-testid="due-services-table">
-    <Typography variant='h3'>Due Services</Typography>
+  const areThereServices = dueServices.length != 0;
 
-    <TableContainer>
-      <Table aria-label="due services table">
-        <TableHead>
-          <TableRow>
-            <TableCell>Id</TableCell>
-            <TableCell align='right'>Client</TableCell>
-            <TableCell align='right'>Frequency</TableCell>
-            <TableCell align='right'>Due Date</TableCell>
-            <TableCell align='right'>Status</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {dueServices.map(service => <DueServiceRow key={service.id} service={service} />)}
-        </TableBody>
-      </Table>
-    </TableContainer>
-  </div>
-);
+  return (
+    <div className={styles.DueServicesTable} data-testid="due-services-table">
+      <Typography variant='h3'>Due Services</Typography>
+
+      {areThereServices ? (
+        <TableContainer>
+          <Table aria-label="due services table">
+            <TableHead>
+              <TableRow>
+                <TableCell>Id</TableCell>
+                <TableCell align='right'>Client</TableCell>
+                <TableCell align='right'>Frequency</TableCell>
+                <TableCell align='right'>Due Date</TableCell>
+                <TableCell align='right'>Status</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {dueServices.map(service => <DueServiceRow key={service.id} service={service} />)}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      ) : (
+        <p>Nope</p>
+      )
+      }
+    </div>
+  );
+};
 
 interface DueServiceRowProps {
   service: DueService

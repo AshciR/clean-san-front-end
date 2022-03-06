@@ -6,7 +6,8 @@ import DueService from './shared/DueService.model';
 
 const App = () => {
   
-  const dueServices: Array<DueService> = MOCK_DUE_SERVICES;
+  // const dueServices: Array<DueService> = MOCK_DUE_SERVICES;
+  const dueServices: Array<DueService> = [];
   
   return (
     <div data-testid="app">
