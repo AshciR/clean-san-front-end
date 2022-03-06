@@ -21,10 +21,25 @@ describe('<DueServicesTable />', () => {
     // When: the Due Services Table is rendered with services 
     render(<DueServicesTable dueServices={MOCK_DUE_SERVICES} />);
 
-    // Then: ALl the rows should have the correct info
+    // Then: All the rows should have the correct info
     const dueServicesTableRows = screen.getAllByTestId('due-service-table-row');
     expect(dueServicesTableRows.length).toBe(MOCK_DUE_SERVICES.length);
     dueServicesTableRows.forEach((row, index) => assertRowContent(row, MOCK_DUE_SERVICES[index]));
+
+  });
+
+  it('it should display message when there are no due services', () => {
+
+    // When: the Due Services Table is rendered without any services 
+    render(<DueServicesTable dueServices={[]} />);
+
+    // Then: The no services display message should be present
+    const visableDueServicesTable = screen.queryByTestId('visable-due-services-table');
+    expect(visableDueServicesTable).not.toBeInTheDocument();
+
+    const noDueServicesDisplay = screen.getByTestId('no-due-services-display');
+    expect(noDueServicesDisplay).toBeInTheDocument();
+    expect(noDueServicesDisplay.textContent).toBe('There are no due services at this time');
 
   });
 

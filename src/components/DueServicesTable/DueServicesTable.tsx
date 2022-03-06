@@ -15,7 +15,7 @@ const DueServicesTable: FC<DueServicesTableProps> = ({ dueServices }: DueService
   return (
     <div className={styles.DueServicesTable} data-testid="due-services-table">
       <Typography variant='h3'>Due Services</Typography>
-      {areThereServices ? <VisableDueServiceTable services={dueServices} /> : <p>Nope</p>}
+      {areThereServices ? <VisableDueServiceTable services={dueServices} /> : <NoDueServicesDisplay />}
     </div>
   );
 };
@@ -25,7 +25,7 @@ interface VisableDueServiceTableProps {
 };
 
 const VisableDueServiceTable = ({ services }: VisableDueServiceTableProps) => (
-  <TableContainer>
+  <TableContainer data-testid="visable-due-services-table">
     <Table aria-label="due services table">
       <TableHead>
         <TableRow>
@@ -56,5 +56,9 @@ const DueServiceRow = ({ service }: DueServiceRowProps) => (
     <TableCell align='right'>{service.currentStatus}</TableCell>
   </TableRow>
 )
+
+const NoDueServicesDisplay = () => (
+  <Typography variant='h5' data-testid="no-due-services-display">There are no due services at this time</Typography>
+);
 
 export default DueServicesTable;
