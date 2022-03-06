@@ -15,31 +15,33 @@ const DueServicesTable: FC<DueServicesTableProps> = ({ dueServices }: DueService
   return (
     <div className={styles.DueServicesTable} data-testid="due-services-table">
       <Typography variant='h3'>Due Services</Typography>
-
-      {areThereServices ? (
-        <TableContainer>
-          <Table aria-label="due services table">
-            <TableHead>
-              <TableRow>
-                <TableCell>Id</TableCell>
-                <TableCell align='right'>Client</TableCell>
-                <TableCell align='right'>Frequency</TableCell>
-                <TableCell align='right'>Due Date</TableCell>
-                <TableCell align='right'>Status</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {dueServices.map(service => <DueServiceRow key={service.id} service={service} />)}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      ) : (
-        <p>Nope</p>
-      )
-      }
+      {areThereServices ? <VisableDueServiceTable services={dueServices} /> : <p>Nope</p>}
     </div>
   );
 };
+
+interface VisableDueServiceTableProps {
+  services: Array<DueService>
+};
+
+const VisableDueServiceTable = ({ services }: VisableDueServiceTableProps) => (
+  <TableContainer>
+    <Table aria-label="due services table">
+      <TableHead>
+        <TableRow>
+          <TableCell>Id</TableCell>
+          <TableCell align='right'>Client</TableCell>
+          <TableCell align='right'>Frequency</TableCell>
+          <TableCell align='right'>Due Date</TableCell>
+          <TableCell align='right'>Status</TableCell>
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        {services.map(service => <DueServiceRow key={service.id} service={service} />)}
+      </TableBody>
+    </Table>
+  </TableContainer>
+);
 
 interface DueServiceRowProps {
   service: DueService
