@@ -10,7 +10,7 @@ interface DueServicesTableProps {
 
 const DueServicesTable: FC<DueServicesTableProps> = ({ dueServices }: DueServicesTableProps) => {
 
-  const areThereServices = dueServices.length != 0;
+  const areThereServices = dueServices.length !== 0;
 
   return (
     <div className={styles.DueServicesTable} data-testid="due-services-table">
