@@ -34,12 +34,8 @@ describe('<DueServicesTable />', () => {
     render(<DueServicesTable dueServices={[]} />);
 
     // Then: The no services display message should be present
-    const visableDueServicesTable = screen.queryByTestId('visable-due-services-table');
-    expect(visableDueServicesTable).not.toBeInTheDocument();
-
-    const noDueServicesDisplay = screen.getByTestId('no-due-services-display');
+    const noDueServicesDisplay = screen.getByText('There are no due services at this time');
     expect(noDueServicesDisplay).toBeInTheDocument();
-    expect(noDueServicesDisplay.textContent).toBe('There are no due services at this time');
 
   });
 

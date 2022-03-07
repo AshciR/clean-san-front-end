@@ -10,12 +10,12 @@ interface DueServicesTableProps {
 
 const DueServicesTable: FC<DueServicesTableProps> = ({ dueServices }: DueServicesTableProps) => {
 
-  const areThereServices = dueServices.length !== 0;
+  const hasServices = dueServices.length !== 0;
 
   return (
     <div className={styles.DueServicesTable} data-testid="due-services-table">
       <Typography variant='h3'>Due Services</Typography>
-      {areThereServices ? <VisableDueServiceTable services={dueServices} /> : <NoDueServicesDisplay />}
+      {hasServices ? <VisableDueServiceTable services={dueServices} /> : <NoDueServicesDisplay />}
     </div>
   );
 };
