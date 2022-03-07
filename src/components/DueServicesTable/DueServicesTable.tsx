@@ -8,28 +8,39 @@ interface DueServicesTableProps {
   dueServices: Array<DueService>
 };
 
-const DueServicesTable: FC<DueServicesTableProps> = ({ dueServices }: DueServicesTableProps) => (
+const DueServicesTable: FC<DueServicesTableProps> = ({ dueServices }: DueServicesTableProps) => {
 
-  <div className={styles.DueServicesTable} data-testid="due-services-table">
-    <Typography variant='h3'>Due Services</Typography>
+  const hasServices = dueServices.length !== 0;
 
-    <TableContainer>
-      <Table aria-label="due services table">
-        <TableHead>
-          <TableRow>
-            <TableCell>Id</TableCell>
-            <TableCell align='right'>Client</TableCell>
-            <TableCell align='right'>Frequency</TableCell>
-            <TableCell align='right'>Due Date</TableCell>
-            <TableCell align='right'>Status</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {dueServices.map(service => <DueServiceRow key={service.id} service={service} />)}
-        </TableBody>
-      </Table>
-    </TableContainer>
-  </div>
+  return (
+    <div className={styles.DueServicesTable} data-testid="due-services-table">
+      <Typography variant='h3'>Due Services</Typography>
+      {hasServices ? <VisableDueServiceTable services={dueServices} /> : <NoDueServicesDisplay />}
+    </div>
+  );
+};
+
+interface VisableDueServiceTableProps {
+  services: Array<DueService>
+};
+
+const VisableDueServiceTable = ({ services }: VisableDueServiceTableProps) => (
+  <TableContainer data-testid="visable-due-services-table">
+    <Table aria-label="due services table">
+      <TableHead>
+        <TableRow>
+          <TableCell>Id</TableCell>
+          <TableCell align='right'>Client</TableCell>
+          <TableCell align='right'>Frequency</TableCell>
+          <TableCell align='right'>Due Date</TableCell>
+          <TableCell align='right'>Status</TableCell>
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        {services.map(service => <DueServiceRow key={service.id} service={service} />)}
+      </TableBody>
+    </Table>
+  </TableContainer>
 );
 
 interface DueServiceRowProps {
@@ -45,5 +56,9 @@ const DueServiceRow = ({ service }: DueServiceRowProps) => (
     <TableCell align='right'>{service.currentStatus}</TableCell>
   </TableRow>
 )
+
+const NoDueServicesDisplay = () => (
+  <Typography variant='h5' data-testid="no-due-services-display">There are no due services at this time</Typography>
+);
 
 export default DueServicesTable;
