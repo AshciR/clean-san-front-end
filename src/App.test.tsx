@@ -11,12 +11,6 @@ describe('App', () => {
     expect(app).toBeInTheDocument();
   });
 
-  it('renders the due services component', () => {
-    render(<App />);
-    const dueServicesComponent = screen.getByTestId('due-services-table');
-    expect(dueServicesComponent).toBeInTheDocument();
-  });
-
 });
 
 

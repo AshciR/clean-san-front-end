@@ -1,6 +1,6 @@
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
 import { DateTime } from 'luxon';
-import React, { FC } from 'react';
+import { FC } from 'react';
 import DueService from '../../shared/DueService.model';
 import styles from './DueServicesTable.module.scss';
 
@@ -14,7 +14,6 @@ const DueServicesTable: FC<DueServicesTableProps> = ({ dueServices }: DueService
 
   return (
     <div className={styles.DueServicesTable} data-testid="due-services-table">
-      <Typography variant='h3'>Due Services</Typography>
       {hasServices ? <VisableDueServiceTable services={dueServices} /> : <NoDueServicesDisplay />}
     </div>
   );
