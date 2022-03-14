@@ -53,4 +53,18 @@ describe('<DashboardPage />', () => {
 
   });
 
+  it('it shows the error message when fetching due services fails', async () => {
+
+    // Given: The services failed to be fetched
+    mockFetchDueServices.mockRejectedValue(new Error('Fetch due services did not work'));
+
+    // When: The DashboardPage renders
+    render(<DashboardPage />);
+
+    // Then: We expect the due services to be in the document
+    expect(fetchDueServices).toHaveBeenCalledTimes(1);
+    await waitFor(() => expect(screen.getByText("Sorry... we weren't able to get the due services at this time.")).toBeInTheDocument());
+
+  });
+
 });

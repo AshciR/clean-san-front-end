@@ -27,8 +27,7 @@ const DashboardPage: FC<DashboardPageProps> = () => {
       });
 
     } catch {
-      // TODO: Will add new state to the reducer in the upcoming story
-      throw new Error('There was an error fetching the Due Services');
+      dispatchDueServices({ type: 'DUE_SERVICES_FETCH_FAILURE' });
     }
 
   }, []);
@@ -39,11 +38,15 @@ const DashboardPage: FC<DashboardPageProps> = () => {
 
   return (
     <div className={styles.DashboardPage} data-testid="DashboardPage">
+
       <Typography variant='h3'>Due Services</Typography>
+
       {
         dueServicesState.isLoading ?
           <Skeleton variant="rectangular" animation="wave" data-testid="DueServicesTable-Skeleton" /> :
-          <DueServicesTable dueServices={dueServicesState.dueServices} />
+          dueServicesState.isError ?
+            <Typography variant='h4'>Sorry... we weren't able to get the due services at this time.</Typography> :
+            <DueServicesTable dueServices={dueServicesState.dueServices} />
       }
     </div>
   )
