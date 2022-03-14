@@ -3,11 +3,13 @@ import DueService from "../../shared/DueService.model";
 interface DueServicesState {
     isLoading: boolean;
     dueServices: Array<DueService>;
+    isError: boolean;
 };
 
 const initialDueServicesState: DueServicesState = {
     isLoading: false,
-    dueServices: []
+    dueServices: [],
+    isError: false
 };
 
 interface DueServicesFetchInitAction {
@@ -19,9 +21,14 @@ interface DueServicesFetchSuccessAction {
     payload: Array<DueService>;
 };
 
+interface DueServicesFetchFailureAction {
+    type: 'DUE_SERVICES_FETCH_FAILURE';
+};
+
 type DueServicesAction =
     | DueServicesFetchInitAction
     | DueServicesFetchSuccessAction
+    | DueServicesFetchFailureAction
 
 const dueServicesReducer = (
     state: DueServicesState,
@@ -42,6 +49,14 @@ const dueServicesReducer = (
                 dueServices: action.payload
             };
             return updatedSuccessState;
+        case "DUE_SERVICES_FETCH_FAILURE":
+            const updatedFailureState: DueServicesState = {
+                ...state,
+                isLoading: false,
+                isError: true,
+                dueServices: []
+            };
+            return updatedFailureState;
         default:
             throw new Error(`Illegal Dashboard action was provided`);
     }
