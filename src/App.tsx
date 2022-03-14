@@ -1,18 +1,10 @@
-import React from 'react';
 import './App.scss';
-import DueServicesTable from './components/DueServicesTable/DueServicesTable';
-import MOCK_DUE_SERVICES from './components/DueServicesTable/MockDueServicesData';
-import DueService from './shared/DueService.model';
+import DashboardPage from './components/DashboardPage/DashboardPage';
 
-const App = () => {
-  
-  const dueServices: Array<DueService> = MOCK_DUE_SERVICES;
-  
-  return (
-    <div data-testid="app">
-      <DueServicesTable dueServices={dueServices} />
-    </div>
-  );
-}
+const App = () => (
+  <div data-testid="app">
+    <DashboardPage />
+  </div>
+)
 
 export default App;
