@@ -1,4 +1,6 @@
-import { Skeleton, Typography } from '@mui/material';
+import { DatePicker, LocalizationProvider } from '@mui/lab';
+import AdapterLuxon from '@mui/lab/AdapterLuxon';
+import { Box, Container, Grid, Skeleton, TextField, Typography } from '@mui/material';
 import React, { FC } from 'react';
 import DueServicesTable from '../DueServicesTable/DueServicesTable';
 import styles from './DashboardPage.module.scss';
@@ -39,15 +41,37 @@ const DashboardPage: FC<DashboardPageProps> = () => {
   return (
     <div className={styles.DashboardPage} data-testid="DashboardPage">
 
-      <Typography variant='h3'>Due Services</Typography>
+      <Container maxWidth='xl'>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'space-between'
+          }}
+        >
+          <Typography variant='h3'>Due Services</Typography>
+          <LocalizationProvider dateAdapter={AdapterLuxon}>
+            <DatePicker
+              label='Due services date'
+              value={() => { }}
+              onChange={() => { }}
+              renderInput={props => <TextField {...props} />}
+            >
+            </DatePicker>
+          </LocalizationProvider>
+        </Box>
 
-      {
-        dueServicesState.isLoading ?
-          <Skeleton variant="rectangular" animation="wave" data-testid="DueServicesTable-Skeleton" /> :
-          dueServicesState.isError ?
-            <Typography variant='h4'>Sorry... we weren't able to get the due services at this time.</Typography> :
-            <DueServicesTable dueServices={dueServicesState.dueServices} />
-      }
+        <Box>
+          {
+            dueServicesState.isLoading ?
+              <Skeleton variant="rectangular" animation="wave" data-testid="DueServicesTable-Skeleton" /> :
+              dueServicesState.isError ?
+                <Typography variant='h4'>Sorry... we weren't able to get the due services at this time.</Typography> :
+                <DueServicesTable dueServices={dueServicesState.dueServices} />
+          }
+        </Box>
+      </Container>
+
     </div>
   )
 };
