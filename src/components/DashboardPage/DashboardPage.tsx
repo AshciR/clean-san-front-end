@@ -1,6 +1,8 @@
 import { DatePicker, LocalizationProvider } from '@mui/lab';
 import AdapterLuxon from '@mui/lab/AdapterLuxon';
 import { Box, Container, Grid, Skeleton, TextField, Typography } from '@mui/material';
+import { margin } from '@mui/system';
+import { DateTime } from 'luxon';
 import React, { FC } from 'react';
 import DueServicesTable from '../DueServicesTable/DueServicesTable';
 import styles from './DashboardPage.module.scss';
@@ -15,6 +17,8 @@ const DashboardPage: FC<DashboardPageProps> = () => {
     dueServicesReducer,
     initialDueServicesState
   );
+
+  const [dueServicesDate, setDueServicesDate] = React.useState(DateTime.now());
 
   const handleFetchDueServices = React.useCallback(async () => {
 
@@ -46,15 +50,16 @@ const DashboardPage: FC<DashboardPageProps> = () => {
           sx={{
             display: 'flex',
             flexDirection: 'row',
-            justifyContent: 'space-between'
+            justifyContent: 'space-between',
+            margin: 2
           }}
         >
           <Typography variant='h3'>Due Services</Typography>
           <LocalizationProvider dateAdapter={AdapterLuxon}>
             <DatePicker
               label='Due services date'
-              value={() => { }}
-              onChange={() => { }}
+              value={dueServicesDate}
+              onChange={(newDueServicesDate) => { }}
               renderInput={props => <TextField {...props} />}
             >
             </DatePicker>
