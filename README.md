@@ -1,4 +1,4 @@
-# Clean San Service Application Backend APIs
+# Clean San Service Frontend Application
 This project is the frontend for the Clean San Service web application.
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
