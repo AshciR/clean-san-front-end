@@ -10,16 +10,16 @@ const fetchDueServices = (beforeDate?: DateTime) => {
 
     // Default to returning all due services
     return new Promise<DueService[]>(resolve =>
-        setTimeout(() => resolve(MOCK_DUE_SERVICES), 1000)
+        setTimeout(() => resolve(MOCK_DUE_SERVICES), 500)
     );
 
 };
 
 const findServicesDueBeforeDate = (dueServices: DueService[], beforeDate: DateTime) => {
-    const filteredServices = dueServices.filter(service => service.dueDate < beforeDate);
+    const filteredServices = dueServices.filter(service => service.dueDate.startOf('day') <= beforeDate.startOf('day'));
 
     return new Promise<DueService[]>(resolve =>
-        setTimeout(() => resolve(filteredServices), 1000)
+        setTimeout(() => resolve(filteredServices), 500)
     );
 };
 

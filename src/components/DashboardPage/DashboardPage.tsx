@@ -18,12 +18,12 @@ const DashboardPage: FC<DashboardPageProps> = () => {
 
   const [dueServicesDate, setDueServicesDate] = React.useState<DateTime | null>(DateTime.now());
 
-  const handleFetchDueServices = React.useCallback(async () => {
+  const handleFetchDueServices = React.useCallback(async (dueServicesDate) => {
 
     dispatchDueServices({ type: 'DUE_SERVICES_FETCH_INIT' });
 
     try {
-      const dueServices = await fetchDueServices();
+      const dueServices = await fetchDueServices(dueServicesDate);
 
       dispatchDueServices({
         type: 'DUE_SERVICES_FETCH_SUCCESS',
@@ -34,10 +34,10 @@ const DashboardPage: FC<DashboardPageProps> = () => {
       dispatchDueServices({ type: 'DUE_SERVICES_FETCH_FAILURE' });
     }
 
-  }, []);
+  }, [dueServicesDate]);
 
   React.useEffect(() => {
-    handleFetchDueServices();
+    handleFetchDueServices(dueServicesDate);
   }, [handleFetchDueServices]);
 
   return (
