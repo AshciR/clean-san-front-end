@@ -1,11 +1,9 @@
 import { DatePicker, LocalizationProvider } from '@mui/lab';
 import AdapterLuxon from '@mui/lab/AdapterLuxon';
-import { Box, Container, Grid, Skeleton, TextField, Typography } from '@mui/material';
-import { margin } from '@mui/system';
+import { Box, Container, Skeleton, TextField, Typography } from '@mui/material';
 import { DateTime } from 'luxon';
 import React, { FC } from 'react';
 import DueServicesTable from '../DueServicesTable/DueServicesTable';
-import styles from './DashboardPage.module.scss';
 import dueServicesReducer, { initialDueServicesState } from './dashboardPage.reducer';
 import { fetchDueServices } from './dashboardPage.services';
 
@@ -18,7 +16,7 @@ const DashboardPage: FC<DashboardPageProps> = () => {
     initialDueServicesState
   );
 
-  const [dueServicesDate, setDueServicesDate] = React.useState(DateTime.now());
+  const [dueServicesDate, setDueServicesDate] = React.useState<DateTime | null>(DateTime.now());
 
   const handleFetchDueServices = React.useCallback(async () => {
 
@@ -43,15 +41,17 @@ const DashboardPage: FC<DashboardPageProps> = () => {
   }, [handleFetchDueServices]);
 
   return (
-    <div className={styles.DashboardPage} data-testid="DashboardPage">
-
+    <Box
+      sx={{ margin: 2 }}
+      data-testid="DashboardPage"
+    >
       <Container maxWidth='xl'>
         <Box
           sx={{
             display: 'flex',
             flexDirection: 'row',
             justifyContent: 'space-between',
-            margin: 2
+            margin: 1
           }}
         >
           <Typography variant='h3'>Due Services</Typography>
@@ -59,7 +59,9 @@ const DashboardPage: FC<DashboardPageProps> = () => {
             <DatePicker
               label='Due services date'
               value={dueServicesDate}
-              onChange={(newDueServicesDate) => { }}
+              onChange={(newDueServicesDate) => {
+                setDueServicesDate(newDueServicesDate)
+              }}
               renderInput={props => <TextField {...props} />}
             >
             </DatePicker>
@@ -76,8 +78,7 @@ const DashboardPage: FC<DashboardPageProps> = () => {
           }
         </Box>
       </Container>
-
-    </div>
+    </Box>
   )
 };
 
