@@ -1,8 +1,10 @@
-import { act, render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import DashboardPage from './DashboardPage';
 import MOCK_DUE_SERVICES from '../DueServicesTable/MockDueServicesData';
 import { fetchDueServices } from './dashboardPage.services';
+import { DateTime } from 'luxon';
+import { act } from 'react-dom/test-utils';
 
 jest.mock('./dashboardPage.services');
 
@@ -65,6 +67,34 @@ describe('<DashboardPage />', () => {
     expect(fetchDueServices).toHaveBeenCalledTimes(1);
     await waitFor(() => expect(screen.getByText("Sorry... we weren't able to get the due services at this time.")).toBeInTheDocument());
 
+  });
+
+  it('it shows the current date when the page loads', async () => {
+
+    // When: The DashboardPage renders
+    render(<DashboardPage />);
+
+    // Then: We expect the current date to be in the date selector
+    const today = DateTime.now().toLocaleString();
+    await waitFor(() => expect(screen.getByDisplayValue(today)).toBeInTheDocument());
+  });
+
+  // TODO: Figure out how to test this
+  it.skip('it shows the correct due services after the due date is changed', async () => {
+
+    // Given: The DashboardPage renders
+    render(<DashboardPage />); // Doesn't render the HTML that has the Calendar icon
+    const yesterday = DateTime.now().minus({ days: 1 });
+
+    // When: We click the date icon
+    await waitFor(() => fireEvent.click(screen.getByTestId('CalendarIcon')));
+      
+    // And: The due date is changed
+    const yesterdayBtn = screen.getByLabelText(yesterday.toLocaleString(DateTime.DATE_MED));
+    await waitFor(() => fireEvent.click(yesterdayBtn));
+      
+    // Then: We expect the correct services to be displayed
+    await waitFor(() => expect(screen.getByDisplayValue(yesterday.toLocaleString())).toBeInTheDocument());
   });
 
 });

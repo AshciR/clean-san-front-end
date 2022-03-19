@@ -16,8 +16,8 @@ describe('Dashboard Page Services', () => {
     });
 
     it.each([
-        { beforeDate: DateTime.now().minus({ months: 1 }), expectedDueServices: MOCK_DUE_SERVICES.slice(1) }, // Exactly 1 month before
         { beforeDate: DateTime.now().minus({ months: 1, days: 1 }), expectedDueServices: MOCK_DUE_SERVICES.slice(2) }, // 1 month and 1 day before
+        { beforeDate: DateTime.now().minus({ months: 1 }), expectedDueServices: MOCK_DUE_SERVICES.slice(1) }, // Exactly 1 month before
         { beforeDate: DateTime.now().minus({ days: 1 }), expectedDueServices: MOCK_DUE_SERVICES.slice(1) }, // 1 day before
         { beforeDate: DateTime.now(), expectedDueServices: MOCK_DUE_SERVICES }, // Same day
         { beforeDate: DateTime.now().plus({ days: 1 }), expectedDueServices: MOCK_DUE_SERVICES }  // 1 day ahead

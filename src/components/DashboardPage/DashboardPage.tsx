@@ -34,11 +34,11 @@ const DashboardPage: FC<DashboardPageProps> = () => {
       dispatchDueServices({ type: 'DUE_SERVICES_FETCH_FAILURE' });
     }
 
-  }, [dueServicesDate]);
+  }, []);
 
   React.useEffect(() => {
     handleFetchDueServices(dueServicesDate);
-  }, [handleFetchDueServices]);
+  }, [handleFetchDueServices, dueServicesDate]);
 
   return (
     <Box
@@ -46,28 +46,7 @@ const DashboardPage: FC<DashboardPageProps> = () => {
       data-testid="DashboardPage"
     >
       <Container maxWidth='xl'>
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            margin: 1
-          }}
-        >
-          <Typography variant='h3'>Due Services</Typography>
-          <LocalizationProvider dateAdapter={AdapterLuxon}>
-            <DatePicker
-              label='Due services date'
-              value={dueServicesDate}
-              onChange={(newDueServicesDate) => {
-                setDueServicesDate(newDueServicesDate)
-              }}
-              renderInput={props => <TextField {...props} />}
-            >
-            </DatePicker>
-          </LocalizationProvider>
-        </Box>
-
+        <TitleAndDatePicker dueServicesDate={dueServicesDate} setDueServicesDate={setDueServicesDate} />
         <Box>
           {
             dueServicesState.isLoading ?
@@ -81,5 +60,36 @@ const DashboardPage: FC<DashboardPageProps> = () => {
     </Box>
   )
 };
+
+interface TitleAndDatePickerProps {
+  dueServicesDate: DateTime | null
+  setDueServicesDate: React.Dispatch<React.SetStateAction<DateTime | null>>
+}
+
+const TitleAndDatePicker: FC<TitleAndDatePickerProps> = ({ dueServicesDate, setDueServicesDate }: TitleAndDatePickerProps) => {
+  return (
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        margin: 1
+      }}
+    >
+      <Typography variant='h3'>Due Services</Typography>
+      <LocalizationProvider dateAdapter={AdapterLuxon}>
+        <DatePicker
+          label='Due services date'
+          value={dueServicesDate}
+          onChange={(newDueServicesDate) => {
+            setDueServicesDate(newDueServicesDate)
+          }}
+          renderInput={props => <TextField {...props} />}
+        >
+        </DatePicker>
+      </LocalizationProvider>
+    </Box>
+  );
+}
 
 export default DashboardPage;
