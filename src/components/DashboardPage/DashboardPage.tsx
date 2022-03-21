@@ -84,7 +84,9 @@ const TitleAndDatePicker: FC<TitleAndDatePickerProps> = ({ dueServicesDate, setD
           onChange={(newDueServicesDate) => {
             setDueServicesDate(newDueServicesDate)
           }}
-          renderInput={props => <TextField {...props} />}
+          renderInput={props =>
+            <TextField {...props} helperText={'mm/dd/yyyy'} />
+          }
         >
         </DatePicker>
       </LocalizationProvider>

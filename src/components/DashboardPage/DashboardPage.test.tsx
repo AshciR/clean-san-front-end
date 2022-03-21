@@ -79,22 +79,24 @@ describe('<DashboardPage />', () => {
     await waitFor(() => expect(screen.getByDisplayValue(today)).toBeInTheDocument());
   });
 
-  // TODO: Figure out how to test this
-  it.skip('it shows the correct due services after the due date is changed', async () => {
+  it('it shows the correct due services after the due date is changed', async () => {
 
     // Given: The DashboardPage renders
-    render(<DashboardPage />); // Doesn't render the HTML that has the Calendar icon
+    render(<DashboardPage />);
+    const today = DateTime.now().toLocaleString();
     const yesterday = DateTime.now().minus({ days: 1 });
+    
+    const dateInputField = screen.getByDisplayValue(today);
 
-    // When: We click the date icon
-    await waitFor(() => fireEvent.click(screen.getByTestId('CalendarIcon')));
-      
-    // And: The due date is changed
-    const yesterdayBtn = screen.getByLabelText(yesterday.toLocaleString(DateTime.DATE_MED));
-    await waitFor(() => fireEvent.click(yesterdayBtn));
-      
+    // When: The date is changed
+    // TODO: Figure out why this isn't change the input value
+    await waitFor(() => fireEvent.change(dateInputField, { target: { value: yesterday.toLocaleString() } }));
+
+    // TODO: Remove when done
+    screen.debug();
+
     // Then: We expect the correct services to be displayed
-    await waitFor(() => expect(screen.getByDisplayValue(yesterday.toLocaleString())).toBeInTheDocument());
+    await waitFor(() => expect(screen.getAllByTestId('due-service-table-row').length).toBe(2));
   });
 
 });
