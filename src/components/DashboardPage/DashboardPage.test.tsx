@@ -5,6 +5,10 @@ import MOCK_DUE_SERVICES from '../DueServicesTable/MockDueServicesData';
 import { fetchDueServices } from './dashboardPage.services';
 import { DateTime } from 'luxon';
 import { act } from 'react-dom/test-utils';
+import userEvent from '@testing-library/user-event';
+import { DatePicker, LocalizationProvider } from '@mui/lab';
+import { TextField } from '@mui/material';
+import AdapterLuxon from '@mui/lab/AdapterLuxon';
 
 jest.mock('./dashboardPage.services');
 
@@ -84,19 +88,68 @@ describe('<DashboardPage />', () => {
     // Given: The DashboardPage renders
     render(<DashboardPage />);
     const today = DateTime.now().toLocaleString();
-    const yesterday = DateTime.now().minus({ days: 1 });
-    
+    const yesterday = DateTime.now().minus({ days: 1 }).toLocaleString();
+
     const dateInputField = screen.getByDisplayValue(today);
+
+
+    screen.debug();
+
+    console.log({ yesterday, today });
+    console.log(dateInputField);
 
     // When: The date is changed
     // TODO: Figure out why this isn't change the input value
-    await waitFor(() => fireEvent.change(dateInputField, { target: { value: yesterday.toLocaleString() } }));
+    // await waitFor(() => userEvent.type(dateInputField, yesterday));
+    // await waitFor(() => userEvent.type(dateInputField, yesterday, {
+    //   skipClick: true
+    // }));
+
+    userEvent.type(dateInputField, yesterday);
+
+    await waitFor(() => { expect(screen.getByDisplayValue(yesterday)).toBeInTheDocument() });
 
     // TODO: Remove when done
-    screen.debug();
+    // screen.debug();
 
     // Then: We expect the correct services to be displayed
-    await waitFor(() => expect(screen.getAllByTestId('due-service-table-row').length).toBe(2));
+    // await waitFor(() => expect(screen.getAllByTestId('due-service-table-row').length).toBe(2));
+  });
+
+  it.only('See if Datepicker works', () => {
+
+    const setDueServicesDate = jest.fn();
+
+    const today = DateTime.now().toLocaleString();
+    const yesterday = DateTime.now().minus({ days: 1 }).toLocaleString();
+    
+    render(
+      <LocalizationProvider dateAdapter={AdapterLuxon}>
+        <DatePicker
+          label='Due services date'
+          value={today}
+          onChange={(newDueServicesDate) => {
+            setDueServicesDate(newDueServicesDate)
+          }}
+          renderInput={props => {
+            console.log(props)
+            // const textFieldProps = { helperText: 'mm/dd/yyyy', ...props.inputProps } 
+            return <TextField {...props} />
+          }}
+          >
+        </DatePicker>
+      </LocalizationProvider>
+    )
+    
+    const dateInputField = screen.getByLabelText('Due services date');
+    console.log(dateInputField);
+    screen.debug();
+
+    userEvent.type(dateInputField, yesterday);
+    expect(setDueServicesDate).toBeCalledTimes(1);
+
+    screen.debug();
+
   });
 
 });

@@ -1,6 +1,6 @@
 import { DatePicker, LocalizationProvider } from '@mui/lab';
 import AdapterLuxon from '@mui/lab/AdapterLuxon';
-import { Box, Container, Skeleton, TextField, Typography } from '@mui/material';
+import { Box, Container, InputProps, Skeleton, TextField, Typography } from '@mui/material';
 import { DateTime } from 'luxon';
 import React, { FC } from 'react';
 import DueServicesTable from '../DueServicesTable/DueServicesTable';
@@ -84,9 +84,10 @@ const TitleAndDatePicker: FC<TitleAndDatePickerProps> = ({ dueServicesDate, setD
           onChange={(newDueServicesDate) => {
             setDueServicesDate(newDueServicesDate)
           }}
-          renderInput={props =>
-            <TextField {...props} helperText={'mm/dd/yyyy'} />
-          }
+          renderInput={props => {
+            console.log(props)
+            return <TextField {...props} helperText={'mm/dd/yyyy'} />
+          }}
         >
         </DatePicker>
       </LocalizationProvider>
