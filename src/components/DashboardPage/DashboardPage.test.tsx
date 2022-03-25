@@ -1,8 +1,9 @@
-import { act, render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import DashboardPage from './DashboardPage';
 import MOCK_DUE_SERVICES from '../DueServicesTable/MockDueServicesData';
 import { fetchDueServices } from './dashboardPage.services';
+import { DateTime } from 'luxon';
 
 jest.mock('./dashboardPage.services');
 
@@ -65,6 +66,16 @@ describe('<DashboardPage />', () => {
     expect(fetchDueServices).toHaveBeenCalledTimes(1);
     await waitFor(() => expect(screen.getByText("Sorry... we weren't able to get the due services at this time.")).toBeInTheDocument());
 
+  });
+
+  it('it shows the current date when the page loads', async () => {
+
+    // When: The DashboardPage renders
+    render(<DashboardPage />);
+
+    // Then: We expect the current date to be in the date selector
+    const today = DateTime.now().toLocaleString();
+    await waitFor(() => expect(screen.getByDisplayValue(today)).toBeInTheDocument());
   });
 
 });
