@@ -1,7 +1,8 @@
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
+import { Chip, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
 import { DateTime } from 'luxon';
 import { FC } from 'react';
 import DueService from '../../shared/DueService.model';
+import ServiceStatus from '../../shared/ServiceStatus.model';
 import styles from './DueServicesTable.module.scss';
 
 interface DueServicesTableProps {
@@ -52,7 +53,7 @@ const DueServiceRow = ({ service }: DueServiceRowProps) => (
     <TableCell align='right'>{service.client.name}</TableCell>
     <TableCell align='right'>{service.contract.serviceFrequency}</TableCell>
     <TableCell align='right'>{service.dueDate.toLocaleString(DateTime.DATE_MED)}</TableCell>
-    <TableCell align='right'>{service.currentStatus}</TableCell>
+    <TableCell align='right'>{getStatusComponent(service.currentStatus)}</TableCell>
   </TableRow>
 )
 
@@ -60,4 +61,37 @@ const NoDueServicesDisplay = () => (
   <Typography variant='h5' data-testid="no-due-services-display">There are no due services at this time</Typography>
 );
 
+const getStatusComponent = (currentStatus: ServiceStatus) => {
+  switch (currentStatus) {
+    case ServiceStatus.NOT_COMPLETED:
+      return <NotCompletedServiceStatus />;
+    case ServiceStatus.IN_PROGRESS:
+      return <InProgressServiceStatus />;
+    case ServiceStatus.COMPLETED:
+      return <CompletedServiceStatus />
+    case ServiceStatus.CANCELLED:
+      return <CancelledServiceStatus />
+    default:
+      new Error(`No status indicator for ${currentStatus} exists`);
+  }
+};
+
+const NotCompletedServiceStatus = () => (
+  <Chip label='Not Completed' color='warning' variant="outlined" size='small'></Chip>
+);
+
+const InProgressServiceStatus = () => (
+  <Chip label='In Progress' color='info' variant="outlined" size='small'></Chip>
+);
+
+const CompletedServiceStatus = () => (
+  <Chip label='Completed' color='success' variant="outlined" size='small'></Chip>
+);
+
+const CancelledServiceStatus = () => (
+  <Chip label='Cancelled' variant="outlined" size='small'></Chip>
+);
+
 export default DueServicesTable;
+
+

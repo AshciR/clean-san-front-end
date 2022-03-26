@@ -39,6 +39,14 @@ describe('<DueServicesTable />', () => {
 
   });
 
+  it('Status Chip component shows correctly', () => {
+
+    // When: the Due Services Table is rendered with services 
+    const { container } = render(<DueServicesTable dueServices={MOCK_DUE_SERVICES} />);
+    expect(container.firstChild).toMatchSnapshot();
+
+  });
+
   const assertRowContent = (row: HTMLElement, service: DueService) => {
 
     const idColumn = row.getElementsByTagName('td')[0];
@@ -54,7 +62,7 @@ describe('<DueServicesTable />', () => {
     expect(dueDateColumn.textContent).toBe(service.dueDate.toLocaleString(DateTime.DATE_MED));
 
     const statusColumn = row.getElementsByTagName('td')[4];
-    expect(statusColumn.textContent).toBe(service.currentStatus);
+    expect(statusColumn.textContent?.toLocaleLowerCase()).toBe(service.currentStatus.toLocaleLowerCase());
 
   }
 
