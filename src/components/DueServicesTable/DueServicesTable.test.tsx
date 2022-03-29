@@ -1,10 +1,10 @@
-import React from 'react';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import DueServicesTable from './DueServicesTable';
 import MOCK_DUE_SERVICES from './MockDueServicesData';
 import { DateTime } from 'luxon';
 import DueService from '../../shared/DueService.model';
+
 
 describe('<DueServicesTable />', () => {
 
@@ -36,14 +36,6 @@ describe('<DueServicesTable />', () => {
     // Then: The no services display message should be present
     const noDueServicesDisplay = screen.getByText('There are no due services at this time');
     expect(noDueServicesDisplay).toBeInTheDocument();
-
-  });
-
-  it('Status Chip component shows correctly', () => {
-
-    // When: the Due Services Table is rendered with services 
-    const { container } = render(<DueServicesTable dueServices={MOCK_DUE_SERVICES} />);
-    expect(container.firstChild).toMatchSnapshot();
 
   });
 

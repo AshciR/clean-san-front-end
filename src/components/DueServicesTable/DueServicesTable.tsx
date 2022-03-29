@@ -1,4 +1,4 @@
-import { Chip, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
+import { Chip, ChipProps, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
 import { DateTime } from 'luxon';
 import { FC } from 'react';
 import DueService from '../../shared/DueService.model';
@@ -53,7 +53,9 @@ const DueServiceRow = ({ service }: DueServiceRowProps) => (
     <TableCell align='right'>{service.client.name}</TableCell>
     <TableCell align='right'>{service.contract.serviceFrequency}</TableCell>
     <TableCell align='right'>{service.dueDate.toLocaleString(DateTime.DATE_MED)}</TableCell>
-    <TableCell align='right'>{getStatusComponent(service.currentStatus)}</TableCell>
+    <TableCell align='right'>
+      <ServiceStatusChip status={service.currentStatus} />
+    </TableCell>
   </TableRow>
 )
 
@@ -61,36 +63,22 @@ const NoDueServicesDisplay = () => (
   <Typography variant='h5' data-testid="no-due-services-display">There are no due services at this time</Typography>
 );
 
-const getStatusComponent = (currentStatus: ServiceStatus) => {
-  switch (currentStatus) {
-    case ServiceStatus.NOT_COMPLETED:
-      return <NotCompletedServiceStatus />;
-    case ServiceStatus.IN_PROGRESS:
-      return <InProgressServiceStatus />;
-    case ServiceStatus.COMPLETED:
-      return <CompletedServiceStatus />
-    case ServiceStatus.CANCELLED:
-      return <CancelledServiceStatus />
-    default:
-      new Error(`No status indicator for ${currentStatus} exists`);
-  }
+interface ServiceStatusBadgeProps {
+  status: ServiceStatus
 };
 
-const NotCompletedServiceStatus = () => (
-  <Chip label='Not Completed' color='warning' variant="outlined" size='small'></Chip>
-);
+const ServiceStatusChip = ({ status }: ServiceStatusBadgeProps) => {
 
-const InProgressServiceStatus = () => (
-  <Chip label='In Progress' color='info' variant="outlined" size='small'></Chip>
-);
+  const chipProps = {
+    [ServiceStatus.NOT_COMPLETED]: { color: 'warning', label: 'Not Completed' },
+    [ServiceStatus.IN_PROGRESS]: { color: 'info', label: 'In Progress' },
+    [ServiceStatus.COMPLETED]: { color: 'success', label: 'Completed' },
+    [ServiceStatus.CANCELLED]: { color: 'default' ,label: 'Cancelled' },
+  };
 
-const CompletedServiceStatus = () => (
-  <Chip label='Completed' color='success' variant="outlined" size='small'></Chip>
-);
+  return <Chip size='small' variant='outlined' {...chipProps[status] as ChipProps}/>
 
-const CancelledServiceStatus = () => (
-  <Chip label='Cancelled' variant="outlined" size='small'></Chip>
-);
+};
 
 export default DueServicesTable;
 
