@@ -1,11 +1,11 @@
 import {
   Box, Chip, ChipProps, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, Table,
-  TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography
+  TableBody, TableCell, TableContainer, TableHead, TableRow, Typography
 } from '@mui/material';
 import { DateTime } from 'luxon';
 import { FC, ReactNode } from 'react';
 import DueService from '../../shared/DueService.model';
-import ServiceStatus, { ServiceStatusKeys } from '../../shared/ServiceStatus.model';
+import ServiceStatus from '../../shared/ServiceStatus.model';
 import styles from './DueServicesTable.module.scss';
 
 interface DueServicesTableProps {
@@ -106,11 +106,20 @@ const StatusDropDown = ({ newStatus, handleChangeStatus }: StatusDropDownProps) 
           renderValue={(selected) => (
             <ServiceStatusChip status={newStatus}></ServiceStatusChip>
           )}
+          variant='outlined'
         >
-          <MenuItem key={ServiceStatus.NOT_COMPLETED} value={ServiceStatus.NOT_COMPLETED}>{ServiceStatus.NOT_COMPLETED}</MenuItem>
-          <MenuItem key={ServiceStatus.IN_PROGRESS} value={ServiceStatus.IN_PROGRESS}>{ServiceStatus.IN_PROGRESS}</MenuItem>
-          <MenuItem key={ServiceStatus.COMPLETED} value={ServiceStatus.COMPLETED}>{ServiceStatus.COMPLETED}</MenuItem>
-          <MenuItem key={ServiceStatus.CANCELLED} value={ServiceStatus.CANCELLED}>{ServiceStatus.CANCELLED}</MenuItem>
+          <MenuItem key={ServiceStatus.NOT_COMPLETED} value={ServiceStatus.NOT_COMPLETED}>
+            <ServiceStatusChip status={ServiceStatus.NOT_COMPLETED}></ServiceStatusChip>
+          </MenuItem>
+          <MenuItem key={ServiceStatus.IN_PROGRESS} value={ServiceStatus.IN_PROGRESS}>
+            <ServiceStatusChip status={ServiceStatus.IN_PROGRESS}></ServiceStatusChip>
+          </MenuItem>
+          <MenuItem key={ServiceStatus.COMPLETED} value={ServiceStatus.COMPLETED}>
+            <ServiceStatusChip status={ServiceStatus.COMPLETED}></ServiceStatusChip>
+          </MenuItem>
+          <MenuItem key={ServiceStatus.CANCELLED} value={ServiceStatus.CANCELLED}>
+            <ServiceStatusChip status={ServiceStatus.CANCELLED}></ServiceStatusChip>
+          </MenuItem>
         </Select>
       </FormControl>
     </Box>
