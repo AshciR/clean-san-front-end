@@ -1,19 +1,28 @@
 import DueService, { createDefaultDueService } from "../../shared/DueService.model";
+import ServiceStatus from "../../shared/ServiceStatus.model";
 
-const service1: DueService = createDefaultDueService();
-const service2: DueService = {
-    ...service1,
-    id: service1.id + 1,
-    dueDate: service1.dueDate.minus({ months: 1 }),
+const notCompletedService: DueService = createDefaultDueService();
+const inProgressService: DueService = {
+    ...notCompletedService,
+    id: notCompletedService.id + 1,
+    dueDate: notCompletedService.dueDate.minus({ months: 1 }),
+    currentStatus: ServiceStatus.IN_PROGRESS
 };
-const service3: DueService = {
-    ...service2,
-    id: service2.id + 1,
-    dueDate: service2.dueDate.minus({ months: 1 }),
+const completedService: DueService = {
+    ...inProgressService,
+    id: inProgressService.id + 1,
+    dueDate: inProgressService.dueDate.minus({ months: 1 }),
+    currentStatus: ServiceStatus.COMPLETED
+};
+const cancelledService: DueService = {
+    ...inProgressService,
+    id: completedService.id + 1,
+    dueDate: completedService.dueDate.minus({ months: 1 }),
+    currentStatus: ServiceStatus.CANCELLED
 };
 
 const MOCK_DUE_SERVICES: Array<DueService> = [
-    service1, service2, service3
+    notCompletedService, inProgressService, completedService, cancelledService
 ];
 
 export default MOCK_DUE_SERVICES;

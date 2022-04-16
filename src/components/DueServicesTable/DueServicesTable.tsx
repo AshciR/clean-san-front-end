@@ -1,7 +1,8 @@
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
+import { Chip, ChipProps, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
 import { DateTime } from 'luxon';
 import { FC } from 'react';
 import DueService from '../../shared/DueService.model';
+import ServiceStatus from '../../shared/ServiceStatus.model';
 import styles from './DueServicesTable.module.scss';
 
 interface DueServicesTableProps {
@@ -52,7 +53,9 @@ const DueServiceRow = ({ service }: DueServiceRowProps) => (
     <TableCell align='right'>{service.client.name}</TableCell>
     <TableCell align='right'>{service.contract.serviceFrequency}</TableCell>
     <TableCell align='right'>{service.dueDate.toLocaleString(DateTime.DATE_MED)}</TableCell>
-    <TableCell align='right'>{service.currentStatus}</TableCell>
+    <TableCell align='right'>
+      <ServiceStatusChip status={service.currentStatus} />
+    </TableCell>
   </TableRow>
 )
 
@@ -60,4 +63,23 @@ const NoDueServicesDisplay = () => (
   <Typography variant='h5' data-testid="no-due-services-display">There are no due services at this time</Typography>
 );
 
+interface ServiceStatusBadgeProps {
+  status: ServiceStatus
+};
+
+const ServiceStatusChip = ({ status }: ServiceStatusBadgeProps) => {
+
+  const chipProps = {
+    [ServiceStatus.NOT_COMPLETED]: { color: 'warning', label: 'Not Completed' },
+    [ServiceStatus.IN_PROGRESS]: { color: 'info', label: 'In Progress' },
+    [ServiceStatus.COMPLETED]: { color: 'success', label: 'Completed' },
+    [ServiceStatus.CANCELLED]: { color: 'default' ,label: 'Cancelled' },
+  };
+
+  return <Chip size='small' variant='outlined' {...chipProps[status] as ChipProps}/>
+
+};
+
 export default DueServicesTable;
+
+

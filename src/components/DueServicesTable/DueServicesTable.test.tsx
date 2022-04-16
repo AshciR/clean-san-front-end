@@ -1,10 +1,10 @@
-import React from 'react';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import DueServicesTable from './DueServicesTable';
 import MOCK_DUE_SERVICES from './MockDueServicesData';
 import { DateTime } from 'luxon';
 import DueService from '../../shared/DueService.model';
+
 
 describe('<DueServicesTable />', () => {
 
@@ -54,7 +54,7 @@ describe('<DueServicesTable />', () => {
     expect(dueDateColumn.textContent).toBe(service.dueDate.toLocaleString(DateTime.DATE_MED));
 
     const statusColumn = row.getElementsByTagName('td')[4];
-    expect(statusColumn.textContent).toBe(service.currentStatus);
+    expect(statusColumn.textContent?.toLocaleLowerCase()).toBe(service.currentStatus.toLocaleLowerCase());
 
   }
 
