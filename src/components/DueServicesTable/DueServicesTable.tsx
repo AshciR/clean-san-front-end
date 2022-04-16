@@ -1,8 +1,11 @@
-import { Chip, ChipProps, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
+import {
+  Box, Chip, ChipProps, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, Table,
+  TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography
+} from '@mui/material';
 import { DateTime } from 'luxon';
-import { FC } from 'react';
+import { FC, ReactNode } from 'react';
 import DueService from '../../shared/DueService.model';
-import ServiceStatus from '../../shared/ServiceStatus.model';
+import ServiceStatus, { ServiceStatusKeys } from '../../shared/ServiceStatus.model';
 import styles from './DueServicesTable.module.scss';
 
 interface DueServicesTableProps {
@@ -33,7 +36,8 @@ const VisableDueServiceTable = ({ services }: VisableDueServiceTableProps) => (
           <TableCell align='right'>Client</TableCell>
           <TableCell align='right'>Frequency</TableCell>
           <TableCell align='right'>Due Date</TableCell>
-          <TableCell align='right'>Status</TableCell>
+          <TableCell align='right'>Current Status</TableCell>
+          <TableCell align='right'>New Status</TableCell>
         </TableRow>
       </TableHead>
       <TableBody>
@@ -56,6 +60,9 @@ const DueServiceRow = ({ service }: DueServiceRowProps) => (
     <TableCell align='right'>
       <ServiceStatusChip status={service.currentStatus} />
     </TableCell>
+    <TableCell align='right'>
+      <StatusDropDown newStatus={service.currentStatus} handleChangeStatus={() => { }} />
+    </TableCell>
   </TableRow>
 )
 
@@ -73,11 +80,44 @@ const ServiceStatusChip = ({ status }: ServiceStatusBadgeProps) => {
     [ServiceStatus.NOT_COMPLETED]: { color: 'warning', label: 'Not Completed' },
     [ServiceStatus.IN_PROGRESS]: { color: 'info', label: 'In Progress' },
     [ServiceStatus.COMPLETED]: { color: 'success', label: 'Completed' },
-    [ServiceStatus.CANCELLED]: { color: 'default' ,label: 'Cancelled' },
+    [ServiceStatus.CANCELLED]: { color: 'default', label: 'Cancelled' },
   };
 
-  return <Chip size='small' variant='outlined' {...chipProps[status] as ChipProps}/>
+  return <Chip size='small' variant='outlined' {...chipProps[status] as ChipProps} />
 
+};
+
+interface StatusDropDownProps {
+  newStatus: ServiceStatus
+  handleChangeStatus: ((event: SelectChangeEvent<ServiceStatus>, child: ReactNode) => void) | undefined
+};
+
+const StatusDropDown = ({ newStatus, handleChangeStatus }: StatusDropDownProps) => {
+  return (
+    <Box sx={{ minWidth: 120 }}>
+      <FormControl fullWidth>
+        <InputLabel id="new-status-select-label">New Status</InputLabel>
+        <Select
+          labelId="new-status-select-label"
+          id="new-staus-select"
+          value={newStatus}
+          label="New Status"
+          onChange={handleChangeStatus}
+        >
+          {
+            // (Object.keys(ServiceStatus) as Array<ServiceStatusKeys>).map(status => {
+            //   console.log(status)
+            //   return <MenuItem key={status} value={status}>{status}</MenuItem>
+            // })
+          }
+          <MenuItem key={ServiceStatus.NOT_COMPLETED} value={ServiceStatus.NOT_COMPLETED}>{ServiceStatus.NOT_COMPLETED}</MenuItem>
+          <MenuItem key={ServiceStatus.IN_PROGRESS} value={ServiceStatus.IN_PROGRESS}>{ServiceStatus.IN_PROGRESS}</MenuItem>
+          <MenuItem key={ServiceStatus.COMPLETED} value={ServiceStatus.COMPLETED}>{ServiceStatus.COMPLETED}</MenuItem>
+          <MenuItem key={ServiceStatus.CANCELLED} value={ServiceStatus.CANCELLED}>{ServiceStatus.CANCELLED}</MenuItem>
+        </Select>
+      </FormControl>
+    </Box>
+  );
 };
 
 export default DueServicesTable;

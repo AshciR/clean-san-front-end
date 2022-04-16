@@ -5,4 +5,7 @@ enum ServiceStatus {
     CANCELLED = 'CANCELLED'
 }
 
+type ServiceStatusKeys = keyof typeof ServiceStatus
+
 export default ServiceStatus;
+export type { ServiceStatusKeys }
