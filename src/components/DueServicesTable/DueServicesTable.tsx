@@ -94,7 +94,7 @@ interface StatusDropDownProps {
 
 const StatusDropDown = ({ newStatus, handleChangeStatus }: StatusDropDownProps) => {
   return (
-    <Box sx={{ minWidth: 120 }}>
+    <Box>
       <FormControl fullWidth>
         <InputLabel id="new-status-select-label">New Status</InputLabel>
         <Select
@@ -103,13 +103,10 @@ const StatusDropDown = ({ newStatus, handleChangeStatus }: StatusDropDownProps) 
           value={newStatus}
           label="New Status"
           onChange={handleChangeStatus}
+          renderValue={(selected) => (
+            <ServiceStatusChip status={newStatus}></ServiceStatusChip>
+          )}
         >
-          {
-            // (Object.keys(ServiceStatus) as Array<ServiceStatusKeys>).map(status => {
-            //   console.log(status)
-            //   return <MenuItem key={status} value={status}>{status}</MenuItem>
-            // })
-          }
           <MenuItem key={ServiceStatus.NOT_COMPLETED} value={ServiceStatus.NOT_COMPLETED}>{ServiceStatus.NOT_COMPLETED}</MenuItem>
           <MenuItem key={ServiceStatus.IN_PROGRESS} value={ServiceStatus.IN_PROGRESS}>{ServiceStatus.IN_PROGRESS}</MenuItem>
           <MenuItem key={ServiceStatus.COMPLETED} value={ServiceStatus.COMPLETED}>{ServiceStatus.COMPLETED}</MenuItem>
