@@ -1,8 +1,10 @@
 import { DatePicker, LocalizationProvider } from '@mui/lab';
 import AdapterLuxon from '@mui/lab/AdapterLuxon';
-import { Box, Container, Skeleton, TextField, Typography } from '@mui/material';
+import { Box, Container, SelectChangeEvent, Skeleton, TextField, Typography } from '@mui/material';
 import { DateTime } from 'luxon';
 import React, { FC } from 'react';
+import DueService from '../../shared/DueService.model';
+import ServiceStatus, { ServiceStatusKeys } from '../../shared/ServiceStatus.model';
 import DueServicesTable from '../DueServicesTable/DueServicesTable';
 import dueServicesReducer, { initialDueServicesState } from './dashboardPage.reducer';
 import { fetchDueServices } from './dashboardPage.services';
@@ -36,6 +38,35 @@ const DashboardPage: FC<DashboardPageProps> = () => {
 
   }, []);
 
+  // TODO: Ask where is the best place to put this in order to test it
+  const handleChangeServiceStatus = (event: SelectChangeEvent<ServiceStatus>) => {
+
+    // TODO: Figure out how to get this value from the child component
+    const dueServiceId: number = 0;
+
+    const updatedServices: DueService[] = updateServiceStatus(dueServicesState.dueServices, dueServiceId, event.target.value as ServiceStatus);
+
+    dispatchDueServices({
+      type: 'DUE_SERVICES_UPDATE_STATUS',
+      payload: updatedServices
+    });
+  }
+
+  // TODO: Ask where is the best place to put this in order to test it
+  const updateServiceStatus = (dueServices: DueService[], dueServiceId: number, updatedStatus: ServiceStatus): DueService[] => {
+
+    const serviceToUpdate = dueServices.find(service => service.id === dueServiceId)
+
+    if (serviceToUpdate) {
+      return dueServices
+        .filter(service => service.id !== dueServiceId)
+        .concat({ ...serviceToUpdate, currentStatus: updatedStatus });
+    }
+
+    // Shouldn't occur, but if it does return the orignial array
+    return dueServices;
+  }
+
   React.useEffect(() => {
     handleFetchDueServices(dueServicesDate);
   }, [handleFetchDueServices, dueServicesDate]);
@@ -53,7 +84,7 @@ const DashboardPage: FC<DashboardPageProps> = () => {
               <Skeleton variant="rectangular" animation="wave" data-testid="DueServicesTable-Skeleton" /> :
               dueServicesState.isError ?
                 <Typography variant='h4'>Sorry... we weren't able to get the due services at this time.</Typography> :
-                <DueServicesTable dueServices={dueServicesState.dueServices} />
+                <DueServicesTable dueServices={dueServicesState.dueServices} handleChangeServiceStatus={undefined} />
           }
         </Box>
       </Container>
@@ -95,3 +126,4 @@ const TitleAndDatePicker: FC<TitleAndDatePickerProps> = ({ dueServicesDate, setD
 }
 
 export default DashboardPage;
+

@@ -3,31 +3,33 @@ import {
   TableBody, TableCell, TableContainer, TableHead, TableRow, Typography
 } from '@mui/material';
 import { DateTime } from 'luxon';
-import { FC, ReactNode } from 'react';
+import { FC } from 'react';
 import DueService from '../../shared/DueService.model';
 import ServiceStatus from '../../shared/ServiceStatus.model';
 import styles from './DueServicesTable.module.scss';
 
 interface DueServicesTableProps {
   dueServices: Array<DueService>
+  handleChangeServiceStatus: ((event: SelectChangeEvent<ServiceStatus>) => void) | undefined
 };
 
-const DueServicesTable: FC<DueServicesTableProps> = ({ dueServices }: DueServicesTableProps) => {
+const DueServicesTable: FC<DueServicesTableProps> = ({ dueServices, handleChangeServiceStatus }: DueServicesTableProps) => {
 
   const hasServices = dueServices.length !== 0;
 
   return (
     <div className={styles.DueServicesTable} data-testid="due-services-table">
-      {hasServices ? <VisableDueServiceTable services={dueServices} /> : <NoDueServicesDisplay />}
+      {hasServices ? <VisableDueServiceTable services={dueServices} handleChangeServiceStatus={handleChangeServiceStatus} /> : <NoDueServicesDisplay />}
     </div>
   );
 };
 
 interface VisableDueServiceTableProps {
   services: Array<DueService>
+  handleChangeServiceStatus: ((event: SelectChangeEvent<ServiceStatus>) => void) | undefined
 };
 
-const VisableDueServiceTable = ({ services }: VisableDueServiceTableProps) => (
+const VisableDueServiceTable = ({ services, handleChangeServiceStatus }: VisableDueServiceTableProps) => (
   <TableContainer data-testid="visable-due-services-table">
     <Table aria-label="due services table">
       <TableHead>
@@ -41,7 +43,7 @@ const VisableDueServiceTable = ({ services }: VisableDueServiceTableProps) => (
         </TableRow>
       </TableHead>
       <TableBody>
-        {services.map(service => <DueServiceRow key={service.id} service={service} />)}
+        {services.map(service => <DueServiceRow key={service.id} service={service} handleChangeServiceStatus={handleChangeServiceStatus} />)}
       </TableBody>
     </Table>
   </TableContainer>
@@ -49,9 +51,10 @@ const VisableDueServiceTable = ({ services }: VisableDueServiceTableProps) => (
 
 interface DueServiceRowProps {
   service: DueService
+  handleChangeServiceStatus: ((event: SelectChangeEvent<ServiceStatus>) => void) | undefined
 };
 
-const DueServiceRow = ({ service }: DueServiceRowProps) => (
+const DueServiceRow = ({ service, handleChangeServiceStatus }: DueServiceRowProps) => (
   <TableRow data-testid="due-service-table-row">
     <TableCell>{service.id}</TableCell>
     <TableCell align='right'>{service.client.name}</TableCell>
@@ -61,7 +64,7 @@ const DueServiceRow = ({ service }: DueServiceRowProps) => (
       <ServiceStatusChip status={service.currentStatus} />
     </TableCell>
     <TableCell align='right'>
-      <StatusDropDown newStatus={service.currentStatus} handleChangeStatus={() => { }} />
+      <StatusDropDown newStatus={service.currentStatus} handleChangeServiceStatus={handleChangeServiceStatus} />
     </TableCell>
   </TableRow>
 )
@@ -70,29 +73,14 @@ const NoDueServicesDisplay = () => (
   <Typography variant='h5' data-testid="no-due-services-display">There are no due services at this time</Typography>
 );
 
-interface ServiceStatusBadgeProps {
-  status: ServiceStatus
-};
-
-const ServiceStatusChip = ({ status }: ServiceStatusBadgeProps) => {
-
-  const chipProps = {
-    [ServiceStatus.NOT_COMPLETED]: { color: 'warning', label: 'Not Completed' },
-    [ServiceStatus.IN_PROGRESS]: { color: 'info', label: 'In Progress' },
-    [ServiceStatus.COMPLETED]: { color: 'success', label: 'Completed' },
-    [ServiceStatus.CANCELLED]: { color: 'default', label: 'Cancelled' },
-  };
-
-  return <Chip size='small' variant='outlined' {...chipProps[status] as ChipProps} />
-
-};
 
 interface StatusDropDownProps {
   newStatus: ServiceStatus
-  handleChangeStatus: ((event: SelectChangeEvent<ServiceStatus>, child: ReactNode) => void) | undefined
+  // TODO: I think this needs to take a <DueService> instead of a <ServiceStatus>
+  handleChangeServiceStatus: ((event: SelectChangeEvent<ServiceStatus>) => void) | undefined
 };
 
-const StatusDropDown = ({ newStatus, handleChangeStatus }: StatusDropDownProps) => {
+const StatusDropDown = ({ newStatus, handleChangeServiceStatus }: StatusDropDownProps) => {
   return (
     <Box>
       <FormControl fullWidth>
@@ -102,10 +90,8 @@ const StatusDropDown = ({ newStatus, handleChangeStatus }: StatusDropDownProps) 
           id="new-staus-select"
           value={newStatus}
           label="New Status"
-          onChange={handleChangeStatus}
-          renderValue={(selected) => (
-            <ServiceStatusChip status={newStatus}></ServiceStatusChip>
-          )}
+          onChange={handleChangeServiceStatus}
+          renderValue={selected => <ServiceStatusChip status={selected}></ServiceStatusChip>}
           variant='outlined'
         >
           <MenuItem key={ServiceStatus.NOT_COMPLETED} value={ServiceStatus.NOT_COMPLETED}>
@@ -124,6 +110,23 @@ const StatusDropDown = ({ newStatus, handleChangeStatus }: StatusDropDownProps) 
       </FormControl>
     </Box>
   );
+};
+
+interface ServiceStatusChipProps {
+  status: ServiceStatus
+};
+
+const ServiceStatusChip = ({ status }: ServiceStatusChipProps) => {
+
+  const chipProps = {
+    [ServiceStatus.NOT_COMPLETED]: { color: 'warning', label: 'Not Completed' },
+    [ServiceStatus.IN_PROGRESS]: { color: 'info', label: 'In Progress' },
+    [ServiceStatus.COMPLETED]: { color: 'success', label: 'Completed' },
+    [ServiceStatus.CANCELLED]: { color: 'default', label: 'Cancelled' },
+  };
+
+  return <Chip size='small' variant='outlined' {...chipProps[status] as ChipProps} />
+
 };
 
 export default DueServicesTable;
