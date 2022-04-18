@@ -1,10 +1,9 @@
 import { DatePicker, LocalizationProvider } from '@mui/lab';
 import AdapterLuxon from '@mui/lab/AdapterLuxon';
-import { Box, Container, SelectChangeEvent, Skeleton, TextField, Typography } from '@mui/material';
+import { Box, Container, Skeleton, TextField, Typography } from '@mui/material';
 import { DateTime } from 'luxon';
 import React, { FC } from 'react';
 import DueService from '../../shared/DueService.model';
-import ServiceStatus, { ServiceStatusKeys } from '../../shared/ServiceStatus.model';
 import DueServicesTable from '../DueServicesTable/DueServicesTable';
 import dueServicesReducer, { initialDueServicesState } from './dashboardPage.reducer';
 import { fetchDueServices } from './dashboardPage.services';

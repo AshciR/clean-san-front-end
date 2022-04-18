@@ -1,11 +1,11 @@
 import {
-  Box, Chip, ChipProps, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, Table,
+  Box, Chip, ChipProps, FormControl, InputLabel, MenuItem, Select, Table,
   TableBody, TableCell, TableContainer, TableHead, TableRow, Typography
 } from '@mui/material';
 import { DateTime } from 'luxon';
 import { FC } from 'react';
 import DueService from '../../shared/DueService.model';
-import ServiceStatus, { ServiceStatusKeys } from '../../shared/ServiceStatus.model';
+import ServiceStatus from '../../shared/ServiceStatus.model';
 import styles from './DueServicesTable.module.scss';
 
 interface DueServicesTableProps {
@@ -87,17 +87,17 @@ const StatusDropDown = ({ serviceToBeUpdated, handleUpdateService }: StatusDropD
         <Select
           labelId="new-status-select-label"
           id="new-staus-select"
-          value={serviceToBeUpdated.prospectiveStatus}
+          value={serviceToBeUpdated?.prospectiveStatus || serviceToBeUpdated.currentStatus}
           label="New Status"
           onChange={(event) => {
             const updatedService = {
               ...serviceToBeUpdated,
-              prospectiveStatus: ServiceStatus[event.target.value as ServiceStatusKeys] // TODO: Figure out why this doesn't work
+              prospectiveStatus: event.target.value as ServiceStatus
             };
             handleUpdateService(updatedService)
           }}
-          renderValue={updatedServiceStatus => <ServiceStatusChip status={updatedServiceStatus || serviceToBeUpdated.currentStatus} />}
           variant='outlined'
+          defaultValue={serviceToBeUpdated.currentStatus}
         >
           {/* TODO: Figure out how to map() this value */}
           <MenuItem key={ServiceStatus.NOT_COMPLETED} value={ServiceStatus.NOT_COMPLETED}>
