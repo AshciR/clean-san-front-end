@@ -38,33 +38,11 @@ const DashboardPage: FC<DashboardPageProps> = () => {
 
   }, []);
 
-  // TODO: Ask where is the best place to put this in order to test it
-  const handleChangeServiceStatus = (event: SelectChangeEvent<ServiceStatus>) => {
-
-    // TODO: Figure out how to get this value from the child component
-    const dueServiceId: number = 0;
-
-    const updatedServices: DueService[] = updateServiceStatus(dueServicesState.dueServices, dueServiceId, event.target.value as ServiceStatus);
-
+  const handleUpdateService = (updatedService: DueService) => {
     dispatchDueServices({
-      type: 'DUE_SERVICES_UPDATE_STATUS',
-      payload: updatedServices
+      type: 'DUE_SERVICES_UPDATE_SERVICE',
+      payload: updatedService
     });
-  }
-
-  // TODO: Ask where is the best place to put this in order to test it
-  const updateServiceStatus = (dueServices: DueService[], dueServiceId: number, updatedStatus: ServiceStatus): DueService[] => {
-
-    const serviceToUpdate = dueServices.find(service => service.id === dueServiceId)
-
-    if (serviceToUpdate) {
-      return dueServices
-        .filter(service => service.id !== dueServiceId)
-        .concat({ ...serviceToUpdate, currentStatus: updatedStatus });
-    }
-
-    // Shouldn't occur, but if it does return the orignial array
-    return dueServices;
   }
 
   React.useEffect(() => {
@@ -84,7 +62,7 @@ const DashboardPage: FC<DashboardPageProps> = () => {
               <Skeleton variant="rectangular" animation="wave" data-testid="DueServicesTable-Skeleton" /> :
               dueServicesState.isError ?
                 <Typography variant='h4'>Sorry... we weren't able to get the due services at this time.</Typography> :
-                <DueServicesTable dueServices={dueServicesState.dueServices} handleChangeServiceStatus={undefined} />
+                <DueServicesTable dueServices={dueServicesState.dueServices} handleUpdateService={handleUpdateService} />
           }
         </Box>
       </Container>

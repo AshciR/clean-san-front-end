@@ -9,7 +9,7 @@ import DueService from '../../shared/DueService.model';
 describe('<DueServicesTable />', () => {
 
   it('it should mount', () => {
-    render(<DueServicesTable dueServices={[]} />);
+    render(<DueServicesTable dueServices={[]} handleUpdateService={(updatedService: DueService) => {}}/>);
 
     const dueServicesTable = screen.getByTestId('due-services-table');
 
@@ -19,7 +19,7 @@ describe('<DueServicesTable />', () => {
   it('it should display due services', () => {
 
     // When: the Due Services Table is rendered with services 
-    render(<DueServicesTable dueServices={MOCK_DUE_SERVICES} />);
+    render(<DueServicesTable dueServices={MOCK_DUE_SERVICES} handleUpdateService={(updatedService: DueService) => {}} />);
 
     // Then: All the rows should have the correct info
     const dueServicesTableRows = screen.getAllByTestId('due-service-table-row');
@@ -31,13 +31,15 @@ describe('<DueServicesTable />', () => {
   it('it should display message when there are no due services', () => {
 
     // When: the Due Services Table is rendered without any services 
-    render(<DueServicesTable dueServices={[]} />);
+    render(<DueServicesTable dueServices={[]} handleUpdateService={(updatedService: DueService) => {}} />);
 
     // Then: The no services display message should be present
     const noDueServicesDisplay = screen.getByText('There are no due services at this time');
     expect(noDueServicesDisplay).toBeInTheDocument();
 
   });
+
+  // TODO: Add test to check that handler was called
 
   const assertRowContent = (row: HTMLElement, service: DueService) => {
 

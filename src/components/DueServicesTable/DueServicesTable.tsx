@@ -5,31 +5,31 @@ import {
 import { DateTime } from 'luxon';
 import { FC } from 'react';
 import DueService from '../../shared/DueService.model';
-import ServiceStatus from '../../shared/ServiceStatus.model';
+import ServiceStatus, { ServiceStatusKeys } from '../../shared/ServiceStatus.model';
 import styles from './DueServicesTable.module.scss';
 
 interface DueServicesTableProps {
   dueServices: Array<DueService>
-  handleChangeServiceStatus: ((event: SelectChangeEvent<ServiceStatus>) => void) | undefined
+  handleUpdateService: (updatedService: DueService) => void
 };
 
-const DueServicesTable: FC<DueServicesTableProps> = ({ dueServices, handleChangeServiceStatus }: DueServicesTableProps) => {
+const DueServicesTable: FC<DueServicesTableProps> = ({ dueServices, handleUpdateService }: DueServicesTableProps) => {
 
   const hasServices = dueServices.length !== 0;
 
   return (
     <div className={styles.DueServicesTable} data-testid="due-services-table">
-      {hasServices ? <VisableDueServiceTable services={dueServices} handleChangeServiceStatus={handleChangeServiceStatus} /> : <NoDueServicesDisplay />}
+      {hasServices ? <VisableDueServiceTable services={dueServices} handleUpdateService={handleUpdateService} /> : <NoDueServicesDisplay />}
     </div>
   );
 };
 
 interface VisableDueServiceTableProps {
   services: Array<DueService>
-  handleChangeServiceStatus: ((event: SelectChangeEvent<ServiceStatus>) => void) | undefined
+  handleUpdateService: (updatedService: DueService) => void
 };
 
-const VisableDueServiceTable = ({ services, handleChangeServiceStatus }: VisableDueServiceTableProps) => (
+const VisableDueServiceTable = ({ services, handleUpdateService }: VisableDueServiceTableProps) => (
   <TableContainer data-testid="visable-due-services-table">
     <Table aria-label="due services table">
       <TableHead>
@@ -43,7 +43,7 @@ const VisableDueServiceTable = ({ services, handleChangeServiceStatus }: Visable
         </TableRow>
       </TableHead>
       <TableBody>
-        {services.map(service => <DueServiceRow key={service.id} service={service} handleChangeServiceStatus={handleChangeServiceStatus} />)}
+        {services.map(service => <DueServiceRow key={service.id} service={service} handleUpdateService={handleUpdateService} />)}
       </TableBody>
     </Table>
   </TableContainer>
@@ -51,10 +51,10 @@ const VisableDueServiceTable = ({ services, handleChangeServiceStatus }: Visable
 
 interface DueServiceRowProps {
   service: DueService
-  handleChangeServiceStatus: ((event: SelectChangeEvent<ServiceStatus>) => void) | undefined
+  handleUpdateService: (updatedService: DueService) => void
 };
 
-const DueServiceRow = ({ service, handleChangeServiceStatus }: DueServiceRowProps) => (
+const DueServiceRow = ({ service, handleUpdateService }: DueServiceRowProps) => (
   <TableRow data-testid="due-service-table-row">
     <TableCell>{service.id}</TableCell>
     <TableCell align='right'>{service.client.name}</TableCell>
@@ -64,7 +64,7 @@ const DueServiceRow = ({ service, handleChangeServiceStatus }: DueServiceRowProp
       <ServiceStatusChip status={service.currentStatus} />
     </TableCell>
     <TableCell align='right'>
-      <StatusDropDown newStatus={service.currentStatus} handleChangeServiceStatus={handleChangeServiceStatus} />
+      <StatusDropDown serviceToBeUpdated={service} handleUpdateService={handleUpdateService} />
     </TableCell>
   </TableRow>
 )
@@ -75,36 +75,42 @@ const NoDueServicesDisplay = () => (
 
 
 interface StatusDropDownProps {
-  newStatus: ServiceStatus
-  // TODO: I think this needs to take a <DueService> instead of a <ServiceStatus>
-  handleChangeServiceStatus: ((event: SelectChangeEvent<ServiceStatus>) => void) | undefined
+  serviceToBeUpdated: DueService
+  handleUpdateService: (updatedService: DueService) => void
 };
 
-const StatusDropDown = ({ newStatus, handleChangeServiceStatus }: StatusDropDownProps) => {
+const StatusDropDown = ({ serviceToBeUpdated, handleUpdateService }: StatusDropDownProps) => {
   return (
     <Box>
       <FormControl fullWidth>
-        <InputLabel id="new-status-select-label">New Status</InputLabel>
+        <InputLabel id="new-status-select-label">Change Status</InputLabel>
         <Select
           labelId="new-status-select-label"
           id="new-staus-select"
-          value={newStatus}
+          value={serviceToBeUpdated.prospectiveStatus}
           label="New Status"
-          onChange={handleChangeServiceStatus}
-          renderValue={selected => <ServiceStatusChip status={selected}></ServiceStatusChip>}
+          onChange={(event) => {
+            const updatedService = {
+              ...serviceToBeUpdated,
+              prospectiveStatus: ServiceStatus[event.target.value as ServiceStatusKeys] // TODO: Figure out why this doesn't work
+            };
+            handleUpdateService(updatedService)
+          }}
+          renderValue={updatedServiceStatus => <ServiceStatusChip status={updatedServiceStatus || serviceToBeUpdated.currentStatus} />}
           variant='outlined'
         >
+          {/* TODO: Figure out how to map() this value */}
           <MenuItem key={ServiceStatus.NOT_COMPLETED} value={ServiceStatus.NOT_COMPLETED}>
-            <ServiceStatusChip status={ServiceStatus.NOT_COMPLETED}></ServiceStatusChip>
+            <ServiceStatusChip status={ServiceStatus.NOT_COMPLETED} />
           </MenuItem>
           <MenuItem key={ServiceStatus.IN_PROGRESS} value={ServiceStatus.IN_PROGRESS}>
-            <ServiceStatusChip status={ServiceStatus.IN_PROGRESS}></ServiceStatusChip>
+            <ServiceStatusChip status={ServiceStatus.IN_PROGRESS} />
           </MenuItem>
           <MenuItem key={ServiceStatus.COMPLETED} value={ServiceStatus.COMPLETED}>
-            <ServiceStatusChip status={ServiceStatus.COMPLETED}></ServiceStatusChip>
+            <ServiceStatusChip status={ServiceStatus.COMPLETED} />
           </MenuItem>
           <MenuItem key={ServiceStatus.CANCELLED} value={ServiceStatus.CANCELLED}>
-            <ServiceStatusChip status={ServiceStatus.CANCELLED}></ServiceStatusChip>
+            <ServiceStatusChip status={ServiceStatus.CANCELLED} />
           </MenuItem>
         </Select>
       </FormControl>
