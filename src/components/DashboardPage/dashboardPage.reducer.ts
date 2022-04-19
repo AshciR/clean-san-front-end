@@ -40,7 +40,7 @@ const dueServicesReducer = (
     state: DueServicesState,
     action: DueServicesAction
 ) => {
-    
+
     switch (action.type) {
         case 'DUE_SERVICES_FETCH_INIT':
             const updatedInitState: DueServicesState = {
@@ -74,12 +74,15 @@ const dueServicesReducer = (
     }
 };
 
-
 const updateServiceStatus = (dueServices: DueService[], updatedService: DueService): DueService[] => {
 
-    return dueServices
-        .filter(service => service.id !== updatedService.id)
-        .concat(updatedService).sort((a, b) => a.id - b.id);
+    const indexToBeReplaced = dueServices.findIndex(service => service.id === updatedService.id);
+
+    return [
+        ...dueServices.slice(0, indexToBeReplaced),
+        updatedService,
+        ...dueServices.slice(indexToBeReplaced + 1)
+    ]
 
 }
 

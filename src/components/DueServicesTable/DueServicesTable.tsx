@@ -1,5 +1,5 @@
 import {
-  Box, Chip, ChipProps, FormControl, InputLabel, MenuItem, Select, Table,
+  Box, Chip, ChipProps, FormControl, MenuItem, Select, Table,
   TableBody, TableCell, TableContainer, TableHead, TableRow, Typography
 } from '@mui/material';
 import { DateTime } from 'luxon';
@@ -64,7 +64,7 @@ const DueServiceRow = ({ service, handleUpdateService }: DueServiceRowProps) => 
       <ServiceStatusChip status={service.currentStatus} />
     </TableCell>
     <TableCell align='right'>
-      <StatusDropDown serviceToBeUpdated={service} handleUpdateService={handleUpdateService} />
+      <StatusDropDown service={service} handleUpdateService={handleUpdateService} />
     </TableCell>
   </TableRow>
 )
@@ -75,29 +75,26 @@ const NoDueServicesDisplay = () => (
 
 
 interface StatusDropDownProps {
-  serviceToBeUpdated: DueService
+  service: DueService
   handleUpdateService: (updatedService: DueService) => void
 };
 
-const StatusDropDown = ({ serviceToBeUpdated, handleUpdateService }: StatusDropDownProps) => {
+const StatusDropDown = ({ service, handleUpdateService }: StatusDropDownProps) => {
   return (
     <Box>
       <FormControl fullWidth>
-        
         <Select
-          
-          id="new-staus-select"
-          value={serviceToBeUpdated?.prospectiveStatus || serviceToBeUpdated.currentStatus}
-          
+          id={`new-status-select-${service.id}`}
+          value={service?.prospectiveStatus || service.currentStatus}
           onChange={(event) => {
             const updatedService = {
-              ...serviceToBeUpdated,
+              ...service,
               prospectiveStatus: event.target.value as ServiceStatus
             };
             handleUpdateService(updatedService)
           }}
           variant='outlined'
-          defaultValue={serviceToBeUpdated.currentStatus}
+          defaultValue={service.currentStatus}
         >
           {
             Object.values(ServiceStatus).map((status) => (
