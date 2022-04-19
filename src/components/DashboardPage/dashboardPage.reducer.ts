@@ -40,7 +40,7 @@ const dueServicesReducer = (
     state: DueServicesState,
     action: DueServicesAction
 ) => {
-
+    
     switch (action.type) {
         case 'DUE_SERVICES_FETCH_INIT':
             const updatedInitState: DueServicesState = {
@@ -80,7 +80,7 @@ const updateServiceStatus = (dueServices: DueService[], updatedService: DueServi
     return dueServices
         .filter(service => service.id !== updatedService.id)
         .concat(updatedService).sort((a, b) => a.id - b.id);
-    
+
 }
 
 export default dueServicesReducer;

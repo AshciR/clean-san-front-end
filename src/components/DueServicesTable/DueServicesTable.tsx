@@ -83,12 +83,12 @@ const StatusDropDown = ({ serviceToBeUpdated, handleUpdateService }: StatusDropD
   return (
     <Box>
       <FormControl fullWidth>
-        <InputLabel id="new-status-select-label">Change Status</InputLabel>
+        
         <Select
-          labelId="new-status-select-label"
+          
           id="new-staus-select"
           value={serviceToBeUpdated?.prospectiveStatus || serviceToBeUpdated.currentStatus}
-          label="New Status"
+          
           onChange={(event) => {
             const updatedService = {
               ...serviceToBeUpdated,
@@ -99,19 +99,13 @@ const StatusDropDown = ({ serviceToBeUpdated, handleUpdateService }: StatusDropD
           variant='outlined'
           defaultValue={serviceToBeUpdated.currentStatus}
         >
-          {/* TODO: Figure out how to map() this value */}
-          <MenuItem key={ServiceStatus.NOT_COMPLETED} value={ServiceStatus.NOT_COMPLETED}>
-            <ServiceStatusChip status={ServiceStatus.NOT_COMPLETED} />
-          </MenuItem>
-          <MenuItem key={ServiceStatus.IN_PROGRESS} value={ServiceStatus.IN_PROGRESS}>
-            <ServiceStatusChip status={ServiceStatus.IN_PROGRESS} />
-          </MenuItem>
-          <MenuItem key={ServiceStatus.COMPLETED} value={ServiceStatus.COMPLETED}>
-            <ServiceStatusChip status={ServiceStatus.COMPLETED} />
-          </MenuItem>
-          <MenuItem key={ServiceStatus.CANCELLED} value={ServiceStatus.CANCELLED}>
-            <ServiceStatusChip status={ServiceStatus.CANCELLED} />
-          </MenuItem>
+          {
+            Object.values(ServiceStatus).map((status) => (
+              <MenuItem key={status} value={status}>
+                <ServiceStatusChip status={status as ServiceStatus} />
+              </MenuItem>
+            ))
+          }
         </Select>
       </FormControl>
     </Box>
