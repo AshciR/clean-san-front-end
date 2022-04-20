@@ -98,7 +98,7 @@ const StatusDropDown = ({ service, handleUpdateService }: StatusDropDownProps) =
         >
           {
             Object.values(ServiceStatus).map((status) => (
-              <MenuItem key={status} value={status}>
+              <MenuItem key={status} value={status} >
                 <ServiceStatusChip status={status as ServiceStatus} />
               </MenuItem>
             ))
