@@ -66,7 +66,7 @@ const dueServicesReducer = (
         case "DUE_SERVICES_UPDATE_SERVICE":
             const updatedServiceStatusState: DueServicesState = {
                 ...state,
-                dueServices: updateServiceStatus(state.dueServices, action.payload),
+                dueServices: updateService(state.dueServices, action.payload),
             }
             return updatedServiceStatusState;
         default:
@@ -74,7 +74,7 @@ const dueServicesReducer = (
     }
 };
 
-const updateServiceStatus = (dueServices: DueService[], updatedService: DueService): DueService[] => {
+const updateService = (dueServices: DueService[], updatedService: DueService): DueService[] => {
 
     const indexToBeReplaced = dueServices.findIndex(service => service.id === updatedService.id);
 

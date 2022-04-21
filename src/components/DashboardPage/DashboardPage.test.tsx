@@ -1,9 +1,10 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import DashboardPage from './DashboardPage';
 import MOCK_DUE_SERVICES from '../DueServicesTable/MockDueServicesData';
 import { fetchDueServices } from './dashboardPage.services';
 import { DateTime } from 'luxon';
+import ServiceStatus from '../../shared/ServiceStatus.model';
 
 jest.mock('./dashboardPage.services');
 
@@ -76,6 +77,27 @@ describe('<DashboardPage />', () => {
     // Then: We expect the current date to be in the date selector
     const today = DateTime.now().toLocaleString();
     await waitFor(() => expect(screen.getByDisplayValue(today)).toBeInTheDocument());
+  });
+
+  it('it should update the service status correctly', async () => {
+
+    // Given: The DashboardPage renders with services
+    render(<DashboardPage />);
+
+    const serviceToUpdate = MOCK_DUE_SERVICES[0];
+    const newStatusDropdown = await screen.findByDisplayValue(serviceToUpdate.currentStatus);
+    const newStatus = ServiceStatus.IN_PROGRESS;
+
+    // When: The service status is changed
+    await waitFor(() =>
+      fireEvent.change(newStatusDropdown, {
+        target: { value: newStatus }
+      })
+    );
+
+    // Then: We expect no due services message to be displayed
+    await waitFor(() => expect(newStatusDropdown).toHaveValue(newStatus));
+
   });
 
 });

@@ -50,15 +50,18 @@ describe('<DueServicesTable />', () => {
 
     // Given: The table has service rows
     render(<DueServicesTable dueServices={MOCK_DUE_SERVICES} handleUpdateService={mockHandleUpdateService} />);
-    const newStatusDropdown = screen.getByDisplayValue(MOCK_DUE_SERVICES[0].currentStatus)
+    const serviceToUpdate = MOCK_DUE_SERVICES[0];
+    const newStatusDropdown = screen.getByDisplayValue(serviceToUpdate.currentStatus)
+    const updateStatus = ServiceStatus.IN_PROGRESS;
 
     // When: the a service status is updated 
     fireEvent.change(newStatusDropdown, {
-      target: { value: ServiceStatus.IN_PROGRESS }
+      target: { value: updateStatus }
     });
-    
+
     // Then: the function to trigger the update should be called
     expect(mockHandleUpdateService).toBeCalledTimes(1);
+    expect(mockHandleUpdateService).toBeCalledWith({ ...serviceToUpdate, prospectiveStatus: updateStatus });
 
   });
 
