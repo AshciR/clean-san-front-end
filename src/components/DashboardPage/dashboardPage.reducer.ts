@@ -25,10 +25,16 @@ interface DueServicesFetchFailureAction {
     type: 'DUE_SERVICES_FETCH_FAILURE';
 };
 
+interface DueServicesUpdateServiceAction {
+    type: 'DUE_SERVICES_UPDATE_SERVICE';
+    payload: DueService;
+};
+
 type DueServicesAction =
     | DueServicesFetchInitAction
     | DueServicesFetchSuccessAction
     | DueServicesFetchFailureAction
+    | DueServicesUpdateServiceAction
 
 const dueServicesReducer = (
     state: DueServicesState,
@@ -57,10 +63,28 @@ const dueServicesReducer = (
                 dueServices: []
             };
             return updatedFailureState;
+        case "DUE_SERVICES_UPDATE_SERVICE":
+            const updatedServiceStatusState: DueServicesState = {
+                ...state,
+                dueServices: updateService(state.dueServices, action.payload),
+            }
+            return updatedServiceStatusState;
         default:
             throw new Error(`Illegal Dashboard action was provided`);
     }
 };
+
+const updateService = (dueServices: DueService[], updatedService: DueService): DueService[] => {
+
+    const indexToBeReplaced = dueServices.findIndex(service => service.id === updatedService.id);
+
+    return [
+        ...dueServices.slice(0, indexToBeReplaced),
+        updatedService,
+        ...dueServices.slice(indexToBeReplaced + 1)
+    ]
+
+}
 
 export default dueServicesReducer;
 export { initialDueServicesState, dueServicesReducer };

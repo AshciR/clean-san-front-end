@@ -10,6 +10,7 @@ interface DueService {
     contract: Contract;
     dueDate: DateTime;
     currentStatus: ServiceStatus;
+    prospectiveStatus?: ServiceStatus;
     history: Array<ServiceHistory>;
 };
 

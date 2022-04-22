@@ -3,6 +3,7 @@ import AdapterLuxon from '@mui/lab/AdapterLuxon';
 import { Box, Container, Skeleton, TextField, Typography } from '@mui/material';
 import { DateTime } from 'luxon';
 import React, { FC } from 'react';
+import DueService from '../../shared/DueService.model';
 import DueServicesTable from '../DueServicesTable/DueServicesTable';
 import dueServicesReducer, { initialDueServicesState } from './dashboardPage.reducer';
 import { fetchDueServices } from './dashboardPage.services';
@@ -36,6 +37,13 @@ const DashboardPage: FC<DashboardPageProps> = () => {
 
   }, []);
 
+  const handleUpdateService = (updatedService: DueService) => {
+    dispatchDueServices({
+      type: 'DUE_SERVICES_UPDATE_SERVICE',
+      payload: updatedService
+    });
+  }
+
   React.useEffect(() => {
     handleFetchDueServices(dueServicesDate);
   }, [handleFetchDueServices, dueServicesDate]);
@@ -53,7 +61,7 @@ const DashboardPage: FC<DashboardPageProps> = () => {
               <Skeleton variant="rectangular" animation="wave" data-testid="DueServicesTable-Skeleton" /> :
               dueServicesState.isError ?
                 <Typography variant='h4'>Sorry... we weren't able to get the due services at this time.</Typography> :
-                <DueServicesTable dueServices={dueServicesState.dueServices} />
+                <DueServicesTable dueServices={dueServicesState.dueServices} handleUpdateService={handleUpdateService} />
           }
         </Box>
       </Container>
@@ -95,3 +103,4 @@ const TitleAndDatePicker: FC<TitleAndDatePickerProps> = ({ dueServicesDate, setD
 }
 
 export default DashboardPage;
+
