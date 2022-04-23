@@ -1,6 +1,8 @@
 import { DateTime } from "luxon";
+import DueService from "../../shared/DueService.model";
+import ServiceStatus from "../../shared/ServiceStatus.model";
 import MOCK_DUE_SERVICES from "../DueServicesTable/MockDueServicesData";
-import { fetchDueServices } from "./dashboardPage.services";
+import { fetchDueServices, submitUpdatedServices } from "./dashboardPage.services";
 
 describe('Dashboard Page Services', () => {
 
@@ -32,5 +34,27 @@ describe('Dashboard Page Services', () => {
         expect(dueServices).toStrictEqual(expectedDueServices);
 
     });
+
+    it('Submits the updated services successfully', async () => {
+
+        // Given: We have services with prospective statuses
+        const servicesToBeUpdated: DueService[] = [
+            { ...MOCK_DUE_SERVICES[0], prospectiveStatus: ServiceStatus.IN_PROGRESS },
+            { ...MOCK_DUE_SERVICES[1], prospectiveStatus: ServiceStatus.COMPLETED },
+            { ...MOCK_DUE_SERVICES[2] }, // This should not be updated
+            { ...MOCK_DUE_SERVICES[3] }, // This should not be updated
+        ]
+                
+        // When: We update the current status with the prospective status
+        const updatedServices = await submitUpdatedServices(servicesToBeUpdated);
+
+        // Then: The current status should refelct the change
+        expect(updatedServices[0].currentStatus).toBe(ServiceStatus.IN_PROGRESS);
+        expect(updatedServices[0].prospectiveStatus).toBe(undefined);
+        
+        expect(updatedServices[1].currentStatus).toBe(ServiceStatus.COMPLETED);
+        expect(updatedServices[1].prospectiveStatus).toBe(undefined);
+        
+    })
 
 });
