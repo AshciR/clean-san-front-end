@@ -1,6 +1,6 @@
 import { DatePicker, LocalizationProvider } from '@mui/lab';
 import AdapterLuxon from '@mui/lab/AdapterLuxon';
-import { Box, Container, Skeleton, TextField, Typography } from '@mui/material';
+import { Box, Container, Fab, Skeleton, TextField, Typography } from '@mui/material';
 import { DateTime } from 'luxon';
 import React, { FC } from 'react';
 import DueService from '../../shared/DueService.model';
@@ -54,7 +54,16 @@ const DashboardPage: FC<DashboardPageProps> = () => {
       data-testid="DashboardPage"
     >
       <Container maxWidth='xl'>
-        <TitleAndDatePicker dueServicesDate={dueServicesDate} setDueServicesDate={setDueServicesDate} />
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            margin: 1
+          }}
+        >
+          <TitleAndDatePicker dueServicesDate={dueServicesDate} setDueServicesDate={setDueServicesDate} />
+        </Box>
         <Box>
           {
             dueServicesState.isLoading ?
@@ -63,6 +72,24 @@ const DashboardPage: FC<DashboardPageProps> = () => {
                 <Typography variant='h4'>Sorry... we weren't able to get the due services at this time.</Typography> :
                 <DueServicesTable dueServices={dueServicesState.dueServices} handleUpdateService={handleUpdateService} />
           }
+        </Box>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'row-reverse',
+            justifyContent: 'space-between',
+            margin: 1
+          }}
+        >
+          <Fab
+            variant="extended"
+            color='primary'
+            sx={{
+              margin: 1
+            }}
+          >
+            Change Statuses
+          </Fab>
         </Box>
       </Container>
     </Box>
@@ -76,15 +103,10 @@ interface TitleAndDatePickerProps {
 
 const TitleAndDatePicker: FC<TitleAndDatePickerProps> = ({ dueServicesDate, setDueServicesDate }: TitleAndDatePickerProps) => {
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        margin: 1
-      }}
-    >
-      <Typography variant='h3'>Due Services</Typography>
+    <>
+      <Typography variant='h3' color='primary'>
+        Due Services
+      </Typography>
       <LocalizationProvider dateAdapter={AdapterLuxon}>
         <DatePicker
           label='Due services date'
@@ -98,7 +120,7 @@ const TitleAndDatePicker: FC<TitleAndDatePickerProps> = ({ dueServicesDate, setD
         >
         </DatePicker>
       </LocalizationProvider>
-    </Box>
+    </>
   );
 }
 
