@@ -6,7 +6,7 @@ import React, { FC } from 'react';
 import DueService from '../../shared/DueService.model';
 import DueServicesTable from '../DueServicesTable/DueServicesTable';
 import dueServicesReducer, { initialDueServicesState } from './dashboardPage.reducer';
-import { fetchDueServices } from './dashboardPage.services';
+import { fetchDueServices, submitUpdatedServices } from './dashboardPage.services';
 
 interface DashboardPageProps { }
 
@@ -19,12 +19,12 @@ const DashboardPage: FC<DashboardPageProps> = () => {
 
   const [dueServicesDate, setDueServicesDate] = React.useState<DateTime | null>(DateTime.now());
 
-  const handleFetchDueServices = React.useCallback(async (dueServicesDate) => {
+  const handleFetchDueServices = React.useCallback(async (dueServicesDate: DateTime | null) => {
 
     dispatchDueServices({ type: 'DUE_SERVICES_FETCH_INIT' });
 
     try {
-      const dueServices = await fetchDueServices(dueServicesDate);
+      const dueServices = await fetchDueServices(dueServicesDate || DateTime.now());
 
       dispatchDueServices({
         type: 'DUE_SERVICES_FETCH_SUCCESS',
@@ -42,6 +42,22 @@ const DashboardPage: FC<DashboardPageProps> = () => {
       type: 'DUE_SERVICES_UPDATE_SERVICE',
       payload: updatedService
     });
+  }
+
+  const handleSubmitUpdatedServices = async (servicesToBeSubmitted: DueService[]) => {
+
+    try {
+      await submitUpdatedServices(servicesToBeSubmitted);
+      // TODO: Show sucess snackbar
+      await handleFetchDueServices(dueServicesDate);
+    } catch {
+      // TODO: Show failure snackbar
+    }
+
+  };
+
+  const hasAnyServiceBeenUpdated = (dueServices: DueService[]) => {
+    return dueServices.some(service => service.prospectiveStatus && (service.currentStatus !== service.prospectiveStatus));
   }
 
   React.useEffect(() => {
@@ -87,6 +103,8 @@ const DashboardPage: FC<DashboardPageProps> = () => {
             sx={{
               margin: 1
             }}
+            disabled={!hasAnyServiceBeenUpdated(dueServicesState.dueServices)}
+            onClick={() => handleSubmitUpdatedServices(dueServicesState.dueServices)}
           >
             Change Statuses
           </Fab>
@@ -125,4 +143,5 @@ const TitleAndDatePicker: FC<TitleAndDatePickerProps> = ({ dueServicesDate, setD
 }
 
 export default DashboardPage;
+
 
