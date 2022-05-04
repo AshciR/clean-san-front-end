@@ -3,13 +3,15 @@ import DueService from "../../shared/DueService.model";
 interface DueServicesState {
     isLoading: boolean;
     dueServices: Array<DueService>;
-    isError: boolean;
+    isFetchError: boolean;
+    isSubmitUpdateError: boolean;
 };
 
 const initialDueServicesState: DueServicesState = {
     isLoading: false,
     dueServices: [],
-    isError: false
+    isFetchError: false,
+    isSubmitUpdateError: false
 };
 
 interface DueServicesFetchInitAction {
@@ -30,11 +32,22 @@ interface DueServicesUpdateServiceAction {
     payload: DueService;
 };
 
+interface DueServicesUpdateServiceSuccessAction {
+    type: 'DUE_SERVICES_UPDATE_SERVICE_SUBMIT_SUCCESS';
+    payload: DueService[];
+};
+
+interface DueServicesUpdateServiceFailureAction {
+    type: 'DUE_SERVICES_UPDATE_SERVICE_SUBMIT_FAILURE';
+};
+
 type DueServicesAction =
     | DueServicesFetchInitAction
     | DueServicesFetchSuccessAction
     | DueServicesFetchFailureAction
     | DueServicesUpdateServiceAction
+    | DueServicesUpdateServiceSuccessAction
+    | DueServicesUpdateServiceFailureAction
 
 const dueServicesReducer = (
     state: DueServicesState,
@@ -49,26 +62,38 @@ const dueServicesReducer = (
             };
             return updatedInitState;
         case "DUE_SERVICES_FETCH_SUCCESS":
-            const updatedSuccessState: DueServicesState = {
+            const updatedFetchSuccessState: DueServicesState = {
                 ...state,
                 isLoading: false,
                 dueServices: action.payload
             };
-            return updatedSuccessState;
+            return updatedFetchSuccessState;
         case "DUE_SERVICES_FETCH_FAILURE":
-            const updatedFailureState: DueServicesState = {
+            const updatedFetchFailureState: DueServicesState = {
                 ...state,
                 isLoading: false,
-                isError: true,
+                isFetchError: true,
                 dueServices: []
             };
-            return updatedFailureState;
+            return updatedFetchFailureState;
         case "DUE_SERVICES_UPDATE_SERVICE":
-            const updatedServiceStatusState: DueServicesState = {
+            const updatedServiceState: DueServicesState = {
                 ...state,
-                dueServices: updateService(state.dueServices, action.payload),
+                dueServices: updateService(state.dueServices, action.payload)
             }
-            return updatedServiceStatusState;
+            return updatedServiceState;
+        case "DUE_SERVICES_UPDATE_SERVICE_SUBMIT_SUCCESS":
+            const updatedServiceSubmitSuccessState: DueServicesState = {
+                ...state,
+                dueServices: updateServicesAfterSubmittal(state.dueServices, action.payload)
+            }
+            return updatedServiceSubmitSuccessState;
+        case "DUE_SERVICES_UPDATE_SERVICE_SUBMIT_FAILURE":
+            const updatedServiceSubmitFailureState: DueServicesState = {
+                ...state,
+                isSubmitUpdateError: true
+            }
+            return updatedServiceSubmitFailureState;
         default:
             throw new Error(`Illegal Dashboard action was provided`);
     }
@@ -86,6 +111,22 @@ const updateService = (dueServices: DueService[], updatedService: DueService): D
 
 }
 
+const updateServicesAfterSubmittal = (dueServices: DueService[], submittedServices: DueService[]): DueService[] => {
+
+    const idsOfSubmittedServices = submittedServices.map(s => s.id);    
+    const notUpdatedServices = dueServices.filter(service => !idsOfSubmittedServices.includes(service.id));
+
+    // TODO: Find better way to do this for this
+    // Because if id isn' the default sorting, we're gonna run into problems
+    const notUpdatedServicesCombinedWithSubmittedServices = [
+        ...notUpdatedServices,
+        ...submittedServices
+    ].sort((a, b) => a.id - b.id);
+
+    return notUpdatedServicesCombinedWithSubmittedServices
+}
+
 export default dueServicesReducer;
 export { initialDueServicesState, dueServicesReducer };
-export type { DueServicesAction as DashboardAction }
+export type { DueServicesAction as DashboardAction, DueServicesState }
+

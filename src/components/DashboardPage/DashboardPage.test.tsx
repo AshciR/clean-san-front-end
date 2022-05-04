@@ -147,15 +147,14 @@ describe('<DashboardPage />', () => {
       })
     );
 
+    const updatedService = { ...MOCK_DUE_SERVICES[0], currentStatus: newStatus };
+    mockSubmitUpdatedServices.mockResolvedValue([updatedService]);
+    
     // When: The changes are submitted
     const submitButton = await screen.findByRole('button', { name: 'Change Statuses' });
     await waitFor(() => submitButton.click());
 
-    const updatedService = { ...MOCK_DUE_SERVICES[0], currentStatus: newStatus };
-    mockSubmitUpdatedServices.mockResolvedValue([updatedService]);
-
-    // Then: We expect the fetchDueServices and submitUpdatedServices to be called
-    expect(fetchDueServices).toHaveBeenCalledTimes(2);
+    // Then: We expect the submitUpdatedServices to be called
     expect(submitUpdatedServices).toHaveBeenCalledTimes(1);
 
   });

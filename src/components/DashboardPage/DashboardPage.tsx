@@ -44,20 +44,25 @@ const DashboardPage: FC<DashboardPageProps> = () => {
     });
   }
 
-  const handleSubmitUpdatedServices = async (servicesToBeSubmitted: DueService[]) => {
+  const handleSubmitUpdatedServices = async (services: DueService[]) => {
 
     try {
-      await submitUpdatedServices(servicesToBeSubmitted);
+      const updatedServices = await submitUpdatedServices(services);
+      dispatchDueServices({
+        type: 'DUE_SERVICES_UPDATE_SERVICE_SUBMIT_SUCCESS',
+        payload: updatedServices
+      });
       // TODO: Show sucess snackbar
-      await handleFetchDueServices(dueServicesDate);
     } catch {
+      dispatchDueServices({ type: 'DUE_SERVICES_UPDATE_SERVICE_SUBMIT_FAILURE' })
       // TODO: Show failure snackbar
     }
 
   };
 
   const hasAnyServiceBeenUpdated = (dueServices: DueService[]) => {
-    return dueServices.some(service => service.prospectiveStatus && (service.currentStatus !== service.prospectiveStatus));
+    const hasChangedStatus = (service: DueService) => service.prospectiveStatus && (service.currentStatus !== service.prospectiveStatus);
+    return dueServices.some(hasChangedStatus);
   }
 
   React.useEffect(() => {
@@ -84,7 +89,7 @@ const DashboardPage: FC<DashboardPageProps> = () => {
           {
             dueServicesState.isLoading ?
               <Skeleton variant="rectangular" animation="wave" data-testid="DueServicesTable-Skeleton" /> :
-              dueServicesState.isError ?
+              dueServicesState.isFetchError ?
                 <Typography variant='h4'>Sorry... we weren't able to get the due services at this time.</Typography> :
                 <DueServicesTable dueServices={dueServicesState.dueServices} handleUpdateService={handleUpdateService} />
           }
