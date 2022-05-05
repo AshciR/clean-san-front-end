@@ -113,17 +113,19 @@ const updateService = (dueServices: DueService[], updatedService: DueService): D
 
 const updateServicesAfterSubmittal = (dueServices: DueService[], submittedServices: DueService[]): DueService[] => {
 
-    const idsOfSubmittedServices = submittedServices.map(s => s.id);    
-    const notUpdatedServices = dueServices.filter(service => !idsOfSubmittedServices.includes(service.id));
+    const useServiceIfItWasSubmitted = (submittedServices: DueService[], service: DueService) => {
+        const idsOfSubmittedServices = submittedServices.map(s => s.id);
 
-    // TODO: Find better way to do this for this
-    // Because if id isn' the default sorting, we're gonna run into problems
-    const notUpdatedServicesCombinedWithSubmittedServices = [
-        ...notUpdatedServices,
-        ...submittedServices
-    ].sort((a, b) => a.id - b.id);
+        // if the service was submitted add the submitted version to the list
+        if (idsOfSubmittedServices.includes(service.id)) {
+            return submittedServices.find(s => s.id === service.id) || service;
+        } else { // it means the service was not submitted, so add the original version instead
+            return service;
+        }
+    };
 
-    return notUpdatedServicesCombinedWithSubmittedServices
+    return dueServices.map(service => useServiceIfItWasSubmitted(submittedServices, service));
+
 }
 
 export default dueServicesReducer;
