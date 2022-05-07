@@ -1,8 +1,7 @@
 import DueService from "../../shared/DueService.model";
 import ServiceStatus from "../../shared/ServiceStatus.model";
 import MOCK_DUE_SERVICES from "../DueServicesTable/MockDueServicesData";
-import dueServicesReducer, { DashboardAction, initialDueServicesState } from "./dashboardPage.reducer";
-
+import dueServicesReducer, { DashboardAction, DueServicesState, initialDueServicesState } from "./dashboardPage.reducer";
 
 describe('DashboardPage Reducer', () => {
 
@@ -21,7 +20,8 @@ describe('DashboardPage Reducer', () => {
         const expectedState = {
             dueServices: [],
             isLoading: true,
-            isError: false
+            isFetchError: false,
+            isSubmitUpdateError: false
         };
 
         expect(updatedState).toStrictEqual(expectedState);
@@ -44,7 +44,8 @@ describe('DashboardPage Reducer', () => {
         const expectedState = {
             dueServices: MOCK_DUE_SERVICES,
             isLoading: false,
-            isError: false
+            isFetchError: false,
+            isSubmitUpdateError: false
         };
 
         expect(updatedState).toStrictEqual(expectedState);
@@ -66,7 +67,8 @@ describe('DashboardPage Reducer', () => {
         const expectedState = {
             dueServices: [],
             isLoading: false,
-            isError: true
+            isFetchError: true,
+            isSubmitUpdateError: false
         };
 
         expect(updatedState).toStrictEqual(expectedState);
@@ -94,7 +96,8 @@ describe('DashboardPage Reducer', () => {
         const expectedState = {
             dueServices: [],
             isLoading: false,
-            isError: true
+            isFetchError: true,
+            isSubmitUpdateError: false
         };
 
         expect(updatedState).toStrictEqual(expectedState);
@@ -104,10 +107,11 @@ describe('DashboardPage Reducer', () => {
     test('should update the new status of the service ', () => {
 
         // Given: We have due services
-        const currentState = {
+        const currentState: DueServicesState = {
             dueServices: MOCK_DUE_SERVICES,
             isLoading: false,
-            isError: false
+            isFetchError: false,
+            isSubmitUpdateError: false
         };
 
         // And: We have the service we want to update
@@ -128,7 +132,8 @@ describe('DashboardPage Reducer', () => {
         const expectedState = {
             dueServices: [updatedService, ...MOCK_DUE_SERVICES.slice(1)],
             isLoading: false,
-            isError: false
+            isFetchError: false,
+            isSubmitUpdateError: false
         };
 
         expect(updatedState).toStrictEqual(expectedState);
@@ -138,10 +143,11 @@ describe('DashboardPage Reducer', () => {
     test('should update the new status of the service while preserving the order ', () => {
 
         // Given: We have due services
-        const currentState = {
+        const currentState: DueServicesState = {
             dueServices: MOCK_DUE_SERVICES,
             isLoading: false,
-            isError: false
+            isFetchError: false,
+            isSubmitUpdateError: false
         };
 
         // And: We we want to update the 3rd service
@@ -167,10 +173,89 @@ describe('DashboardPage Reducer', () => {
                 ...MOCK_DUE_SERVICES.slice(updatedServiceIndex + 1)
             ],
             isLoading: false,
-            isError: false
+            isFetchError: false,
+            isSubmitUpdateError: false
         };
 
         expect(updatedState).toStrictEqual(expectedState);
+    });
+
+    it('updates the services correctly after a sucessful submittal', () => {
+
+        // Given: We have due services
+        const currentState: DueServicesState = {
+            dueServices: MOCK_DUE_SERVICES,
+            isLoading: false,
+            isFetchError: false,
+            isSubmitUpdateError: false
+        };
+
+        // And: We have the services after a successful submittal
+        const updatedToCompletedService: DueService = {
+            ...MOCK_DUE_SERVICES[0],
+            currentStatus: ServiceStatus.COMPLETED
+        }
+
+        const updatedToCancelService: DueService = {
+            ...MOCK_DUE_SERVICES[2],
+            currentStatus: ServiceStatus.CANCELLED
+        }
+
+        const submittedServices = [updatedToCompletedService, updatedToCancelService];
+
+        const updateAction: DashboardAction = {
+            type: 'DUE_SERVICES_UPDATE_SERVICE_SUBMIT_SUCCESS',
+            payload: submittedServices
+        };
+
+        // When: We call the update action
+        const updatedState = dueServicesReducer(currentState, updateAction);
+
+        // Then: The expected state should be produdced
+        const expectedState = {
+            dueServices: [
+                updatedToCompletedService,
+                MOCK_DUE_SERVICES[1],
+                updatedToCancelService,
+                MOCK_DUE_SERVICES[3]
+            ],
+            isLoading: false,
+            isFetchError: false,
+            isSubmitUpdateError: false
+        };
+
+        expect(updatedState).toStrictEqual(expectedState);
+
+    });
+
+    it('sets the error state after an unsucessful submittal', () => {
+
+        // Given: We have due services
+        const currentState: DueServicesState = {
+            dueServices: MOCK_DUE_SERVICES,
+            isLoading: false,
+            isFetchError: false,
+            isSubmitUpdateError: false
+        };
+
+        // And: There was a submittal failure
+        const updateAction: DashboardAction = {
+            type: 'DUE_SERVICES_UPDATE_SERVICE_SUBMIT_FAILURE'
+        };
+
+        // When: We call the update action
+        const updatedState = dueServicesReducer(currentState, updateAction);
+
+        // Then: The expected state should be produdced
+        const expectedState = {
+            dueServices: MOCK_DUE_SERVICES,
+            isLoading: false,
+            isFetchError: false,
+            isSubmitUpdateError: true
+        };
+
+        expect(updatedState).toStrictEqual(expectedState);
+
     });
 
 });

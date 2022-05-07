@@ -23,4 +23,29 @@ const findServicesDueBeforeDate = (dueServices: DueService[], beforeDate: DateTi
     );
 };
 
-export { fetchDueServices };
+const submitUpdatedServices = (servicesToBeSubmitted: DueService[]) => {
+
+
+    const updatedServices = servicesToBeSubmitted
+        .filter(service => !!service.prospectiveStatus)
+        .map(service => updateCurrentStatusWithProspectiveStatus(service));
+
+    return new Promise<DueService[]>(resolve =>
+        setTimeout(() => resolve(updatedServices), 250)
+    );
+
+};
+
+const updateCurrentStatusWithProspectiveStatus = (service: DueService) => {
+
+    const updatedService: DueService = {
+        ...service,
+        currentStatus: service.prospectiveStatus || service.currentStatus,
+        prospectiveStatus: undefined
+    }
+
+    return updatedService
+
+};
+
+export { fetchDueServices, submitUpdatedServices };

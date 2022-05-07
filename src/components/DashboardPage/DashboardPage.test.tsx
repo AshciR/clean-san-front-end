@@ -2,7 +2,7 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import DashboardPage from './DashboardPage';
 import MOCK_DUE_SERVICES from '../DueServicesTable/MockDueServicesData';
-import { fetchDueServices } from './dashboardPage.services';
+import { fetchDueServices, submitUpdatedServices } from './dashboardPage.services';
 import { DateTime } from 'luxon';
 import ServiceStatus from '../../shared/ServiceStatus.model';
 
@@ -11,6 +11,7 @@ jest.mock('./dashboardPage.services');
 describe('<DashboardPage />', () => {
 
   const mockFetchDueServices = fetchDueServices as jest.MockedFunction<typeof fetchDueServices>
+  const mockSubmitUpdatedServices = submitUpdatedServices as jest.MockedFunction<typeof submitUpdatedServices>
 
   beforeEach(() => {
     mockFetchDueServices.mockResolvedValue(MOCK_DUE_SERVICES);
@@ -100,4 +101,61 @@ describe('<DashboardPage />', () => {
 
   });
 
+  it('the change statuses button should be disabled when the page loads', async () => {
+
+    // When: The DashboardPage renders
+    render(<DashboardPage />);
+
+    // Then: We expect the change status button to be disabled
+    await waitFor(() => expect(screen.getByRole('button', { name: 'Change Statuses' })).toBeDisabled());
+  });
+
+  it('the change statuses button should be enabled when status changes', async () => {
+
+    // Given: The DashboardPage renders with services
+    render(<DashboardPage />);
+
+    const serviceToUpdate = MOCK_DUE_SERVICES[0];
+    const newStatusDropdown = await screen.findByDisplayValue(serviceToUpdate.currentStatus);
+    const newStatus = ServiceStatus.IN_PROGRESS;
+
+    // When: The service status is changed
+    await waitFor(() =>
+      fireEvent.change(newStatusDropdown, {
+        target: { value: newStatus }
+      })
+    );
+
+    // Then: We expect the change statuses button to be enabled
+    await waitFor(() => expect(screen.getByRole('button', { name: 'Change Statuses' })).toBeEnabled());
+
+  });
+
+  it('the fetchDueServices and submitUpdatedServices are called after submit button is clicked', async () => {
+
+    // Given: The DashboardPage renders with services
+    render(<DashboardPage />);
+
+    const serviceToUpdate = MOCK_DUE_SERVICES[0];
+    const newStatusDropdown = await screen.findByDisplayValue(serviceToUpdate.currentStatus);
+    const newStatus = ServiceStatus.IN_PROGRESS;
+
+    // And: The service status is changed
+    await waitFor(() =>
+      fireEvent.change(newStatusDropdown, {
+        target: { value: newStatus }
+      })
+    );
+
+    const updatedService = { ...MOCK_DUE_SERVICES[0], currentStatus: newStatus };
+    mockSubmitUpdatedServices.mockResolvedValue([updatedService]);
+    
+    // When: The changes are submitted
+    const submitButton = await screen.findByRole('button', { name: 'Change Statuses' });
+    await waitFor(() => submitButton.click());
+
+    // Then: We expect the submitUpdatedServices to be called
+    expect(submitUpdatedServices).toHaveBeenCalledTimes(1);
+
+  });
 });
