@@ -5,6 +5,8 @@ import { DateTime } from 'luxon';
 import React, { FC } from 'react';
 import DueService from '../../shared/DueService.model';
 import DueServicesTable from '../DueServicesTable/DueServicesTable';
+import SnackbarNotification from '../SnackbarNotification/SnackbarNotification';
+import snackbarNotificationReducer, { initialSnackbarNotificationState } from '../SnackbarNotification/snackbarNotification.reducer';
 import dueServicesReducer, { initialDueServicesState } from './dashboardPage.reducer';
 import { fetchDueServices, submitUpdatedServices } from './dashboardPage.services';
 
@@ -12,25 +14,30 @@ interface DashboardPageProps { }
 
 const DashboardPage: FC<DashboardPageProps> = () => {
 
+  // State Management
   const [dueServicesState, dispatchDueServices] = React.useReducer(
     dueServicesReducer,
     initialDueServicesState
   );
 
+  const [updateServiceNotificationState, dispatchUpdateServiceNotification] = React.useReducer(
+    snackbarNotificationReducer,
+    initialSnackbarNotificationState
+  );
+
   const [dueServicesDate, setDueServicesDate] = React.useState<DateTime | null>(DateTime.now());
 
+  // Handlers
   const handleFetchDueServices = React.useCallback(async (dueServicesDate: DateTime | null) => {
 
     dispatchDueServices({ type: 'DUE_SERVICES_FETCH_INIT' });
 
     try {
       const dueServices = await fetchDueServices(dueServicesDate || DateTime.now());
-
       dispatchDueServices({
         type: 'DUE_SERVICES_FETCH_SUCCESS',
         payload: dueServices
       });
-
     } catch {
       dispatchDueServices({ type: 'DUE_SERVICES_FETCH_FAILURE' });
     }
@@ -52,10 +59,25 @@ const DashboardPage: FC<DashboardPageProps> = () => {
         type: 'DUE_SERVICES_UPDATE_SERVICE_SUBMIT_SUCCESS',
         payload: updatedServices
       });
-      // TODO: Show sucess snackbar
+
+      dispatchUpdateServiceNotification({
+        type: 'SNACKBAR_NOTIFICATION_OPEN',
+        payload: {
+          severity: 'success',
+          message: 'Services were updated'
+        }
+      });
+
     } catch {
       dispatchDueServices({ type: 'DUE_SERVICES_UPDATE_SERVICE_SUBMIT_FAILURE' })
-      // TODO: Show failure snackbar
+      
+      dispatchUpdateServiceNotification({
+        type: 'SNACKBAR_NOTIFICATION_OPEN',
+        payload: {
+          severity: 'error',
+          message: 'There was an error updating the services. Please try again later.'
+        }
+      });
     }
 
   };
@@ -65,10 +87,19 @@ const DashboardPage: FC<DashboardPageProps> = () => {
     return dueServices.some(hasChangedStatus);
   }
 
+  const handleCloseUpdateServiceNotificationOpen = (event?: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    dispatchUpdateServiceNotification({ type: 'SNACKBAR_NOTIFICATION_CLOSE' });
+  };
+
+  // Effects
   React.useEffect(() => {
     handleFetchDueServices(dueServicesDate);
   }, [handleFetchDueServices, dueServicesDate]);
 
+  // Rendered components
   return (
     <Box
       sx={{ margin: 2 }}
@@ -83,6 +114,12 @@ const DashboardPage: FC<DashboardPageProps> = () => {
             margin: 1
           }}
         >
+          <SnackbarNotification
+            open={updateServiceNotificationState.isNotificationOpen}
+            handleClose={handleCloseUpdateServiceNotificationOpen}
+            severity={updateServiceNotificationState.severity}
+            message={updateServiceNotificationState.message}
+          />
           <TitleAndDatePicker dueServicesDate={dueServicesDate} setDueServicesDate={setDueServicesDate} />
         </Box>
         <Box>
