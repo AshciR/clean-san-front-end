@@ -1,5 +1,6 @@
-import { DatePicker, LocalizationProvider } from '@mui/lab';
-import AdapterLuxon from '@mui/lab/AdapterLuxon';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import { Box, Container, Fab, Skeleton, TextField, Typography } from '@mui/material';
 import { DateTime } from 'luxon';
 import React, { FC } from 'react';
@@ -70,7 +71,7 @@ const DashboardPage: FC<DashboardPageProps> = () => {
 
     } catch {
       dispatchDueServices({ type: 'DUE_SERVICES_UPDATE_SERVICE_SUBMIT_FAILURE' })
-      
+
       dispatchUpdateServiceNotification({
         type: 'SNACKBAR_NOTIFICATION_OPEN',
         payload: {
