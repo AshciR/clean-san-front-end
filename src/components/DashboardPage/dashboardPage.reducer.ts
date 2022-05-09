@@ -85,6 +85,7 @@ const dueServicesReducer = (
         case "DUE_SERVICES_UPDATE_SERVICE_SUBMIT_SUCCESS":
             const updatedServiceSubmitSuccessState: DueServicesState = {
                 ...state,
+                isSubmitUpdateError: false,
                 dueServices: updateServicesAfterSubmittal(state.dueServices, action.payload)
             }
             return updatedServiceSubmitSuccessState;

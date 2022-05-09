@@ -131,7 +131,7 @@ describe('<DashboardPage />', () => {
 
   });
 
-  it('the fetchDueServices and submitUpdatedServices are called after submit button is clicked', async () => {
+  it('successful update notifcation is displayed is called after submit button is clicked', async () => {
 
     // Given: The DashboardPage renders with services
     render(<DashboardPage />);
@@ -149,13 +149,51 @@ describe('<DashboardPage />', () => {
 
     const updatedService = { ...MOCK_DUE_SERVICES[0], currentStatus: newStatus };
     mockSubmitUpdatedServices.mockResolvedValue([updatedService]);
-    
+
     // When: The changes are submitted
     const submitButton = await screen.findByRole('button', { name: 'Change Statuses' });
     await waitFor(() => submitButton.click());
 
     // Then: We expect the submitUpdatedServices to be called
     expect(submitUpdatedServices).toHaveBeenCalledTimes(1);
+    
+    // And: The notification was displayed
+    const snackBarNotification = await screen.findByText('Services were updated');
+    expect(snackBarNotification).toBeInTheDocument();
+    expect(snackBarNotification.textContent).toBe('Services were updated');
 
   });
+
+  it('unsuccessful update notifcation is displayed is called after submit button is clicked', async () => {
+
+    // Given: The DashboardPage renders with services
+    render(<DashboardPage />);
+
+    const serviceToUpdate = MOCK_DUE_SERVICES[0];
+    const newStatusDropdown = await screen.findByDisplayValue(serviceToUpdate.currentStatus);
+    const newStatus = ServiceStatus.IN_PROGRESS;
+
+    // And: The service status is changed
+    await waitFor(() =>
+      fireEvent.change(newStatusDropdown, {
+        target: { value: newStatus }
+      })
+    );
+
+    mockSubmitUpdatedServices.mockRejectedValue([]); // Failed service update
+
+    // When: The changes are submitted
+    const submitButton = await screen.findByRole('button', { name: 'Change Statuses' });
+    await waitFor(() => submitButton.click());
+
+    // Then: We expect the submitUpdatedServices to be called
+    expect(submitUpdatedServices).toHaveBeenCalledTimes(1);
+    
+    // And: The notification was displayed
+    const snackBarNotification = await screen.findByText('There was an error updating the services. Please try again later.');
+    expect(snackBarNotification).toBeInTheDocument();
+    expect(snackBarNotification.textContent).toBe('There was an error updating the services. Please try again later.');
+
+  });
+
 });
