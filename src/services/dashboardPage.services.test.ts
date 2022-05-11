@@ -1,7 +1,7 @@
 import { DateTime } from "luxon";
-import DueService from "../../shared/DueService.model";
-import ServiceStatus from "../../shared/ServiceStatus.model";
-import MOCK_DUE_SERVICES from "../DueServicesTable/MockDueServicesData";
+import DueService from "../shared/DueService.model";
+import ServiceStatus from "../shared/ServiceStatus.model";
+import MOCK_DUE_SERVICES from "./MockDueServicesData";
 import { fetchDueServices, submitUpdatedServices } from "./dashboardPage.services";
 
 describe('Dashboard Page Services', () => {

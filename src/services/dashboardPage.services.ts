@@ -1,6 +1,6 @@
 import { DateTime } from "luxon";
-import DueService from "../../shared/DueService.model";
-import MOCK_DUE_SERVICES from "../DueServicesTable/MockDueServicesData";
+import DueService from "../shared/DueService.model";
+import MOCK_DUE_SERVICES from "./MockDueServicesData";
 
 const fetchDueServices = (beforeDate?: DateTime) => {
 
