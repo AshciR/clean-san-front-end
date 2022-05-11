@@ -9,7 +9,7 @@ import DueServicesTable from '../DueServicesTable/DueServicesTable';
 import SnackbarNotification from '../SnackbarNotification/SnackbarNotification';
 import snackbarNotificationReducer, { initialSnackbarNotificationState } from '../SnackbarNotification/snackbarNotification.reducer';
 import dueServicesReducer, { initialDueServicesState } from './dashboardPage.reducer';
-import { fetchDueServices, submitUpdatedServices } from './dashboardPage.services';
+import { fetchDueServices, submitUpdatedServices } from '../../services/dashboardPage.services';
 
 interface DashboardPageProps { }
 
