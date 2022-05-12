@@ -5,7 +5,7 @@ interface ServiceHistory {
     id: number;
     status: ServiceStatus;
     updateTime: DateTime;
-};
+}
 
 const createServiceHistory = ({ id, status, updateTime }: ServiceHistory): ServiceHistory => ({
     id: id,
