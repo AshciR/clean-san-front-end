@@ -11,7 +11,7 @@ import styles from './DueServicesTable.module.scss';
 interface DueServicesTableProps {
   dueServices: Array<DueService>
   handleUpdateService: (updatedService: DueService) => void
-};
+}
 
 const DueServicesTable: FC<DueServicesTableProps> = ({ dueServices, handleUpdateService }: DueServicesTableProps) => {
 
@@ -27,7 +27,7 @@ const DueServicesTable: FC<DueServicesTableProps> = ({ dueServices, handleUpdate
 interface VisableDueServiceTableProps {
   services: Array<DueService>
   handleUpdateService: (updatedService: DueService) => void
-};
+}
 
 const VisableDueServiceTable = ({ services, handleUpdateService }: VisableDueServiceTableProps) => (
   <TableContainer data-testid="visable-due-services-table">
@@ -52,7 +52,7 @@ const VisableDueServiceTable = ({ services, handleUpdateService }: VisableDueSer
 interface DueServiceRowProps {
   service: DueService
   handleUpdateService: (updatedService: DueService) => void
-};
+}
 
 const DueServiceRow = ({ service, handleUpdateService }: DueServiceRowProps) => (
   <TableRow data-testid="due-service-table-row">
@@ -77,7 +77,7 @@ const NoDueServicesDisplay = () => (
 interface StatusDropDownProps {
   service: DueService
   handleUpdateService: (updatedService: DueService) => void
-};
+}
 
 const StatusDropDown = ({ service, handleUpdateService }: StatusDropDownProps) => {
   return (
@@ -97,7 +97,7 @@ const StatusDropDown = ({ service, handleUpdateService }: StatusDropDownProps) =
           defaultValue={service.currentStatus}
         >
           {
-            Object.values(ServiceStatus).map((status) => (
+            Object.keys(ServiceStatus).map((status) => (
               <MenuItem key={status} value={status} >
                 <ServiceStatusChip status={status as ServiceStatus} />
               </MenuItem>
@@ -111,7 +111,7 @@ const StatusDropDown = ({ service, handleUpdateService }: StatusDropDownProps) =
 
 interface ServiceStatusChipProps {
   status: ServiceStatus
-};
+}
 
 const ServiceStatusChip = ({ status }: ServiceStatusChipProps) => {
 
