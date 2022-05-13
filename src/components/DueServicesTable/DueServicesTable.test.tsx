@@ -81,7 +81,7 @@ describe('<DueServicesTable />', () => {
     expect(dueDateColumn.textContent).toBe(service.dueDate.toLocaleString(DateTime.DATE_MED));
 
     const statusColumn = row.getElementsByTagName('td')[4];
-    expect(statusColumn.textContent?.toLocaleLowerCase()).toBe(service.currentStatus.toLocaleLowerCase());
+    expect(statusColumn.textContent?.toLocaleUpperCase().replace(' ', '_')).toBe(service.currentStatus.toLocaleUpperCase());
 
   }
 
