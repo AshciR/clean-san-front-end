@@ -12,7 +12,7 @@ interface DueService {
     currentStatus: ServiceStatus;
     prospectiveStatus?: ServiceStatus;
     history: Array<ServiceHistory>;
-};
+}
 
 const createDueService = ({ id, client, contract, dueDate, currentStatus, history }: DueService): DueService => ({
     id: id,
