@@ -5,7 +5,8 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 
 // We only want the mock service calls in the development env
-if (process.env.NODE_ENV === 'development') {
+// and when disable MSW flag is off
+if (process.env.NODE_ENV === 'development' && !process.env.REACT_APP_DISABLE_MSW) {
   const { worker } = require('./mocks/browser')
   worker.start()
 }

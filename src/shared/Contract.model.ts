@@ -11,7 +11,7 @@ interface Contract {
 
 enum ServiceFrequency {
   WEEKLY = 'WEEKLY',
-  BIWEEKLY = 'BIWEEKLY', // Every 2 weeks (English is a trash language)
+  FORTNIGHTLY = 'FORTNIGHTLY',
   MONTHLY = 'MONTHLY'
 }
 
