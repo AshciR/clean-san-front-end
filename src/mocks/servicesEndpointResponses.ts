@@ -1,4 +1,4 @@
-import {GetDueServicesResponse} from "../services/dashboardPage.services";
+import {GetDueServicesResponse} from "../services/services.services";
 
 const getDueServicesResponse: GetDueServicesResponse = {
   "dueServices": [
@@ -115,4 +115,55 @@ const getDueServicesResponse: GetDueServicesResponse = {
   ]
 }
 
-export {getDueServicesResponse}
+const updatedServicesResponse = {
+  "updatedServices": [
+    {
+      "id": 3,
+      "contractId": 1,
+      "dueDate": "2022-04-07",
+      "currentStatus": "COMPLETED",
+      "history": [
+        {
+          "id": 3,
+          "status": "NOT_COMPLETED",
+          "updateTime": "2022-05-13T19:59:48.508036"
+        },
+        {
+          "id": 15,
+          "status": "IN_PROGRESS",
+          "updateTime": "2022-05-13T20:00:08.680155"
+        },
+        {
+          "id": 17,
+          "status": "COMPLETED",
+          "updateTime": "2022-05-14T11:47:38.999945"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "contractId": 1,
+      "dueDate": "2022-05-05",
+      "currentStatus": "CANCELLED",
+      "history": [
+        {
+          "id": 4,
+          "status": "NOT_COMPLETED",
+          "updateTime": "2022-05-13T19:59:48.508665"
+        },
+        {
+          "id": 16,
+          "status": "IN_PROGRESS",
+          "updateTime": "2022-05-13T20:00:12.669974"
+        },
+        {
+          "id": 18,
+          "status": "CANCELLED",
+          "updateTime": "2022-05-14T11:47:39.001182"
+        }
+      ]
+    }
+  ]
+}
+
+export {getDueServicesResponse, updatedServicesResponse}

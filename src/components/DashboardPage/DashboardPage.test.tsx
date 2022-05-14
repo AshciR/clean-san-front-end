@@ -2,11 +2,11 @@ import {fireEvent, render, screen, waitFor} from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import DashboardPage from './DashboardPage';
 import MOCK_DUE_SERVICES from '../../services/MockDueServicesData';
-import {fetchDueServices, submitUpdatedServices} from '../../services/dashboardPage.services';
+import {fetchDueServices, submitUpdatedServices} from '../../services/services.services';
 import {DateTime} from 'luxon';
 import ServiceStatus from '../../shared/ServiceStatus.model';
 
-jest.mock('../../services/dashboardPage.services.ts');
+jest.mock('../../services/services.services.ts');
 
 describe('<DashboardPage />', () => {
 
