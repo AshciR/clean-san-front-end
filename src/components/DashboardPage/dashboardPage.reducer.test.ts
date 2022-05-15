@@ -16,7 +16,7 @@ describe('DashboardPage Reducer', () => {
         // When: We call the reducer
         const updatedState = dueServicesReducer(state, action);
 
-        // Then: The expected state should be produdced
+        // Then: The expected state should be produced
         const expectedState = {
             dueServices: [],
             isLoading: true,
@@ -40,7 +40,7 @@ describe('DashboardPage Reducer', () => {
         // When: We call the reducer
         const updatedState = dueServicesReducer(state, action);
 
-        // Then: The expected state should be produdced
+        // Then: The expected state should be produced
         const expectedState = {
             dueServices: MOCK_DUE_SERVICES,
             isLoading: false,
@@ -63,7 +63,7 @@ describe('DashboardPage Reducer', () => {
         // When: We call the reducer
         const updatedState = dueServicesReducer(state, action);
 
-        // Then: The expected state should be produdced
+        // Then: The expected state should be produced
         const expectedState = {
             dueServices: [],
             isLoading: false,
@@ -92,7 +92,7 @@ describe('DashboardPage Reducer', () => {
         };
         const updatedState = dueServicesReducer(stateWithDueServices, failAction);
 
-        // Then: The expected state should be produdced
+        // Then: The expected state should be produced
         const expectedState = {
             dueServices: [],
             isLoading: false,
@@ -104,7 +104,7 @@ describe('DashboardPage Reducer', () => {
 
     });
 
-    test('should update the new status of the service ', () => {
+    test('should update the new status of the service', () => {
 
         // Given: We have due services
         const currentState: DueServicesState = {
@@ -140,7 +140,7 @@ describe('DashboardPage Reducer', () => {
 
     });
 
-    test('should update the new status of the service while preserving the order ', () => {
+    test('should update the new status of the service while preserving the order', () => {
 
         // Given: We have due services
         const currentState: DueServicesState = {
@@ -150,8 +150,8 @@ describe('DashboardPage Reducer', () => {
             isSubmitUpdateError: false
         };
 
-        // And: We we want to update the 3rd service
-        const updatedServiceIndex = 2;
+        // And: We want to update the 3rd service
+        const updatedServiceIndex = 1;
         const updatedService: DueService = {
             ...MOCK_DUE_SERVICES[updatedServiceIndex],
             prospectiveStatus: ServiceStatus.IN_PROGRESS
@@ -165,7 +165,7 @@ describe('DashboardPage Reducer', () => {
         // When: We call the update action
         const updatedState = dueServicesReducer(currentState, updateAction);
 
-        // Then: The expected state should be produdced
+        // Then: The expected state should be produced
         const expectedState = {
             dueServices: [
                 ...MOCK_DUE_SERVICES.slice(0, updatedServiceIndex),
@@ -180,7 +180,7 @@ describe('DashboardPage Reducer', () => {
         expect(updatedState).toStrictEqual(expectedState);
     });
 
-    it('updates the services correctly after a sucessful submittal', () => {
+    it('updates the services correctly after a successful submittal', () => {
 
         // Given: We have due services
         const currentState: DueServicesState = {
@@ -211,13 +211,10 @@ describe('DashboardPage Reducer', () => {
         // When: We call the update action
         const updatedState = dueServicesReducer(currentState, updateAction);
 
-        // Then: The expected state should be produdced
+        // Then: The expected state should be produced
         const expectedState = {
             dueServices: [
-                updatedToCompletedService,
                 MOCK_DUE_SERVICES[1],
-                updatedToCancelService,
-                MOCK_DUE_SERVICES[3]
             ],
             isLoading: false,
             isFetchError: false,
@@ -228,7 +225,7 @@ describe('DashboardPage Reducer', () => {
 
     });
 
-    it('sets the error state after an unsucessful submittal', () => {
+    it('sets the error state after an unsuccessful submittal', () => {
 
         // Given: We have due services
         const currentState: DueServicesState = {
