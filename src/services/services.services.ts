@@ -65,6 +65,7 @@ const convertDueServicesResponseToDueService = (response: DueServiceResponse): D
  * The caller will pass in all the services in the application state.
  * This function will filter out the services that should be submitted.
  * @param services all the services in the application state
+ * @return the services that were updated
  */
 const submitUpdatedServices = async (services: DueService[]) => {
 
@@ -199,7 +200,12 @@ type UpdatedServicesRequest = {
   currentStatus: string;
 }
 
-export {fetchDueServices, submitUpdatedServices, convertDueServicesResponseToDueService, convertUpdatedServiceResponseToDueService};
+export {
+  fetchDueServices,
+  submitUpdatedServices,
+  convertDueServicesResponseToDueService,
+  convertUpdatedServiceResponseToDueService
+};
 export type {
   GetDueServicesResponse,
   DueServiceResponse,
