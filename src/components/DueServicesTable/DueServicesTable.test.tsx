@@ -75,7 +75,7 @@ describe('<DueServicesTable />', () => {
     expect(clientColumn.textContent).toBe(service.client.name);
 
     const frequencyColumn = row.getElementsByTagName('td')[2];
-    expect(frequencyColumn.textContent).toBe(service.contract.serviceFrequency);
+    expect(frequencyColumn.textContent?.toLocaleUpperCase()).toBe(service.contract.serviceFrequency.toLocaleUpperCase());
 
     const dueDateColumn = row.getElementsByTagName('td')[3];
     expect(dueDateColumn.textContent).toBe(service.dueDate.toLocaleString(DateTime.DATE_MED));

@@ -1,36 +1,51 @@
 import {
-  Box, Chip, ChipProps, FormControl, MenuItem, Select, Table,
-  TableBody, TableCell, TableContainer, TableHead, TableRow, Typography
+  Box,
+  Chip,
+  ChipProps,
+  createTheme,
+  FormControl,
+  MenuItem,
+  Select,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  ThemeProvider,
+  Typography
 } from '@mui/material';
-import { DateTime } from 'luxon';
-import { FC } from 'react';
+import {DateTime} from 'luxon';
+import {FC} from 'react';
 import DueService from '../../shared/DueService.model';
 import ServiceStatus from '../../shared/ServiceStatus.model';
 import styles from './DueServicesTable.module.scss';
+import {ServiceFrequency} from "../../shared/Contract.model";
 
 interface DueServicesTableProps {
   dueServices: Array<DueService>
   handleUpdateService: (updatedService: DueService) => void
 }
 
-const DueServicesTable: FC<DueServicesTableProps> = ({ dueServices, handleUpdateService }: DueServicesTableProps) => {
+const DueServicesTable: FC<DueServicesTableProps> = ({dueServices, handleUpdateService}: DueServicesTableProps) => {
 
   const hasServices = dueServices.length !== 0;
 
   return (
     <div className={styles.DueServicesTable} data-testid="due-services-table">
-      {hasServices ? <VisableDueServiceTable services={dueServices} handleUpdateService={handleUpdateService} /> : <NoDueServicesDisplay />}
+      {hasServices ? <VisibleDueServiceTable services={dueServices} handleUpdateService={handleUpdateService}/> :
+        <NoDueServicesDisplay/>}
     </div>
   );
 };
 
-interface VisableDueServiceTableProps {
+interface VisibleDueServiceTableProps {
   services: Array<DueService>
   handleUpdateService: (updatedService: DueService) => void
 }
 
-const VisableDueServiceTable = ({ services, handleUpdateService }: VisableDueServiceTableProps) => (
-  <TableContainer data-testid="visable-due-services-table">
+const VisibleDueServiceTable = ({services, handleUpdateService}: VisibleDueServiceTableProps) => (
+  <TableContainer data-testid="visible-due-services-table">
     <Table aria-label="due services table">
       <TableHead>
         <TableRow>
@@ -43,7 +58,9 @@ const VisableDueServiceTable = ({ services, handleUpdateService }: VisableDueSer
         </TableRow>
       </TableHead>
       <TableBody>
-        {services.map(service => <DueServiceRow key={service.id} service={service} handleUpdateService={handleUpdateService} />)}
+        {services.map(service =>
+          <DueServiceRow key={service.id} service={service} handleUpdateService={handleUpdateService}/>
+        )}
       </TableBody>
     </Table>
   </TableContainer>
@@ -54,17 +71,19 @@ interface DueServiceRowProps {
   handleUpdateService: (updatedService: DueService) => void
 }
 
-const DueServiceRow = ({ service, handleUpdateService }: DueServiceRowProps) => (
+const DueServiceRow = ({service, handleUpdateService}: DueServiceRowProps) => (
   <TableRow data-testid="due-service-table-row">
     <TableCell>{service.id}</TableCell>
     <TableCell align='right'>{service.client.name}</TableCell>
-    <TableCell align='right'>{service.contract.serviceFrequency}</TableCell>
+    <TableCell align='right'>
+      <ServiceFrequencyChip frequency={service.contract.serviceFrequency}/>
+    </TableCell>
     <TableCell align='right'>{service.dueDate.toLocaleString(DateTime.DATE_MED)}</TableCell>
     <TableCell align='right'>
-      <ServiceStatusChip status={service.currentStatus} />
+      <ServiceStatusChip status={service.currentStatus}/>
     </TableCell>
     <TableCell align='right'>
-      <StatusDropDown service={service} handleUpdateService={handleUpdateService} />
+      <StatusDropDown service={service} handleUpdateService={handleUpdateService}/>
     </TableCell>
   </TableRow>
 )
@@ -79,7 +98,7 @@ interface StatusDropDownProps {
   handleUpdateService: (updatedService: DueService) => void
 }
 
-const StatusDropDown = ({ service, handleUpdateService }: StatusDropDownProps) => {
+const StatusDropDown = ({service, handleUpdateService}: StatusDropDownProps) => {
   return (
     <Box>
       <FormControl fullWidth>
@@ -98,8 +117,8 @@ const StatusDropDown = ({ service, handleUpdateService }: StatusDropDownProps) =
         >
           {
             Object.keys(ServiceStatus).map((status) => (
-              <MenuItem key={status} value={status} >
-                <ServiceStatusChip status={status as ServiceStatus} />
+              <MenuItem key={status} value={status}>
+                <ServiceStatusChip status={status as ServiceStatus}/>
               </MenuItem>
             ))
           }
@@ -113,16 +132,47 @@ interface ServiceStatusChipProps {
   status: ServiceStatus
 }
 
-const ServiceStatusChip = ({ status }: ServiceStatusChipProps) => {
+const ServiceStatusChip = ({status}: ServiceStatusChipProps) => {
 
   const chipProps = {
-    [ServiceStatus.NOT_COMPLETED]: { color: 'warning', label: 'Not Completed' },
-    [ServiceStatus.IN_PROGRESS]: { color: 'info', label: 'In Progress' },
-    [ServiceStatus.COMPLETED]: { color: 'success', label: 'Completed' },
-    [ServiceStatus.CANCELLED]: { color: 'default', label: 'Cancelled' },
+    [ServiceStatus.NOT_COMPLETED]: {color: 'warning', label: 'Not Completed'},
+    [ServiceStatus.IN_PROGRESS]: {color: 'info', label: 'In Progress'},
+    [ServiceStatus.COMPLETED]: {color: 'success', label: 'Completed'},
+    [ServiceStatus.CANCELLED]: {color: 'default', label: 'Cancelled'},
   };
 
   return <Chip size='small' variant='outlined' {...chipProps[status] as ChipProps} />
+
+};
+
+interface ServiceFrequencyChipProps {
+  frequency: ServiceFrequency
+}
+
+const ServiceFrequencyChip = ({frequency}: ServiceFrequencyChipProps) => {
+
+  const chipProps = {
+    [ServiceFrequency.WEEKLY]: {color: 'info', label: 'Weekly'},
+    [ServiceFrequency.FORTNIGHTLY]: {color: 'secondary', label: 'Fortnightly'},
+    [ServiceFrequency.MONTHLY]: {color: 'primary', label: 'Monthly'},
+  };
+
+  const theme = createTheme({
+    palette: {
+      primary: {
+        main: '#729727' // Dark-green
+      },
+      secondary: {
+        main: '#c19c00' // Dark-orange
+      }
+    }
+  });
+
+  return (
+    <ThemeProvider theme={theme}>
+      <Chip size='small' variant='outlined' {...chipProps[frequency] as ChipProps} />
+    </ThemeProvider>
+  );
 
 };
 
