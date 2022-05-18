@@ -30,16 +30,16 @@ const getDueServicesResponse: GetDueServicesResponse = {
     {
       "id": 2,
       "client": {
-        "id": 1,
-        "name": "Sash",
-        "email": "sash@gmail.com"
+        "id": 2,
+        "name": "Richie",
+        "email": "rich@gmail.com"
       },
       "contract": {
-        "id": 1,
-        "clientId": 1,
+        "id": 2,
+        "clientId": 2,
         "startDate": "2022-02-10",
         "endDate": "2023-02-09",
-        "serviceFrequency": "MONTHLY",
+        "serviceFrequency": "FORTNIGHTLY",
         "status": "ACTIVE"
       },
       "dueDate": "2022-03-10",
@@ -55,16 +55,16 @@ const getDueServicesResponse: GetDueServicesResponse = {
     {
       "id": 3,
       "client": {
-        "id": 1,
-        "name": "Sash",
-        "email": "sash@gmail.com"
+        "id": 3,
+        "name": "Morty",
+        "email": "mort@gmail.com"
       },
       "contract": {
-        "id": 1,
-        "clientId": 1,
+        "id": 3,
+        "clientId": 3,
         "startDate": "2022-02-10",
         "endDate": "2023-02-09",
-        "serviceFrequency": "MONTHLY",
+        "serviceFrequency": "WEEKLY",
         "status": "ACTIVE"
       },
       "dueDate": "2022-04-07",
