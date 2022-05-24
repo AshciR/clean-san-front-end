@@ -1,17 +1,21 @@
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
-import { Box, Container, Fab, Skeleton, TextField, Typography } from '@mui/material';
-import { DateTime } from 'luxon';
-import React, { FC } from 'react';
+import {DatePicker} from '@mui/x-date-pickers/DatePicker';
+import {LocalizationProvider} from '@mui/x-date-pickers/LocalizationProvider';
+import {AdapterLuxon} from '@mui/x-date-pickers/AdapterLuxon';
+import {Box, Container, Fab, Skeleton, TextField, Typography} from '@mui/material';
+import {DateTime} from 'luxon';
+import React, {FC} from 'react';
 import DueService from '../../shared/DueService.model';
 import DueServicesTable from '../DueServicesTable/DueServicesTable';
 import SnackbarNotification from '../SnackbarNotification/SnackbarNotification';
-import snackbarNotificationReducer, { initialSnackbarNotificationState } from '../SnackbarNotification/snackbarNotification.reducer';
-import dueServicesReducer, { initialDueServicesState } from './dashboardPage.reducer';
-import { fetchDueServices, submitUpdatedServices } from '../../services/services.services';
+import snackbarNotificationReducer, {
+  initialSnackbarNotificationState
+} from '../SnackbarNotification/snackbarNotification.reducer';
+import dueServicesReducer, {initialDueServicesState} from './dashboardPage.reducer';
+import {fetchDueServices, submitUpdatedServices} from '../../services/services.services';
+import NavBar from "../NavBar/NavBar";
 
-interface DashboardPageProps { }
+interface DashboardPageProps {
+}
 
 const DashboardPage: FC<DashboardPageProps> = () => {
 
@@ -31,7 +35,7 @@ const DashboardPage: FC<DashboardPageProps> = () => {
   // Handlers
   const handleFetchDueServices = React.useCallback(async (dueServicesDate: DateTime | null) => {
 
-    dispatchDueServices({ type: 'DUE_SERVICES_FETCH_INIT' });
+    dispatchDueServices({type: 'DUE_SERVICES_FETCH_INIT'});
 
     try {
       const dueServices = await fetchDueServices(dueServicesDate || DateTime.now());
@@ -40,12 +44,12 @@ const DashboardPage: FC<DashboardPageProps> = () => {
         payload: dueServices
       });
     } catch {
-      dispatchDueServices({ type: 'DUE_SERVICES_FETCH_FAILURE' });
+      dispatchDueServices({type: 'DUE_SERVICES_FETCH_FAILURE'});
     }
 
   }, []);
 
-  const handleUpdateService = (updatedService: DueService) => {
+  const handleUpdateService = async (updatedService: DueService) => {
     dispatchDueServices({
       type: 'DUE_SERVICES_UPDATE_SERVICE',
       payload: updatedService
@@ -70,7 +74,7 @@ const DashboardPage: FC<DashboardPageProps> = () => {
       });
 
     } catch {
-      dispatchDueServices({ type: 'DUE_SERVICES_UPDATE_SERVICE_SUBMIT_FAILURE' })
+      dispatchDueServices({type: 'DUE_SERVICES_UPDATE_SERVICE_SUBMIT_FAILURE'})
 
       dispatchUpdateServiceNotification({
         type: 'SNACKBAR_NOTIFICATION_OPEN',
@@ -92,7 +96,7 @@ const DashboardPage: FC<DashboardPageProps> = () => {
     if (reason === 'clickaway') {
       return;
     }
-    dispatchUpdateServiceNotification({ type: 'SNACKBAR_NOTIFICATION_CLOSE' });
+    dispatchUpdateServiceNotification({type: 'SNACKBAR_NOTIFICATION_CLOSE'});
   };
 
   // Effects
@@ -103,9 +107,11 @@ const DashboardPage: FC<DashboardPageProps> = () => {
   // Rendered components
   return (
     <Box
-      sx={{ margin: 2 }}
       data-testid="DashboardPage"
     >
+      <Box sx={{marginBottom: 10}}>
+        <NavBar title={'Dashboard'}/>
+      </Box>
       <Container maxWidth='xl'>
         <Box
           sx={{
@@ -121,15 +127,15 @@ const DashboardPage: FC<DashboardPageProps> = () => {
             severity={updateServiceNotificationState.severity}
             message={updateServiceNotificationState.message}
           />
-          <TitleAndDatePicker dueServicesDate={dueServicesDate} setDueServicesDate={setDueServicesDate} />
+          <TitleAndDatePicker dueServicesDate={dueServicesDate} setDueServicesDate={setDueServicesDate}/>
         </Box>
         <Box>
           {
             dueServicesState.isLoading ?
-              <Skeleton variant="rectangular" animation="wave" data-testid="DueServicesTable-Skeleton" /> :
+              <Skeleton variant="rectangular" animation="wave" data-testid="DueServicesTable-Skeleton"/> :
               dueServicesState.isFetchError ?
                 <Typography variant='h4'>Sorry... we weren't able to get the due services at this time.</Typography> :
-                <DueServicesTable dueServices={dueServicesState.dueServices} handleUpdateService={handleUpdateService} />
+                <DueServicesTable dueServices={dueServicesState.dueServices} handleUpdateService={handleUpdateService}/>
           }
         </Box>
         <Box
@@ -162,7 +168,10 @@ interface TitleAndDatePickerProps {
   setDueServicesDate: React.Dispatch<React.SetStateAction<DateTime | null>>
 }
 
-const TitleAndDatePicker: FC<TitleAndDatePickerProps> = ({ dueServicesDate, setDueServicesDate }: TitleAndDatePickerProps) => {
+const TitleAndDatePicker: FC<TitleAndDatePickerProps> = ({
+                                                           dueServicesDate,
+                                                           setDueServicesDate
+                                                         }: TitleAndDatePickerProps) => {
   return (
     <>
       <Typography variant='h3' color='primary'>
@@ -176,7 +185,7 @@ const TitleAndDatePicker: FC<TitleAndDatePickerProps> = ({ dueServicesDate, setD
             setDueServicesDate(newDueServicesDate)
           }}
           renderInput={props => {
-            return <TextField {...props} helperText={'mm/dd/yyyy'} />
+            return <TextField {...props} helperText={'mm/dd/yyyy'}/>
           }}
         >
         </DatePicker>
