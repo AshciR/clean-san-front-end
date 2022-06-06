@@ -1,5 +1,5 @@
-import DueService from "../../shared/DueService.model";
-import ServiceStatus from "../../shared/ServiceStatus.model";
+import DueService from "../../../shared/DueService.model";
+import ServiceStatus from "../../../shared/ServiceStatus.model";
 
 interface DueServicesState {
   isLoading: boolean;
