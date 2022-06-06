@@ -10,6 +10,8 @@ interface NavBarProps {
   onCloseDrawer: (event: React.SyntheticEvent | Event) => void
 }
 
+const NAV_BAR_HEIGHT = 10;
+
 const NavBar: FC<NavBarProps> = ({title, menuDrawerOpen, onOpenDrawer, onCloseDrawer}: NavBarProps) => {
 
   return (
@@ -75,4 +77,5 @@ const NavBar: FC<NavBarProps> = ({title, menuDrawerOpen, onOpenDrawer, onCloseDr
   );
 };
 
+export {NAV_BAR_HEIGHT};
 export default NavBar;

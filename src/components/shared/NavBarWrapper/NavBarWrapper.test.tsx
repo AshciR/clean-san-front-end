@@ -2,13 +2,14 @@ import React from 'react';
 import {fireEvent, render, screen} from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import NavBarWrapper from './NavBarWrapper';
+import {MemoryRouter} from "react-router-dom";
 
 describe('<NavBarWrapper />', () => {
 
   it('opens the drawer when menu is clicked', () => {
 
     // Given: the NavBar is present on the page
-    render(<NavBarWrapper/>);
+    render(<NavBarWrapper/>, {wrapper: MemoryRouter});
 
     // When: the menu button is clicked
     const menuButton = screen.getByRole('button');

@@ -12,13 +12,24 @@ import snackbarNotificationReducer, {
 } from '../../shared/SnackbarNotification/snackbarNotification.reducer';
 import dueServicesReducer, {initialDueServicesState} from './dashboardPage.reducer';
 import {fetchDueServices, submitUpdatedServices} from '../../../services/services.services';
-
+import NavBarWrapper from "../../shared/NavBarWrapper/NavBarWrapper";
+import {NAV_BAR_HEIGHT} from "../../shared/NavBar/NavBar";
 
 interface DashboardPageProps {
+
+}
+
+const DashboardPage: FC<DashboardPageProps> = () => (
+  <NavBarWrapper>
+    <DashboardPageContent distanceFromNavBar={NAV_BAR_HEIGHT}/>
+  </NavBarWrapper>
+);
+
+interface DashboardPageContentProps {
   distanceFromNavBar?: number
 }
 
-const DashboardPage: FC<DashboardPageProps> = ({distanceFromNavBar = 10}: DashboardPageProps) => {
+const DashboardPageContent: FC<DashboardPageContentProps> = ({distanceFromNavBar = 10}: DashboardPageContentProps) => {
 
   // State Management
   const [dueServicesState, dispatchDueServices] = React.useReducer(

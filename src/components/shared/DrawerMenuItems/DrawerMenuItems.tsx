@@ -3,6 +3,8 @@ import {Box, List, ListItem, ListItemButton, ListItemIcon, ListItemText} from "@
 import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined';
 import BusinessOutlinedIcon from '@mui/icons-material/BusinessOutlined';
 import CleaningServicesOutlinedIcon from '@mui/icons-material/CleaningServicesOutlined';
+import {Link} from "react-router-dom";
+import routes from "../../../routes";
 
 type menuItemTypes = 'Dashboard'
   | 'Clients'
@@ -14,18 +16,21 @@ interface DrawerMenuItemsProps {
 
 const DrawerMenuItems: FC<DrawerMenuItemsProps> = () => {
 
-  const menuItems: ({ text: menuItemTypes; icon: JSX.Element })[] = [
+  const menuItems: ({ text: menuItemTypes, icon: JSX.Element, route: string })[] = [
     {
       text: 'Dashboard',
-      icon: <DashboardOutlinedIcon/>
+      icon: <DashboardOutlinedIcon/>,
+      route: routes.dashboardPage
     },
     {
       text: 'Clients',
-      icon: <BusinessOutlinedIcon/>
+      icon: <BusinessOutlinedIcon/>,
+      route: routes.clientsPage
     },
     {
       text: 'Services',
-      icon: <CleaningServicesOutlinedIcon/>
+      icon: <CleaningServicesOutlinedIcon/>,
+      route: '' //TODO: Implement in the future
     }
   ];
 
@@ -36,7 +41,15 @@ const DrawerMenuItems: FC<DrawerMenuItemsProps> = () => {
     >
       <List>
         {menuItems.map(item =>
-          <ListItem key={item.text} disablePadding>
+          <ListItem
+            key={item.text}
+            component={Link}
+            to={item.route}
+            sx={{
+              color: 'black'
+            }}
+            disablePadding
+          >
             <ListItemButton>
               <ListItemIcon>
                 {item.icon}
