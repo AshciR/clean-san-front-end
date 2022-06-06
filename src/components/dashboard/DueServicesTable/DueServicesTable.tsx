@@ -17,10 +17,10 @@ import {
 } from '@mui/material';
 import {DateTime} from 'luxon';
 import {FC} from 'react';
-import DueService from '../../shared/DueService.model';
-import ServiceStatus from '../../shared/ServiceStatus.model';
+import DueService from '../../../shared/DueService.model';
+import ServiceStatus from '../../../shared/ServiceStatus.model';
 import styles from './DueServicesTable.module.scss';
-import {ServiceFrequency} from "../../shared/Contract.model";
+import {ServiceFrequency} from "../../../shared/Contract.model";
 
 interface DueServicesTableProps {
   dueServices: Array<DueService>

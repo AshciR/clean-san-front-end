@@ -4,14 +4,14 @@ import {AdapterLuxon} from '@mui/x-date-pickers/AdapterLuxon';
 import {Box, Container, Fab, Skeleton, TextField, Typography} from '@mui/material';
 import {DateTime} from 'luxon';
 import React, {FC} from 'react';
-import DueService from '../../shared/DueService.model';
+import DueService from '../../../shared/DueService.model';
 import DueServicesTable from '../DueServicesTable/DueServicesTable';
-import SnackbarNotification from '../SnackbarNotification/SnackbarNotification';
+import SnackbarNotification from '../../shared/SnackbarNotification/SnackbarNotification';
 import snackbarNotificationReducer, {
   initialSnackbarNotificationState
-} from '../SnackbarNotification/snackbarNotification.reducer';
+} from '../../shared/SnackbarNotification/snackbarNotification.reducer';
 import dueServicesReducer, {initialDueServicesState} from './dashboardPage.reducer';
-import {fetchDueServices, submitUpdatedServices} from '../../services/services.services';
+import {fetchDueServices, submitUpdatedServices} from '../../../services/services.services';
 
 
 interface DashboardPageProps {
