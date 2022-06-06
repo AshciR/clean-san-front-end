@@ -12,12 +12,13 @@ import snackbarNotificationReducer, {
 } from '../SnackbarNotification/snackbarNotification.reducer';
 import dueServicesReducer, {initialDueServicesState} from './dashboardPage.reducer';
 import {fetchDueServices, submitUpdatedServices} from '../../services/services.services';
-import NavBar from "../NavBar/NavBar";
+
 
 interface DashboardPageProps {
+  distanceFromNavBar?: number
 }
 
-const DashboardPage: FC<DashboardPageProps> = () => {
+const DashboardPage: FC<DashboardPageProps> = ({distanceFromNavBar = 10}: DashboardPageProps) => {
 
   // State Management
   const [dueServicesState, dispatchDueServices] = React.useReducer(
@@ -48,12 +49,12 @@ const DashboardPage: FC<DashboardPageProps> = () => {
     }
 
   }, []);
-
   const handleUpdateService = async (updatedService: DueService) => {
     dispatchDueServices({
       type: 'DUE_SERVICES_UPDATE_SERVICE',
       payload: updatedService
     });
+
   }
 
   const handleSubmitUpdatedServices = async (services: DueService[]) => {
@@ -86,12 +87,11 @@ const DashboardPage: FC<DashboardPageProps> = () => {
     }
 
   };
-
   const hasAnyServiceBeenUpdated = (dueServices: DueService[]) => {
     const hasChangedStatus = (service: DueService) => service.prospectiveStatus && (service.currentStatus !== service.prospectiveStatus);
     return dueServices.some(hasChangedStatus);
-  }
 
+  }
   const handleCloseUpdateServiceNotificationOpen = (event?: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === 'clickaway') {
       return;
@@ -104,14 +104,21 @@ const DashboardPage: FC<DashboardPageProps> = () => {
     handleFetchDueServices(dueServicesDate);
   }, [handleFetchDueServices, dueServicesDate]);
 
+
   // Rendered components
   return (
     <Box
       data-testid="DashboardPage"
+      sx={{
+        marginTop: distanceFromNavBar
+      }}
     >
-      <Box sx={{marginBottom: 10}}>
-        <NavBar title={'Dashboard'}/>
-      </Box>
+      <SnackbarNotification
+        open={updateServiceNotificationState.isNotificationOpen}
+        handleClose={handleCloseUpdateServiceNotificationOpen}
+        severity={updateServiceNotificationState.severity}
+        message={updateServiceNotificationState.message}
+      />
       <Container maxWidth='xl'>
         <Box
           sx={{
@@ -121,12 +128,6 @@ const DashboardPage: FC<DashboardPageProps> = () => {
             margin: 1
           }}
         >
-          <SnackbarNotification
-            open={updateServiceNotificationState.isNotificationOpen}
-            handleClose={handleCloseUpdateServiceNotificationOpen}
-            severity={updateServiceNotificationState.severity}
-            message={updateServiceNotificationState.message}
-          />
           <TitleAndDatePicker dueServicesDate={dueServicesDate} setDueServicesDate={setDueServicesDate}/>
         </Box>
         <Box>
