@@ -23,7 +23,7 @@ const getDueServicesResponse: GetDueServicesResponse = {
         {
           "id": 1,
           "status": "NOT_COMPLETED",
-          "updateTime": "2022-05-13T19:59:48.490639"
+          "updateTime": "2022-05-13T19:59:48.490639Z"
         }
       ]
     },
@@ -48,7 +48,7 @@ const getDueServicesResponse: GetDueServicesResponse = {
         {
           "id": 2,
           "status": "NOT_COMPLETED",
-          "updateTime": "2022-05-13T19:59:48.507424"
+          "updateTime": "2022-05-13T19:59:48.507424Z"
         }
       ]
     },
@@ -73,12 +73,12 @@ const getDueServicesResponse: GetDueServicesResponse = {
         {
           "id": 3,
           "status": "NOT_COMPLETED",
-          "updateTime": "2022-05-13T19:59:48.508036"
+          "updateTime": "2022-05-13T19:59:48.508036Z"
         },
         {
           "id": 15,
           "status": "IN_PROGRESS",
-          "updateTime": "2022-05-13T20:00:08.680155"
+          "updateTime": "2022-05-13T20:00:08.680155Z"
         }
       ]
     },
@@ -103,12 +103,12 @@ const getDueServicesResponse: GetDueServicesResponse = {
         {
           "id": 4,
           "status": "NOT_COMPLETED",
-          "updateTime": "2022-05-13T19:59:48.508665"
+          "updateTime": "2022-05-13T19:59:48.508665Z"
         },
         {
           "id": 16,
           "status": "IN_PROGRESS",
-          "updateTime": "2022-05-13T20:00:12.669974"
+          "updateTime": "2022-05-13T20:00:12.669974Z"
         }
       ]
     }
@@ -126,17 +126,17 @@ const updatedServicesResponse = {
         {
           "id": 3,
           "status": "NOT_COMPLETED",
-          "updateTime": "2022-05-13T19:59:48.508036"
+          "updateTime": "2022-05-13T19:59:48.508036Z"
         },
         {
           "id": 15,
           "status": "IN_PROGRESS",
-          "updateTime": "2022-05-13T20:00:08.680155"
+          "updateTime": "2022-05-13T20:00:08.680155Z"
         },
         {
           "id": 17,
           "status": "COMPLETED",
-          "updateTime": "2022-05-14T11:47:38.999945"
+          "updateTime": "2022-05-14T11:47:38.999945Z"
         }
       ]
     },
@@ -149,17 +149,17 @@ const updatedServicesResponse = {
         {
           "id": 4,
           "status": "NOT_COMPLETED",
-          "updateTime": "2022-05-13T19:59:48.508665"
+          "updateTime": "2022-05-13T19:59:48.508665Z"
         },
         {
           "id": 16,
           "status": "IN_PROGRESS",
-          "updateTime": "2022-05-13T20:00:12.669974"
+          "updateTime": "2022-05-13T20:00:12.669974Z"
         },
         {
           "id": 18,
           "status": "CANCELLED",
-          "updateTime": "2022-05-14T11:47:39.001182"
+          "updateTime": "2022-05-14T11:47:39.001182Z"
         }
       ]
     }

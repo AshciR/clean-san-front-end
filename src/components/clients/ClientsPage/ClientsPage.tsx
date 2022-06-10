@@ -8,7 +8,7 @@ interface ClientsPageProps {
 }
 
 const ClientsPage: FC<ClientsPageProps> = () => (
-  <NavBarWrapper>
+  <NavBarWrapper title={'Clients'}>
     <ClientsPageContent distanceFromNavBar={NAV_BAR_HEIGHT}/>
   </NavBarWrapper>
 
