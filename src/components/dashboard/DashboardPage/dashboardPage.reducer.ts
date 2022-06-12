@@ -60,13 +60,15 @@ const dueServicesReducer = (
       const updatedInitState: DueServicesState = {
         ...state,
         isLoading: true,
+        isFetchError: false
       };
       return updatedInitState;
     case "DUE_SERVICES_FETCH_SUCCESS":
       const updatedFetchSuccessState: DueServicesState = {
         ...state,
         isLoading: false,
-        dueServices: action.payload
+        dueServices: action.payload,
+        isFetchError: false
       };
       return updatedFetchSuccessState;
     case "DUE_SERVICES_FETCH_FAILURE":

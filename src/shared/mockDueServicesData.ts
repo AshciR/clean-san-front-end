@@ -1,5 +1,5 @@
-import DueService, { createDefaultDueService } from "../shared/DueService.model";
-import ServiceStatus from "../shared/ServiceStatus.model";
+import DueService, { createDefaultDueService } from "./DueService.model";
+import ServiceStatus from "./ServiceStatus.model";
 
 const notCompletedService: DueService = createDefaultDueService();
 const inProgressService: DueService = {

@@ -1,6 +1,6 @@
 import DueService from "../../../shared/DueService.model";
 import ServiceStatus from "../../../shared/ServiceStatus.model";
-import MOCK_DUE_SERVICES from "../../../services/MockDueServicesData";
+import MOCK_DUE_SERVICES from "../../../shared/mockDueServicesData";
 import dueServicesReducer, { DashboardAction, DueServicesState, initialDueServicesState } from "./dashboardPage.reducer";
 
 describe('DashboardPage Reducer', () => {

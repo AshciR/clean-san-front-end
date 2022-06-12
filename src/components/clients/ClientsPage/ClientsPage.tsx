@@ -1,7 +1,11 @@
 import React, {FC} from 'react';
-import {Box, Typography} from "@mui/material";
+import {Box, Container, Skeleton, Typography} from "@mui/material";
 import NavBarWrapper from "../../shared/NavBarWrapper/NavBarWrapper";
 import {NAV_BAR_HEIGHT} from "../../shared/NavBar/NavBar";
+import {clientsReducer, initialClientsState} from "./clientsPage.reducer";
+import Client from "../../../shared/Client.model";
+import ClientsTable from "../ClientsTable/ClientsTable";
+import MOCK_CLIENTS from "../../../shared/mockClientsData";
 
 interface ClientsPageProps {
 
@@ -18,17 +22,69 @@ interface ClientsPageContentProps {
   distanceFromNavBar?: number
 }
 
-const ClientsPageContent: FC<ClientsPageContentProps> = ({distanceFromNavBar}) => (
-  <Box
-    data-testid="ClientsPage"
-    sx={{
-      marginTop: distanceFromNavBar
-    }}
-  >
-    <Typography variant='h1'>
-      Clients Page
-    </Typography>
-  </Box>
-);
+const ClientsPageContent: FC<ClientsPageContentProps> = ({distanceFromNavBar}) => {
+
+  const [clientsState, dispatchClients] = React.useReducer(
+    clientsReducer,
+    initialClientsState
+  );
+
+
+  const handleFetchClients = React.useCallback(() => {
+
+      dispatchClients({type: 'CLIENTS_FETCH_INIT'});
+
+      try {
+
+        // TODO: Replace with real values in upcoming commits
+        const clients: Client[] = MOCK_CLIENTS;
+
+        dispatchClients({
+          type: 'CLIENTS_FETCH_SUCCESS',
+          payload: clients
+        });
+      } catch {
+        dispatchClients({type: 'CLIENTS_FETCH_FAILURE'})
+      }
+    }
+    , []);
+
+  React.useEffect(() => {
+    handleFetchClients()
+  }, [handleFetchClients])
+
+  return (
+    <Box
+      data-testid="ClientsPage"
+      sx={{
+        marginTop: distanceFromNavBar
+      }}
+    >
+      <Container maxWidth='xl'>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            margin: 1
+          }}
+        >
+          <Typography variant='h3' color='primary'>Clients Page</Typography>
+        </Box>
+        <Box>
+          {
+            clientsState.isLoading ?
+              <Skeleton variant="rectangular" animation="wave" data-testid="ClientsTable-Skeleton"/> :
+              clientsState.isFetchError ?
+                <Typography variant='h4'>
+                  Sorry... we weren't able to get the clients at this time.
+                </Typography> :
+                <ClientsTable clients={clientsState.clients}/>
+          }
+        </Box>
+      </Container>
+    </Box>
+  );
+};
 
 export default ClientsPage;

@@ -22,6 +22,10 @@ import ServiceStatus from '../../../shared/ServiceStatus.model';
 import styles from './DueServicesTable.module.scss';
 import {ServiceFrequency} from "../../../shared/Contract.model";
 
+const SERVICE_ID_WIDTH = 100;
+const STATUS_CHIP_WIDTH = 120;
+const STATUS_COLUMN_WIDTH = STATUS_CHIP_WIDTH + 60;
+
 interface DueServicesTableProps {
   dueServices: Array<DueService>
   handleUpdateService: (updatedService: DueService) => void
@@ -49,12 +53,12 @@ const VisibleDueServiceTable = ({services, handleUpdateService}: VisibleDueServi
     <Table aria-label="due services table">
       <TableHead>
         <TableRow>
-          <TableCell>Id</TableCell>
-          <TableCell align='right'>Client</TableCell>
-          <TableCell align='right'>Frequency</TableCell>
-          <TableCell align='right'>Due Date</TableCell>
-          <TableCell align='right'>Current Status</TableCell>
-          <TableCell align='right'>New Status</TableCell>
+          <TableCell sx={{width: SERVICE_ID_WIDTH}}>Service Id</TableCell>
+          <TableCell>Client</TableCell>
+          <TableCell>Frequency</TableCell>
+          <TableCell>Due Date</TableCell>
+          <TableCell sx={{width: STATUS_COLUMN_WIDTH}}>Current Status</TableCell>
+          <TableCell sx={{width: STATUS_COLUMN_WIDTH}}>New Status</TableCell>
         </TableRow>
       </TableHead>
       <TableBody>
@@ -73,16 +77,16 @@ interface DueServiceRowProps {
 
 const DueServiceRow = ({service, handleUpdateService}: DueServiceRowProps) => (
   <TableRow data-testid="due-service-table-row">
-    <TableCell>{service.id}</TableCell>
-    <TableCell align='right'>{service.client.name}</TableCell>
-    <TableCell align='right'>
+    <TableCell sx={{width: SERVICE_ID_WIDTH}}>{service.id}</TableCell>
+    <TableCell>{service.client.name}</TableCell>
+    <TableCell>
       <ServiceFrequencyChip frequency={service.contract.serviceFrequency}/>
     </TableCell>
-    <TableCell align='right'>{service.dueDate.toLocaleString(DateTime.DATE_MED)}</TableCell>
-    <TableCell align='right'>
+    <TableCell>{service.dueDate.toLocaleString(DateTime.DATE_MED)}</TableCell>
+    <TableCell sx={{width: STATUS_COLUMN_WIDTH}}>
       <ServiceStatusChip status={service.currentStatus}/>
     </TableCell>
-    <TableCell align='right'>
+    <TableCell sx={{width: STATUS_COLUMN_WIDTH}}>
       <StatusDropDown service={service} handleUpdateService={handleUpdateService}/>
     </TableCell>
   </TableRow>
@@ -101,7 +105,7 @@ interface StatusDropDownProps {
 const StatusDropDown = ({service, handleUpdateService}: StatusDropDownProps) => {
   return (
     <Box>
-      <FormControl fullWidth>
+      <FormControl sx={{width: STATUS_COLUMN_WIDTH}}>
         <Select
           id={`new-status-select-${service.id}`}
           value={service?.prospectiveStatus || service.currentStatus}
@@ -111,9 +115,13 @@ const StatusDropDown = ({service, handleUpdateService}: StatusDropDownProps) => 
               prospectiveStatus: event.target.value as ServiceStatus
             };
             handleUpdateService(updatedService)
+
           }}
           variant='outlined'
           defaultValue={service.currentStatus}
+          sx={{
+            '& .MuiSelect-select':{ paddingTop: 1, paddingBottom: 1} // 8px
+          }}
         >
           {
             Object.keys(ServiceStatus).map((status) => (
@@ -141,7 +149,11 @@ const ServiceStatusChip = ({status}: ServiceStatusChipProps) => {
     [ServiceStatus.CANCELLED]: {color: 'default', label: 'Cancelled'},
   };
 
-  return <Chip size='small' variant='outlined' {...chipProps[status] as ChipProps} />
+  return <Chip
+    size='small'
+    variant='outlined'
+    sx={{width: STATUS_CHIP_WIDTH}}
+    {...chipProps[status] as ChipProps} />
 
 };
 
@@ -170,7 +182,11 @@ const ServiceFrequencyChip = ({frequency}: ServiceFrequencyChipProps) => {
 
   return (
     <ThemeProvider theme={theme}>
-      <Chip size='small' variant='outlined' {...chipProps[frequency] as ChipProps} />
+      <Chip
+        size='small'
+        variant='outlined'
+        sx={{width: 100}}
+        {...chipProps[frequency] as ChipProps} />
     </ThemeProvider>
   );
 

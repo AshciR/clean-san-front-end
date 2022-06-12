@@ -1,7 +1,7 @@
 import {fireEvent, render, screen} from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import DueServicesTable from './DueServicesTable';
-import MOCK_DUE_SERVICES from '../../../services/MockDueServicesData';
+import MOCK_DUE_SERVICES from '../../../shared/mockDueServicesData';
 import {DateTime} from 'luxon';
 import DueService from '../../../shared/DueService.model';
 import ServiceStatus from '../../../shared/ServiceStatus.model';
