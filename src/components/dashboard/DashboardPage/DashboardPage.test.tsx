@@ -1,6 +1,6 @@
 import {fireEvent, render, screen, waitFor} from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
-import DashboardPageContent from './DashboardPageContent';
+import DashboardPage from './DashboardPage';
 import MOCK_DUE_SERVICES from '../../../services/MockDueServicesData';
 import {fetchDueServices, submitUpdatedServices} from '../../../services/services.services';
 import {DateTime} from 'luxon';
@@ -8,7 +8,7 @@ import ServiceStatus from '../../../shared/ServiceStatus.model';
 
 jest.mock('../../../services/services.services.ts');
 
-describe('<DashboardPageContent />', () => {
+describe('<DashboardPage />', () => {
 
   const mockFetchDueServices = fetchDueServices as jest.MockedFunction<typeof fetchDueServices>
   const mockSubmitUpdatedServices = submitUpdatedServices as jest.MockedFunction<typeof submitUpdatedServices>
@@ -18,14 +18,14 @@ describe('<DashboardPageContent />', () => {
   });
 
   test('it should mount', async () => {
-    render(<DashboardPageContent/>);
+    render(<DashboardPage/>);
     const dashboardPage = screen.getByTestId('DashboardPage');
 
     await waitFor(() => expect(dashboardPage).toBeInTheDocument());
   });
 
   it('renders shows the loading component before the due services are fetched', async () => {
-    render(<DashboardPageContent/>);
+    render(<DashboardPage/>);
     const loadingComponent = screen.getByTestId('DueServicesTable-Skeleton');
 
     await waitFor(() => expect(loadingComponent).toBeInTheDocument());
@@ -37,7 +37,7 @@ describe('<DashboardPageContent />', () => {
     mockFetchDueServices.mockResolvedValue([]);
 
     // When: The DashboardPage renders
-    render(<DashboardPageContent/>);
+    render(<DashboardPage/>);
 
     // Then: We expect no due services message to be displayed
     expect(fetchDueServices).toHaveBeenCalledTimes(1);
@@ -48,7 +48,7 @@ describe('<DashboardPageContent />', () => {
   it('shows the due services after they are fetched', async () => {
 
     // When: The DashboardPage renders
-    render(<DashboardPageContent/>);
+    render(<DashboardPage/>);
 
     // Then: We expect the due services to be in the document
     expect(fetchDueServices).toHaveBeenCalledTimes(1);
@@ -62,7 +62,7 @@ describe('<DashboardPageContent />', () => {
     mockFetchDueServices.mockRejectedValue(new Error('Fetch due services did not work'));
 
     // When: The DashboardPage renders
-    render(<DashboardPageContent/>);
+    render(<DashboardPage/>);
 
     // Then: We expect the due services to be in the document
     expect(fetchDueServices).toHaveBeenCalledTimes(1);
@@ -73,7 +73,7 @@ describe('<DashboardPageContent />', () => {
   it('shows the current date when the page loads', async () => {
 
     // When: The DashboardPage renders
-    render(<DashboardPageContent/>);
+    render(<DashboardPage/>);
 
     // Then: We expect the current date to be in the date selector
     const today = DateTime.now().toLocaleString();
@@ -83,7 +83,7 @@ describe('<DashboardPageContent />', () => {
   it('should update the service status correctly', async () => {
 
     // Given: The DashboardPage renders with services
-    render(<DashboardPageContent/>);
+    render(<DashboardPage/>);
 
     const serviceToUpdate = MOCK_DUE_SERVICES[0];
     const newStatusDropdown = await screen.findByDisplayValue(serviceToUpdate.currentStatus);
@@ -104,7 +104,7 @@ describe('<DashboardPageContent />', () => {
   it('the change statuses button should be disabled when the page loads', async () => {
 
     // When: The DashboardPage renders
-    render(<DashboardPageContent/>);
+    render(<DashboardPage/>);
 
     // Then: We expect the change status button to be disabled
     await waitFor(() => expect(screen.getByRole('button', {name: 'Change Statuses'})).toBeDisabled());
@@ -113,7 +113,7 @@ describe('<DashboardPageContent />', () => {
   it('the change statuses button should be enabled when status changes', async () => {
 
     // Given: The DashboardPage renders with services
-    render(<DashboardPageContent/>);
+    render(<DashboardPage/>);
 
     const serviceToUpdate = MOCK_DUE_SERVICES[0];
     const newStatusDropdown = await screen.findByDisplayValue(serviceToUpdate.currentStatus);
@@ -134,7 +134,7 @@ describe('<DashboardPageContent />', () => {
   it('successful update notifcation is displayed is called after submit button is clicked', async () => {
 
     // Given: The DashboardPage renders with services
-    render(<DashboardPageContent/>);
+    render(<DashboardPage/>);
 
     const serviceToUpdate = MOCK_DUE_SERVICES[0];
     const newStatusDropdown = await screen.findByDisplayValue(serviceToUpdate.currentStatus);
@@ -167,7 +167,7 @@ describe('<DashboardPageContent />', () => {
   it('unsuccessful update notifcation is displayed is called after submit button is clicked', async () => {
 
     // Given: The DashboardPage renders with services
-    render(<DashboardPageContent/>);
+    render(<DashboardPage/>);
 
     const serviceToUpdate = MOCK_DUE_SERVICES[0];
     const newStatusDropdown = await screen.findByDisplayValue(serviceToUpdate.currentStatus);
