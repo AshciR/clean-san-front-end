@@ -98,7 +98,7 @@ describe('Due Services Services', () => {
         createServiceHistory({
           id: 1,
           status: ServiceStatus.NOT_COMPLETED,
-          updateTime: DateTime.fromISO('2022-05-13T19:59:48.490639')
+          updateTime: DateTime.fromISO('2022-05-13T19:59:48.490639Z')
         })
       ]
     };
@@ -127,12 +127,12 @@ describe('Due Services Services', () => {
         createServiceHistory({
           id: 3,
           status: ServiceStatus.NOT_COMPLETED,
-          updateTime: DateTime.fromISO('2022-05-13T19:59:48.508036')
+          updateTime: DateTime.fromISO('2022-05-13T19:59:48.508036Z')
         }),
         createServiceHistory({
           id: 15,
           status: ServiceStatus.IN_PROGRESS,
-          updateTime: DateTime.fromISO('2022-05-13T20:00:08.680155')
+          updateTime: DateTime.fromISO('2022-05-13T20:00:08.680155Z')
         })
       ]
     };
@@ -158,17 +158,17 @@ describe('Due Services Services', () => {
         createServiceHistory({
           id: 3,
           status: ServiceStatus.NOT_COMPLETED,
-          updateTime: DateTime.fromISO('2022-05-13T19:59:48.508036')
+          updateTime: DateTime.fromISO('2022-05-13T19:59:48.508036Z')
         }),
         createServiceHistory({
           id: 15,
           status: ServiceStatus.IN_PROGRESS,
-          updateTime: DateTime.fromISO('2022-05-13T20:00:08.680155')
+          updateTime: DateTime.fromISO('2022-05-13T20:00:08.680155Z')
         }),
         createServiceHistory({
           id: 17,
           status: ServiceStatus.COMPLETED,
-          updateTime: DateTime.fromISO('2022-05-14T11:47:38.999945')
+          updateTime: DateTime.fromISO('2022-05-14T11:47:38.999945Z')
         })
       ]
     };

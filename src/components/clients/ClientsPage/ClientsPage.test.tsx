@@ -7,7 +7,7 @@ describe('<ClientsPage />', () => {
 
   it('should display the clients page', () => {
     render(<ClientsPage/>);
-    const clientsPage = screen.getByText(/Clients/);
+    const clientsPage = screen.getByText(/Clients Page/);
     expect(clientsPage).toBeInTheDocument();
   });
 

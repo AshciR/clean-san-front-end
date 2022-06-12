@@ -20,7 +20,7 @@ interface DashboardPageProps {
 }
 
 const DashboardPage: FC<DashboardPageProps> = () => (
-  <NavBarWrapper>
+  <NavBarWrapper title={'Dashboard'}>
     <DashboardPageContent distanceFromNavBar={NAV_BAR_HEIGHT}/>
   </NavBarWrapper>
 );
@@ -146,7 +146,9 @@ const DashboardPageContent: FC<DashboardPageContentProps> = ({distanceFromNavBar
             dueServicesState.isLoading ?
               <Skeleton variant="rectangular" animation="wave" data-testid="DueServicesTable-Skeleton"/> :
               dueServicesState.isFetchError ?
-                <Typography variant='h4'>Sorry... we weren't able to get the due services at this time.</Typography> :
+                <Typography variant='h4'>
+                  Sorry... we weren't able to get the due services at this time.
+                </Typography> :
                 <DueServicesTable dueServices={dueServicesState.dueServices} handleUpdateService={handleUpdateService}/>
           }
         </Box>

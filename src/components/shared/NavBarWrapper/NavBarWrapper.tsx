@@ -1,12 +1,13 @@
-import React, {FC, PropsWithChildren} from 'react';
+import React, {FC} from 'react';
 import NavBar from "../NavBar/NavBar";
 import {Box} from "@mui/material";
 
 interface NavBarWrapperProps {
-  props?: PropsWithChildren<NavBarWrapperProps>
+  title: string
+  children?: React.ReactNode
 }
 
-const NavBarWrapper: FC<NavBarWrapperProps> = (props) => {
+const NavBarWrapper: FC<NavBarWrapperProps> = ({title, children}) => {
 
   const [menuDrawerOpen, setMenuDrawerOpen] = React.useState<boolean>(false)
   const toggleDrawer = () => setMenuDrawerOpen(!menuDrawerOpen);
@@ -14,12 +15,12 @@ const NavBarWrapper: FC<NavBarWrapperProps> = (props) => {
   return (
     <Box sx={{marginBottom: 10}}>
       <NavBar
-        title={'Dashboard'}
+        title={title}
         menuDrawerOpen={menuDrawerOpen}
         onOpenDrawer={toggleDrawer}
         onCloseDrawer={toggleDrawer}
       />
-      {props.children}
+      {children}
     </Box>
   );
 };
