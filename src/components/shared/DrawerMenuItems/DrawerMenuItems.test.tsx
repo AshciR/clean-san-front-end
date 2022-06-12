@@ -1,5 +1,6 @@
 import {render, screen} from "@testing-library/react";
 import DrawerMenuItems from "./DrawerMenuItems";
+import {MemoryRouter} from "react-router-dom";
 
 describe('<DrawerMenuItems />', () => {
 
@@ -13,7 +14,7 @@ describe('<DrawerMenuItems />', () => {
     ];
 
     // When: The component renders
-    render(<DrawerMenuItems/>);
+    render(<DrawerMenuItems/>, {wrapper: MemoryRouter});
 
     // Then: All the menu items should be present
     menuItems.forEach(item => {

@@ -1,13 +1,16 @@
 import './App.scss';
 import React from "react";
-import DashboardPage from "./components/dashboard/DashboardPage/DashboardPage";
-import NavBarWrapper from "./components/shared/NavBarWrapper/NavBarWrapper";
+import DashboardPage from "./components/dashboard/DashboardPage/DashboardPageContent";
+import {Route, Routes} from "react-router-dom";
+import ClientsPage from "./components/clients/ClientsPage/ClientsPage";
+import routes from "./routes";
 
 const App = () => (
   <div data-testid="app">
-    <NavBarWrapper>
-      <DashboardPage distanceFromNavBar={10}/>
-    </NavBarWrapper>
+    <Routes>
+      <Route path={routes.clientsPage} element={<ClientsPage/>}/>
+      <Route path={routes.dashboardPage} element={<DashboardPage/>}/>
+    </Routes>
   </div>
 )
 
