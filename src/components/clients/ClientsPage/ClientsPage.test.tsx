@@ -10,5 +10,5 @@ describe('<ClientsPage />', () => {
     const clientsPage = screen.getByText(/Clients Page/);
     expect(clientsPage).toBeInTheDocument();
   });
-
+  
 });

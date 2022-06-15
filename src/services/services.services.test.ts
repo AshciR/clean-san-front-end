@@ -83,7 +83,7 @@ describe('Due Services Services', () => {
     // Then: The domain should be mapped correctly
     const expectedDueService: DueService = {
       id: 1,
-      client: createClient({id: 1, name: 'Sash', email: 'sash@gmail.com'}),
+      client: createClient({id: 1, name: 'Sash', email: 'sash@gmail.com', isActive: true}),
       contract: createContract({
         id: 1,
         clientId: 1,
@@ -112,7 +112,7 @@ describe('Due Services Services', () => {
     // And: The corresponding service
     const correspondingService = {
       id: 3,
-      client: createClient({id: 1, name: 'Sash', email: 'sash@gmail.com'}),
+      client: createClient({id: 1, name: 'Sash', email: 'sash@gmail.com', isActive: true}),
       contract: createContract({
         id: 1,
         clientId: 1,
@@ -143,7 +143,7 @@ describe('Due Services Services', () => {
     // Then: The domain should be mapped correctly
     const expectedDueService: DueService = {
       id: 3,
-      client: createClient({id: 1, name: 'Sash', email: 'sash@gmail.com'}),
+      client: createClient({id: 1, name: 'Sash', email: 'sash@gmail.com', isActive: true}),
       contract: createContract({
         id: 1,
         clientId: 1,

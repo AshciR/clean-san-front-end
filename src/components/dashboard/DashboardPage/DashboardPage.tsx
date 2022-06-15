@@ -60,6 +60,7 @@ const DashboardPageContent: FC<DashboardPageContentProps> = ({distanceFromNavBar
     }
 
   }, []);
+
   const handleUpdateService = async (updatedService: DueService) => {
     dispatchDueServices({
       type: 'DUE_SERVICES_UPDATE_SERVICE',

@@ -37,7 +37,8 @@ const convertDueServicesResponseToDueService = (response: DueServiceResponse): D
   const convertClientResponseToClient = (client: ClientResponse): Client => ({
     id: client.id,
     name: client.name,
-    email: client.email
+    email: client.email,
+    isActive: true // if there's a due service, the client has to be active
   });
 
   const convertContractResponseToContract = (contract: ContractResponse): Contract => ({
@@ -123,7 +124,7 @@ const convertUpdatedServiceResponseToDueService = (updatedServiceResponse: Updat
 
   return {
     id: updatedServiceResponse.id,
-    client: {...correspondingService.client},     // Response doesn't have these values, that's why we're copying them
+    client: {...correspondingService.client, isActive: true}, // Response doesn't have these values, that's why we're copying them
     contract: {...correspondingService.contract}, // Response doesn't have these values, that's why we're copying them
     currentStatus: updatedServiceResponse.currentStatus as ServiceStatus,
     dueDate: DateTime.fromISO(updatedServiceResponse.dueDate),

@@ -1,7 +1,7 @@
 import {fireEvent, render, screen, waitFor} from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import DashboardPage from './DashboardPage';
-import MOCK_DUE_SERVICES from '../../../services/MockDueServicesData';
+import MOCK_DUE_SERVICES from '../../../shared/mockDueServicesData';
 import {fetchDueServices, submitUpdatedServices} from '../../../services/services.services';
 import {DateTime} from 'luxon';
 import ServiceStatus from '../../../shared/ServiceStatus.model';
@@ -131,7 +131,7 @@ describe('<DashboardPage />', () => {
 
   });
 
-  it('successful update notifcation is displayed is called after submit button is clicked', async () => {
+  it('successful update notification is displayed is called after submit button is clicked', async () => {
 
     // Given: The DashboardPage renders with services
     render(<DashboardPage/>);
