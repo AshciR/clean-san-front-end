@@ -45,28 +45,11 @@ const DashboardPageContent: FC<DashboardPageContentProps> = ({distanceFromNavBar
   const [dueServicesDate, setDueServicesDate] = React.useState<DateTime | null>(DateTime.now());
 
   // Handlers
-  const handleFetchDueServices = React.useCallback(async (dueServicesDate: DateTime | null) => {
-
-    dispatchDueServices({type: 'DUE_SERVICES_FETCH_INIT'});
-
-    try {
-      const dueServices = await fetchDueServices(dueServicesDate || DateTime.now());
-      dispatchDueServices({
-        type: 'DUE_SERVICES_FETCH_SUCCESS',
-        payload: dueServices
-      });
-    } catch {
-      dispatchDueServices({type: 'DUE_SERVICES_FETCH_FAILURE'});
-    }
-
-  }, []);
-
   const handleUpdateService = async (updatedService: DueService) => {
     dispatchDueServices({
       type: 'DUE_SERVICES_UPDATE_SERVICE',
       payload: updatedService
     });
-
   }
 
   const handleSubmitUpdatedServices = async (services: DueService[]) => {
@@ -99,6 +82,7 @@ const DashboardPageContent: FC<DashboardPageContentProps> = ({distanceFromNavBar
     }
 
   };
+
   const hasAnyServiceBeenUpdated = (dueServices: DueService[]) => {
     const hasChangedStatus = (service: DueService) => service.prospectiveStatus && (service.currentStatus !== service.prospectiveStatus);
     return dueServices.some(hasChangedStatus);
@@ -112,10 +96,40 @@ const DashboardPageContent: FC<DashboardPageContentProps> = ({distanceFromNavBar
   };
 
   // Effects
+  // @ts-ignore
   React.useEffect(() => {
-    handleFetchDueServices(dueServicesDate);
-  }, [handleFetchDueServices, dueServicesDate]);
 
+    // We need to check if the component is still using the effect
+    let isSubscribed = true;
+
+    const handleFetchDueServices = async () => {
+
+      dispatchDueServices({type: 'DUE_SERVICES_FETCH_INIT'});
+
+      try {
+        const dueServices = await fetchDueServices(dueServicesDate || DateTime.now());
+
+        if (isSubscribed) {
+          dispatchDueServices({
+            type: 'DUE_SERVICES_FETCH_SUCCESS',
+            payload: dueServices
+          });
+
+        }
+      } catch {
+        if (isSubscribed) {
+          dispatchDueServices({type: 'DUE_SERVICES_FETCH_FAILURE'});
+        }
+      }
+
+    }
+
+    handleFetchDueServices()
+
+    // Cancel subscription to useEffect
+    return () => (isSubscribed = false)
+
+  }, [dueServicesDate]);
 
   // Rendered components
   return (

@@ -2,7 +2,7 @@ import React from 'react';
 import {render, screen} from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import ClientsTable from './ClientsTable';
-import MOCK_CLIENTS from "../../../shared/mockClientsData";
+import MOCK_CLIENTS_WITH_CONTRACTS from "../../../shared/mockClientsWithContractsData";
 import Client from "../../../shared/Client.model";
 
 describe('<ClientsTable />', () => {
@@ -17,12 +17,12 @@ describe('<ClientsTable />', () => {
   it('should display clients', () => {
 
     // When: the Due Services Table is rendered with services
-    render(<ClientsTable clients={MOCK_CLIENTS}/>);
+    render(<ClientsTable clients={MOCK_CLIENTS_WITH_CONTRACTS}/>);
 
     // Then: All the rows should have the correct info
     const clientTableRows = screen.getAllByTestId('client-table-row');
-    expect(clientTableRows.length).toBe(MOCK_CLIENTS.length);
-    clientTableRows.forEach((row, index) => assertRowContent(row, MOCK_CLIENTS[index]));
+    expect(clientTableRows.length).toBe(MOCK_CLIENTS_WITH_CONTRACTS.length);
+    clientTableRows.forEach((row, index) => assertRowContent(row, MOCK_CLIENTS_WITH_CONTRACTS[index]));
 
   });
 

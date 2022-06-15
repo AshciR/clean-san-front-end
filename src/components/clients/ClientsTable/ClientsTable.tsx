@@ -1,12 +1,12 @@
 import React, {FC} from 'react';
 import styles from './ClientsTable.module.scss';
-import Client from "../../../shared/Client.model";
 import {Chip, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography} from "@mui/material";
+import {ClientWithContracts} from "../../../shared/ClientWithContracts.model";
 
 const STATUS_CHIP_WIDTH = 120;
 
 interface ClientsTableProps {
-  clients: Client[]
+  clients: ClientWithContracts[]
 }
 
 const ClientsTable: FC<ClientsTableProps> = ({clients}: ClientsTableProps) => {
@@ -20,11 +20,11 @@ const ClientsTable: FC<ClientsTableProps> = ({clients}: ClientsTableProps) => {
   );
 };
 
-interface ClientsTableProps {
-  clients: Client[]
+interface VisibleClientsTableProps {
+  clients: ClientWithContracts[]
 }
 
-const VisibleClientsTable = ({clients}: ClientsTableProps) => (
+const VisibleClientsTable = ({clients}: VisibleClientsTableProps) => (
   <TableContainer data-testid="visible-clients-table">
     <Table aria-label="clients table">
       <TableHead>
@@ -43,7 +43,7 @@ const VisibleClientsTable = ({clients}: ClientsTableProps) => (
 );
 
 interface ClientRowProps {
-  client: Client
+  client: ClientWithContracts
 }
 
 const ClientRow = ({client}: ClientRowProps) => (
