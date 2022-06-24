@@ -3,8 +3,8 @@ import DueService from "../shared/DueService.model";
 import axios from "../axiosConfig";
 import ServiceStatus from "../shared/ServiceStatus.model";
 import Client from "../shared/Client.model";
-import Contract, {ContractStatus, ServiceFrequency} from "../shared/Contract.model";
 import ServiceHistory from "../shared/ServiceHistory.model";
+import {ContractResponse, convertContractResponseToContract} from "./shared-responses";
 
 /**
  * Fetches the due services from the backend
@@ -39,15 +39,6 @@ const convertDueServicesResponseToDueService = (response: DueServiceResponse): D
     name: client.name,
     email: client.email,
     isActive: true // if there's a due service, the client has to be active
-  });
-
-  const convertContractResponseToContract = (contract: ContractResponse): Contract => ({
-    id: contract.id,
-    clientId: contract.clientId,
-    startDate: DateTime.fromISO(contract.startDate),
-    endDate: DateTime.fromISO(contract.endDate),
-    serviceFrequency: contract.serviceFrequency as ServiceFrequency,
-    status: contract.status as ContractStatus
   });
 
   return {
@@ -165,15 +156,6 @@ type ClientResponse = {
   email: string;
 };
 
-type ContractResponse = {
-  id: number;
-  clientId: number;
-  startDate: string;
-  endDate: string;
-  serviceFrequency: string;
-  status: string;
-};
-
 type ServiceHistoryResponse = {
   id: number;
   status: string;
@@ -211,7 +193,6 @@ export type {
   GetDueServicesResponse,
   DueServiceResponse,
   ClientResponse,
-  ContractResponse,
   ServiceHistoryResponse,
   SubmitUpdateServiceResponse,
   UpdatedServiceResponse,

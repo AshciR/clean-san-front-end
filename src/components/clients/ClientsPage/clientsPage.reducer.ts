@@ -1,8 +1,8 @@
-import Client from "../../../shared/Client.model";
+import {ClientWithContracts} from "../../../shared/ClientWithContracts.model";
 
 interface ClientsState {
   isLoading: boolean;
-  clients: Client[];
+  clients: ClientWithContracts[];
   isFetchError: boolean;
 }
 
@@ -18,7 +18,7 @@ interface ClientsFetchInitAction {
 
 interface ClientsFetchSuccessAction {
   type: 'CLIENTS_FETCH_SUCCESS';
-  payload: Client[];
+  payload: ClientWithContracts[];
 }
 
 interface ClientsFetchFailureAction {

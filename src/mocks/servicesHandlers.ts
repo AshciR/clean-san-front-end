@@ -90,6 +90,6 @@ const convertDueServiceResponseToUpdatedServiceResponse = (dueServiceResponse: D
   }
 };
 
-export const handlers = [
+export const servicesHandlers = [
   getDueServicesHandler, submitUpdatedServicesHandler
 ]

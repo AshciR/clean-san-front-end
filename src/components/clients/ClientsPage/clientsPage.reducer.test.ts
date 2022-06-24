@@ -1,5 +1,5 @@
 import {ClientsAction, clientsReducer, ClientsState, initialClientsState} from "./clientsPage.reducer";
-import MOCK_CLIENTS from "../../../shared/mockClientsData";
+import MOCK_CLIENTS_WITH_CONTRACTS from "../../../shared/mockClientsWithContractsData";
 
 describe('ClientPage Reducer', () => {
 
@@ -29,7 +29,7 @@ describe('ClientPage Reducer', () => {
     const state = initialClientsState;
     const successAction: ClientsAction = {
       type: 'CLIENTS_FETCH_SUCCESS',
-      payload: MOCK_CLIENTS
+      payload: MOCK_CLIENTS_WITH_CONTRACTS
     };
 
     // When: We call the reducer
@@ -38,7 +38,7 @@ describe('ClientPage Reducer', () => {
     // Then: The expected state should be produced
     const expectedState: ClientsState = {
       isLoading: false,
-      clients: MOCK_CLIENTS,
+      clients: MOCK_CLIENTS_WITH_CONTRACTS,
       isFetchError: false
     }
     expect(updatedState).toStrictEqual(expectedState);
@@ -70,7 +70,7 @@ describe('ClientPage Reducer', () => {
     const state = initialClientsState
     const successAction: ClientsAction = {
       type: 'CLIENTS_FETCH_SUCCESS',
-      payload: MOCK_CLIENTS
+      payload: MOCK_CLIENTS_WITH_CONTRACTS
     };
 
     const stateWithClients = clientsReducer(state, successAction);

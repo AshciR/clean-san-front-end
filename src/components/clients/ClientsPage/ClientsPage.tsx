@@ -3,9 +3,9 @@ import {Box, Container, Skeleton, Typography} from "@mui/material";
 import NavBarWrapper from "../../shared/NavBarWrapper/NavBarWrapper";
 import {NAV_BAR_HEIGHT} from "../../shared/NavBar/NavBar";
 import {clientsReducer, initialClientsState} from "./clientsPage.reducer";
-import Client from "../../../shared/Client.model";
 import ClientsTable from "../ClientsTable/ClientsTable";
-import MOCK_CLIENTS from "../../../shared/mockClientsData";
+import {fetchClientsWithContracts} from "../../../services/clients.services";
+import {ClientWithContracts} from "../../../shared/ClientWithContracts.model";
 
 interface ClientsPageProps {
 
@@ -29,29 +29,38 @@ const ClientsPageContent: FC<ClientsPageContentProps> = ({distanceFromNavBar}) =
     initialClientsState
   );
 
+  // @ts-ignore
+  React.useEffect(() => {
 
-  const handleFetchClients = React.useCallback(() => {
+    // We need to check if the component is still using the effect
+    let isSubscribed = true;
+
+    const handleFetchClientsWithContracts = async () => {
 
       dispatchClients({type: 'CLIENTS_FETCH_INIT'});
 
       try {
+        const clients: ClientWithContracts[] = await fetchClientsWithContracts();
 
-        // TODO: Replace with real values in upcoming commits
-        const clients: Client[] = MOCK_CLIENTS;
+        if (isSubscribed) {
+          dispatchClients({
+            type: 'CLIENTS_FETCH_SUCCESS',
+            payload: clients
+          });
 
-        dispatchClients({
-          type: 'CLIENTS_FETCH_SUCCESS',
-          payload: clients
-        });
+        }
       } catch {
-        dispatchClients({type: 'CLIENTS_FETCH_FAILURE'})
+        if (isSubscribed) {
+          dispatchClients({type: 'CLIENTS_FETCH_FAILURE'})
+        }
       }
     }
-    , []);
 
-  React.useEffect(() => {
-    handleFetchClients()
-  }, [handleFetchClients])
+    handleFetchClientsWithContracts()
+
+    // Cancel subscription to useEffect
+    return () => (isSubscribed = false)
+  }, []);
 
   return (
     <Box

@@ -1,5 +1,9 @@
 import {setupWorker} from 'msw'
-import {handlers} from './handlers'
+import {servicesHandlers} from './servicesHandlers'
+import {clientsHandlers} from "./clientsHandlers";
 
-// Configures a Service Worker with the given request handlers.
-export const worker = setupWorker(...handlers)
+// Configures a Service Worker with the given request dueServiceHandlers.
+export const worker = setupWorker(
+  ...servicesHandlers,
+  ...clientsHandlers
+)
