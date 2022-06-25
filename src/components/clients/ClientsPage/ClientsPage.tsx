@@ -1,11 +1,12 @@
 import React, {FC} from 'react';
-import {Box, Container, Skeleton, Typography} from "@mui/material";
+import {Backdrop, Box, Container, Fab, Skeleton, Typography} from "@mui/material";
 import NavBarWrapper from "../../shared/NavBarWrapper/NavBarWrapper";
 import {NAV_BAR_HEIGHT} from "../../shared/NavBar/NavBar";
 import {clientsReducer, initialClientsState} from "./clientsPage.reducer";
 import ClientsTable from "../ClientsTable/ClientsTable";
 import {fetchClientsWithContracts} from "../../../services/clients.services";
 import {ClientWithContracts} from "../../../shared/ClientWithContracts.model";
+import AddClientForm from "../AddClientForm/AddClientForm";
 
 interface ClientsPageProps {
 
@@ -24,10 +25,22 @@ interface ClientsPageContentProps {
 
 const ClientsPageContent: FC<ClientsPageContentProps> = ({distanceFromNavBar}) => {
 
+  // State Management
   const [clientsState, dispatchClients] = React.useReducer(
     clientsReducer,
     initialClientsState
   );
+
+  const [addClientModalOpen, setAddClientModalOpen] = React.useState(false);
+
+  // Handlers
+  const handleCloseAddClientModal = () => {
+    setAddClientModalOpen(false);
+  }
+
+  const handleOpenAddClientModal = () => {
+    setAddClientModalOpen(true);
+  };
 
   // @ts-ignore
   React.useEffect(() => {
@@ -68,6 +81,11 @@ const ClientsPageContent: FC<ClientsPageContentProps> = ({distanceFromNavBar}) =
       sx={{
         marginTop: distanceFromNavBar
       }}
+      onKeyDown={(event) => {
+        if (event.key === 'Escape') {
+          handleCloseAddClientModal()
+        }
+      }}
     >
       <Container maxWidth='xl'>
         <Box
@@ -90,6 +108,31 @@ const ClientsPageContent: FC<ClientsPageContentProps> = ({distanceFromNavBar}) =
                 </Typography> :
                 <ClientsTable clients={clientsState.clients}/>
           }
+        </Box>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'row-reverse',
+            justifyContent: 'space-between',
+            margin: 1
+          }}>
+          <Fab
+            variant="extended"
+            color='primary'
+            sx={{
+              margin: 1
+            }}
+            onClick={handleOpenAddClientModal}
+          >
+            Add Client
+          </Fab>
+          <Backdrop
+            sx={{color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1}}
+            open={addClientModalOpen}
+            data-testid="AddClientModal"
+          >
+            <AddClientForm handleCloseAddClientModal={handleCloseAddClientModal}/>
+          </Backdrop>
         </Box>
       </Container>
     </Box>
