@@ -1,5 +1,5 @@
 import React from 'react';
-import {render, screen, waitFor} from '@testing-library/react';
+import {fireEvent, render, screen, waitFor} from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import ClientsPage from './ClientsPage';
 import {fetchClientsWithContracts} from "../../../services/clients.services";
@@ -64,7 +64,23 @@ describe('<ClientsPage />', () => {
 
     // Then: We expect the due services to be in the document
     expect(fetchClientsWithContracts).toHaveBeenCalledTimes(1);
-    await screen.findByText("Sorry... we weren't able to get the clients at this time.");
+    const errorMessage = await screen.findByText("Sorry... we weren't able to get the clients at this time.");
+    expect(errorMessage).toBeInTheDocument();
+  });
+
+  it('opens the Add Client modal', async () => {
+
+    // Given: The ClientsPage renders
+    mockFetchClientsWithContracts.mockResolvedValue([]);
+    render(<ClientsPage/>);
+
+    // When: The Add Client button is pressed
+    const addClientButton = screen.getByRole('button', {name: 'Add Client'});
+    fireEvent.click(addClientButton);
+
+    // Then: The Add Client modal is opened
+    const modal = await screen.findByTestId('AddClientModal');
+    expect(modal).toHaveStyle('visibility: visible');
 
   });
 
