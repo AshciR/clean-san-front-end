@@ -1,12 +1,16 @@
 import {
-  ClientResponse,
+  addClient,
+  AddClientResponse,
+  convertAddedClientResponseToClient,
   convertClientResponseToClientWithContracts,
-  fetchClientsWithContracts
+  fetchClientsWithContracts,
+  GetClientResponse
 } from "./clients.services";
 import {getClientsResponse} from "../mocks/clientsEndpointResponses";
 import {ContractStatus, createContract, ServiceFrequency} from "../shared/Contract.model";
 import {DateTime} from "luxon";
 import {ClientWithContracts} from "../shared/ClientWithContracts.model";
+import Client, {createDefaultClient} from "../shared/Client.model";
 
 describe('Clients Services', () => {
 
@@ -16,7 +20,7 @@ describe('Clients Services', () => {
     const clients = await fetchClientsWithContracts();
 
     // Then: The clients should be present
-    const expectedServices = getClientsResponse.clients.map((clientResponse: ClientResponse) =>
+    const expectedServices = getClientsResponse.clients.map((clientResponse: GetClientResponse) =>
       convertClientResponseToClientWithContracts(clientResponse)
     )
 
@@ -25,7 +29,7 @@ describe('Clients Services', () => {
 
   });
 
-  it('converts Clients response to domain model', () => {
+  it('converts GetClientResponse to domain model', () => {
 
     // Given: We have a Client response
     const clientResponse = getClientsResponse.clients[3];
@@ -48,6 +52,47 @@ describe('Clients Services', () => {
           status: ContractStatus.INACTIVE
         })
       ],
+      isActive: false
+    };
+
+    expect(client).toStrictEqual(expectedClient);
+
+  });
+
+  it('adds a client successfully', async () => {
+
+    // Given: We have a prospective client
+    const client = createDefaultClient();
+
+    // When: we add the client
+    const addedClient = await addClient(client);
+
+    // Then: The client info should be correct
+    const idOfLastClient = getClientsResponse.clients[getClientsResponse.clients.length - 1].id;
+    expect(addedClient.id).toBe(idOfLastClient + 1);
+    expect(addedClient.name).toBe(client.name);
+    expect(addedClient.email).toBe(client.email);
+    expect(addedClient.isActive).toBeFalsy();
+
+  });
+
+  it('converts AddClientResponse to domain model', () => {
+
+    // Given: We have a AddClientResponse
+    const addClientResponse: AddClientResponse = {
+      id: 1,
+      name: "Morty",
+      email: "morty@adultswim.com"
+    }
+
+    // When: We convert the response
+    const client = convertAddedClientResponseToClient(addClientResponse);
+
+    // Then: The domain should be mapped correctly
+    const expectedClient: Client = {
+      id: 1,
+      name: "Morty",
+      email: "morty@adultswim.com",
       isActive: false
     };
 
