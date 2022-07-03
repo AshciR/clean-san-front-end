@@ -3,12 +3,14 @@ import styles from './AddClientForm.module.scss';
 import {Box, Button, Paper, TextField, Typography} from "@mui/material";
 import * as yup from 'yup';
 import {useFormik} from "formik";
+import Client from "../../../shared/Client.model";
 
 interface AddClientFormProps {
   handleCloseAddClientModal: () => void
+  handleAddClient: (prospectiveClient: Client) => void
 }
 
-const AddClientForm: FC<AddClientFormProps> = ({handleCloseAddClientModal}: AddClientFormProps) => {
+const AddClientForm: FC<AddClientFormProps> = ({handleCloseAddClientModal, handleAddClient}: AddClientFormProps) => {
 
   const validationSchema = yup.object({
     clientName: yup
@@ -27,9 +29,15 @@ const AddClientForm: FC<AddClientFormProps> = ({handleCloseAddClientModal}: AddC
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      // TODO: Replace with Service Call
-      console.log(JSON.stringify(values, null, 2));
+
+      handleAddClient({
+        id: 0, // Using the value 0 b/c the true id will be assigned after creation
+        name: values.clientName,
+        email: values.clientEmail,
+        isActive: false
+      });
       handleCloseAddClientModal();
+      formik.resetForm()
     }
   });
 

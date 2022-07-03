@@ -11,11 +11,15 @@ describe('<AddClientForm />', () => {
   });
 
   const mockHandleCloseAddClientModal = jest.fn();
+  const mockHandleAddClient = jest.fn();
 
   test('it should submit form successfully', async () => {
 
     // Given: The form is filled with valid values
-    render(<AddClientForm handleCloseAddClientModal={mockHandleCloseAddClientModal}/>);
+    render(<AddClientForm
+      handleCloseAddClientModal={mockHandleCloseAddClientModal}
+      handleAddClient={mockHandleAddClient}
+    />);
     const user = userEvent
     await user.type(screen.getByLabelText('Client Name'), 'Rick');
     await user.type(screen.getByLabelText('Client Email'), 'rick@gmail.com');
@@ -25,7 +29,15 @@ describe('<AddClientForm />', () => {
 
     // Then: The form should be submitted correctly
     await waitFor(() => {
-      // TODO: Add check for values in services story
+      expect(mockHandleAddClient).toBeCalledWith({
+        id: 0,
+        name: 'Rick',
+        email: 'rick@gmail.com',
+        isActive: false
+      });
+    })
+
+    await waitFor(() => {
       expect(mockHandleCloseAddClientModal).toBeCalledTimes(1);
     });
 
@@ -34,13 +46,20 @@ describe('<AddClientForm />', () => {
   test('it should not submit form when required fields are missing', async () => {
 
     // Given: The form is missing required values
-    render(<AddClientForm handleCloseAddClientModal={mockHandleCloseAddClientModal}/>);
+    render(<AddClientForm
+      handleCloseAddClientModal={mockHandleCloseAddClientModal}
+      handleAddClient={mockHandleAddClient}
+    />);
     const user = userEvent
 
     // When: We submit the form
     await user.click(screen.getByRole('button', {name: 'Submit'}));
 
     // Then: The error messages should appear
+    await waitFor(() => {
+      expect(mockHandleAddClient).not.toBeCalled();
+    });
+
     await waitFor(() => {
       expect(mockHandleCloseAddClientModal).not.toBeCalled();
     });
@@ -58,7 +77,10 @@ describe('<AddClientForm />', () => {
   test('it should clear form when cancelled', async () => {
 
     // Given: The form is filled with valid values
-    render(<AddClientForm handleCloseAddClientModal={mockHandleCloseAddClientModal}/>);
+    render(<AddClientForm
+      handleCloseAddClientModal={mockHandleCloseAddClientModal}
+      handleAddClient={mockHandleAddClient}
+    />);
     const user = userEvent
     await user.type(screen.getByLabelText('Client Name'), 'Rick');
     await user.type(screen.getByLabelText('Client Email'), 'rick@gmail.com');
@@ -67,6 +89,10 @@ describe('<AddClientForm />', () => {
     await user.click(screen.getByRole('button', {name: 'Cancel'}));
 
     // Then: The form should not be submitted
+    await waitFor(() => {
+      expect(mockHandleAddClient).not.toBeCalled();
+    });
+
     await waitFor(() => {
       expect(mockHandleCloseAddClientModal).toBeCalledTimes(1);
     });
