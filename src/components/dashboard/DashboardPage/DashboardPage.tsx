@@ -1,7 +1,7 @@
 import {DatePicker} from '@mui/x-date-pickers/DatePicker';
 import {LocalizationProvider} from '@mui/x-date-pickers/LocalizationProvider';
 import {AdapterLuxon} from '@mui/x-date-pickers/AdapterLuxon';
-import {Box, Container, Fab, Skeleton, TextField, Typography} from '@mui/material';
+import {Backdrop, Box, Container, Fab, Skeleton, TextField, Typography} from '@mui/material';
 import {DateTime} from 'luxon';
 import React, {FC} from 'react';
 import DueService from '../../../shared/DueService.model';
@@ -11,9 +11,19 @@ import snackbarNotificationReducer, {
   initialSnackbarNotificationState
 } from '../../shared/SnackbarNotification/snackbarNotification.reducer';
 import dueServicesReducer, {initialDueServicesState} from './dashboardPage.reducer';
-import {fetchDueServices, submitUpdatedServices} from '../../../services/services.services';
+import {
+  convertDueServicesResponseToDueService,
+  fetchDueServices,
+  submitUpdatedServices
+} from '../../../services/services.services';
 import NavBarWrapper from "../../shared/NavBarWrapper/NavBarWrapper";
 import {NAV_BAR_HEIGHT} from "../../shared/NavBar/NavBar";
+import AssociatedServicesModal from "../AssociatedServicesModal/AssociatedServicesModal";
+import {
+  associatedServicesReducer,
+  initialAssociatedServicesModalState
+} from "../AssociatedServicesModal/associatedServicesModal.reducer";
+import {getDueServicesResponse} from "../../../mocks/servicesEndpointResponses";
 
 interface DashboardPageProps {
 
@@ -41,6 +51,11 @@ const DashboardPageContent: FC<DashboardPageContentProps> = ({distanceFromNavBar
     snackbarNotificationReducer,
     initialSnackbarNotificationState
   );
+
+  const [associatedServicesModalState, dispatchAssociatedServicesModal] = React.useReducer(
+    associatedServicesReducer,
+    initialAssociatedServicesModalState
+  )
 
   const [dueServicesDate, setDueServicesDate] = React.useState<DateTime | null>(DateTime.now());
 
@@ -95,6 +110,41 @@ const DashboardPageContent: FC<DashboardPageContentProps> = ({distanceFromNavBar
     dispatchUpdateServiceNotification({type: 'SNACKBAR_NOTIFICATION_CLOSE'});
   };
 
+  const handleOpenViewAssociatedServicesModal = (selectedService: DueService) => {
+
+    // First select the service we're interested in
+    dispatchAssociatedServicesModal({
+      type: 'ASSOCIATED_SERVICES_SELECT_SERVICE',
+      payload: selectedService
+    });
+
+    // Then make the service call to find the other related services
+    dispatchAssociatedServicesModal({
+      type: 'ASSOCIATED_SERVICES_FETCH_INIT'
+    });
+
+    try {
+
+      // TODO: Replace with real service call in upcoming PR
+      const mockAssociatedServices = getDueServicesResponse.dueServices
+        .map(service => convertDueServicesResponseToDueService(service))
+        .filter(service => service.contract.id === 1);
+
+      dispatchAssociatedServicesModal({
+        type: 'ASSOCIATED_SERVICES_FETCH_SUCCESS',
+        payload: mockAssociatedServices
+      });
+
+    } catch {
+      dispatchAssociatedServicesModal({type: 'ASSOCIATED_SERVICES_FETCH_FAILURE'});
+    }
+
+  };
+
+  const handleCloseViewAssociatedServicesModal = () => {
+    dispatchAssociatedServicesModal({type: 'ASSOCIATED_SERVICES_CLOSE_MODAL'});
+  };
+
   // Effects
   // @ts-ignore
   React.useEffect(() => {
@@ -138,6 +188,11 @@ const DashboardPageContent: FC<DashboardPageContentProps> = ({distanceFromNavBar
       sx={{
         marginTop: distanceFromNavBar
       }}
+      onKeyDown={(event) => {
+        if (event.key === 'Escape') {
+          handleCloseViewAssociatedServicesModal()
+        }
+      }}
     >
       <SnackbarNotification
         open={updateServiceNotificationState.isNotificationOpen}
@@ -145,6 +200,20 @@ const DashboardPageContent: FC<DashboardPageContentProps> = ({distanceFromNavBar
         severity={updateServiceNotificationState.severity}
         message={updateServiceNotificationState.message}
       />
+      {
+        // Only render if the user wants to see associated services
+        associatedServicesModalState.isOpen &&
+          <Backdrop
+              sx={{color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1}}
+              open={associatedServicesModalState.isOpen}
+              data-testid="ViewAssociatedServicesModal"
+          >
+              <AssociatedServicesModal
+                  modalState={associatedServicesModalState}
+                  handleCloseAssociatedServicesModal={handleCloseViewAssociatedServicesModal}
+              />
+          </Backdrop>
+      }
       <Container maxWidth='xl'>
         <Box
           sx={{
@@ -164,7 +233,11 @@ const DashboardPageContent: FC<DashboardPageContentProps> = ({distanceFromNavBar
                 <Typography variant='h4'>
                   Sorry... we weren't able to get the due services at this time.
                 </Typography> :
-                <DueServicesTable dueServices={dueServicesState.dueServices} handleUpdateService={handleUpdateService}/>
+                <DueServicesTable
+                  dueServices={dueServicesState.dueServices}
+                  handleUpdateService={handleUpdateService}
+                  handleOpenViewAssociatedServicesModal={handleOpenViewAssociatedServicesModal}
+                />
           }
         </Box>
         <Box

@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   Chip,
   ChipProps,
   createTheme,
@@ -21,23 +22,32 @@ import DueService from '../../../shared/DueService.model';
 import ServiceStatus from '../../../shared/ServiceStatus.model';
 import styles from './DueServicesTable.module.scss';
 import {ServiceFrequency} from "../../../shared/Contract.model";
+import ServiceStatusChip, {STATUS_CHIP_WIDTH} from "../ServiceStatusChip/ServiceStatusChip";
 
 const SERVICE_ID_WIDTH = 100;
-const STATUS_CHIP_WIDTH = 120;
 const STATUS_COLUMN_WIDTH = STATUS_CHIP_WIDTH + 60;
 
 interface DueServicesTableProps {
   dueServices: Array<DueService>
   handleUpdateService: (updatedService: DueService) => void
+  handleOpenViewAssociatedServicesModal: (selectedService: DueService) => void
 }
 
-const DueServicesTable: FC<DueServicesTableProps> = ({dueServices, handleUpdateService}: DueServicesTableProps) => {
+const DueServicesTable: FC<DueServicesTableProps> = ({
+                                                       dueServices,
+                                                       handleUpdateService,
+                                                       handleOpenViewAssociatedServicesModal
+                                                     }: DueServicesTableProps) => {
 
   const hasServices = dueServices.length !== 0;
 
   return (
     <div className={styles.DueServicesTable} data-testid="due-services-table">
-      {hasServices ? <VisibleDueServiceTable services={dueServices} handleUpdateService={handleUpdateService}/> :
+      {hasServices ? <VisibleDueServiceTable
+          services={dueServices}
+          handleUpdateService={handleUpdateService}
+          handleOpenViewAssociatedServicesModal={handleOpenViewAssociatedServicesModal}
+        /> :
         <NoDueServicesDisplay/>}
     </div>
   );
@@ -46,9 +56,14 @@ const DueServicesTable: FC<DueServicesTableProps> = ({dueServices, handleUpdateS
 interface VisibleDueServiceTableProps {
   services: Array<DueService>
   handleUpdateService: (updatedService: DueService) => void
+  handleOpenViewAssociatedServicesModal: (selectedService: DueService) => void
 }
 
-const VisibleDueServiceTable = ({services, handleUpdateService}: VisibleDueServiceTableProps) => (
+const VisibleDueServiceTable = ({
+                                  services,
+                                  handleUpdateService,
+                                  handleOpenViewAssociatedServicesModal
+                                }: VisibleDueServiceTableProps) => (
   <TableContainer data-testid="visible-due-services-table">
     <Table aria-label="due services table">
       <TableHead>
@@ -63,7 +78,12 @@ const VisibleDueServiceTable = ({services, handleUpdateService}: VisibleDueServi
       </TableHead>
       <TableBody>
         {services.map(service =>
-          <DueServiceRow key={service.id} service={service} handleUpdateService={handleUpdateService}/>
+          <DueServiceRow
+            key={service.id}
+            service={service}
+            handleUpdateService={handleUpdateService}
+            handleOpenViewAssociatedServicesModal={handleOpenViewAssociatedServicesModal}
+          />
         )}
       </TableBody>
     </Table>
@@ -73,11 +93,20 @@ const VisibleDueServiceTable = ({services, handleUpdateService}: VisibleDueServi
 interface DueServiceRowProps {
   service: DueService
   handleUpdateService: (updatedService: DueService) => void
+  handleOpenViewAssociatedServicesModal: (selectedService: DueService) => void
 }
 
-const DueServiceRow = ({service, handleUpdateService}: DueServiceRowProps) => (
+const DueServiceRow = ({service, handleUpdateService, handleOpenViewAssociatedServicesModal}: DueServiceRowProps) => (
   <TableRow data-testid="due-service-table-row">
-    <TableCell sx={{width: SERVICE_ID_WIDTH}}>{service.id}</TableCell>
+    <TableCell sx={{width: SERVICE_ID_WIDTH}}>
+      <Button
+        size="small"
+        color="primary"
+        onClick={() => handleOpenViewAssociatedServicesModal(service)}
+      >
+        {service.id}
+      </Button>
+    </TableCell>
     <TableCell>{service.client.name}</TableCell>
     <TableCell>
       <ServiceFrequencyChip frequency={service.contract.serviceFrequency}/>
@@ -120,7 +149,7 @@ const StatusDropDown = ({service, handleUpdateService}: StatusDropDownProps) => 
           variant='outlined'
           defaultValue={service.currentStatus}
           sx={{
-            '& .MuiSelect-select':{ paddingTop: 1, paddingBottom: 1} // 8px
+            '& .MuiSelect-select': {paddingTop: 1, paddingBottom: 1} // 8px
           }}
         >
           {
@@ -134,27 +163,6 @@ const StatusDropDown = ({service, handleUpdateService}: StatusDropDownProps) => 
       </FormControl>
     </Box>
   );
-};
-
-interface ServiceStatusChipProps {
-  status: ServiceStatus
-}
-
-const ServiceStatusChip = ({status}: ServiceStatusChipProps) => {
-
-  const chipProps = {
-    [ServiceStatus.NOT_COMPLETED]: {color: 'warning', label: 'Not Completed'},
-    [ServiceStatus.IN_PROGRESS]: {color: 'info', label: 'In Progress'},
-    [ServiceStatus.COMPLETED]: {color: 'success', label: 'Completed'},
-    [ServiceStatus.CANCELLED]: {color: 'default', label: 'Cancelled'},
-  };
-
-  return <Chip
-    size='small'
-    variant='outlined'
-    sx={{width: STATUS_CHIP_WIDTH}}
-    {...chipProps[status] as ChipProps} />
-
 };
 
 interface ServiceFrequencyChipProps {
