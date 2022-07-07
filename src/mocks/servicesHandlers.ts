@@ -1,17 +1,52 @@
 import {rest} from "msw";
 import {getDueServicesResponse} from "./servicesEndpointResponses";
 import {
-  DueServiceResponse,
   GetDueServicesResponse,
+  ServiceQueryResponse,
+  ServiceResponse,
   SubmitUpdateServiceRequest,
   SubmitUpdateServiceResponse,
-  UpdatedServiceResponse,
   UpdatedServicesRequest
 } from "../services/services.services";
 import {DateTime} from "luxon";
 
 const getDueServicesHandler = rest.get('*/v1/services', (req, res, context) => {
 
+  const dueDate = req.url.searchParams.get('dueDate');
+  if (dueDate) {
+    return filterResponseBasedOnDueDate(dueDate, res, context);
+  }
+
+  const contractId = Number(req.url.searchParams.get('contractId'));
+  if (contractId) {
+    return filterResponseBasedOnContractId(contractId, res, context);
+  }
+
+  return res(
+    context.status(200),
+    context.json(getDueServicesResponse)
+  );
+
+});
+
+// @ts-ignore
+const filterResponseBasedOnContractId = (contractId, res, context) => {
+  const filterByContractId = (getDueServicesResponse: GetDueServicesResponse, contractId: number) =>
+    getDueServicesResponse.dueServices
+      .filter(service => service.contract.id === contractId)
+
+  const response = {
+    services: filterByContractId(getDueServicesResponse, contractId)
+  }
+
+  return res(
+    context.status(200),
+    context.json(response)
+  )
+}
+
+// @ts-ignore
+const filterResponseBasedOnDueDate = (dueDate, res, context) => {
   const filterByDueDate = (getDueServicesResponse: GetDueServicesResponse, dueDate: string) => {
 
     const dueServicesBeforeDate = getDueServicesResponse.dueServices.filter(serviceResponse => {
@@ -23,15 +58,13 @@ const getDueServicesHandler = rest.get('*/v1/services', (req, res, context) => {
     }
   };
 
-  const dueDate = req.url.searchParams.get('dueDate');
-  const response = (dueDate) ? filterByDueDate(getDueServicesResponse, dueDate) : getDueServicesResponse
+  const response = filterByDueDate(getDueServicesResponse, dueDate)
 
   return res(
     context.status(200),
     context.json(response)
-  )
-
-});
+  );
+};
 
 const submitUpdatedServicesHandler = rest.put('*/v1/services', (req, res, context) => {
 
@@ -41,7 +74,7 @@ const submitUpdatedServicesHandler = rest.put('*/v1/services', (req, res, contex
   // Using the mock Due services response as the base for update logic.
   // Find the mock due services which match the ids in the request
   // Then construct a response based on the data in the request
-  const updatedServices: UpdatedServiceResponse[] = getDueServicesResponse.dueServices
+  const updatedServices: ServiceResponse[] = getDueServicesResponse.dueServices
     .filter(dueServiceResponse => servicesToUpdateIds.includes(dueServiceResponse.id))
     .map(dueServiceToUpdate => convertDueServiceResponseToUpdatedServiceResponse(dueServiceToUpdate, updatedServicesRequests))
 
@@ -56,10 +89,10 @@ const submitUpdatedServicesHandler = rest.put('*/v1/services', (req, res, contex
 
 });
 
-const convertDueServiceResponseToUpdatedServiceResponse = (dueServiceResponse: DueServiceResponse,
+const convertDueServiceResponseToUpdatedServiceResponse = (dueServiceResponse: ServiceQueryResponse,
                                                            updatedServicesRequests: UpdatedServicesRequest[]) => {
 
-  const findMatchingRequest = (dueServiceResponse: DueServiceResponse, updatedServicesRequests: UpdatedServicesRequest[]) => {
+  const findMatchingRequest = (dueServiceResponse: ServiceQueryResponse, updatedServicesRequests: UpdatedServicesRequest[]) => {
 
     // The fallback should never happen b/c the requests were build based on the responses.
     return updatedServicesRequests.find(req => req.id === dueServiceResponse.id) || updatedServicesRequests[0]

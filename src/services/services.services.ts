@@ -6,6 +6,7 @@ import Client from "../shared/Client.model";
 import ServiceHistory from "../shared/ServiceHistory.model";
 import {ContractResponse, convertContractResponseToContract} from "./shared-responses";
 
+const servicesEndpoint = '/v1/services';
 /**
  * Fetches the due services from the backend
  * @param beforeDate services due before and on this date
@@ -16,9 +17,9 @@ const fetchDueServices = async (beforeDate?: DateTime) => {
 
   try {
 
-    const response = await axios.get<GetDueServicesResponse>('/v1/services', {params});
+    const response = await axios.get<GetDueServicesResponse>(servicesEndpoint, {params});
     const dueServices = response.data.dueServices.map(serviceResponse =>
-      convertDueServicesResponseToDueService(serviceResponse)
+      convertServicesQueryResponseToDueService(serviceResponse)
     );
 
     return dueServices || [];
@@ -29,10 +30,33 @@ const fetchDueServices = async (beforeDate?: DateTime) => {
 };
 
 /**
+ * Fetches the services associated with a contract
+ * @param contractId the contract id
+ */
+const fetchServicesForContract = async (contractId: number) => {
+
+  const params = {
+    contractId: contractId
+  }
+
+  try {
+    const response = await axios.get<GetServicesForContractResponse>(servicesEndpoint, {params});
+    const contractServices = response.data.services.map(service =>
+      convertServicesQueryResponseToDueService(service)
+    );
+
+    return contractServices || [];
+
+  } catch (error) {
+    throw error
+  }
+};
+
+/**
  * Helper method to convert the DueServices response into the domain model
  * @param response DueServiceResponse
  */
-const convertDueServicesResponseToDueService = (response: DueServiceResponse): DueService => {
+const convertServicesQueryResponseToDueService = (response: ServiceQueryResponse): DueService => {
 
   const convertClientResponseToClient = (client: ClientResponse): Client => ({
     id: client.id,
@@ -69,7 +93,7 @@ const submitUpdatedServices = async (services: DueService[]) => {
   try {
 
     const response = await axios.put<SubmitUpdateServiceResponse>(
-      '/v1/services',
+      servicesEndpoint,
       updatedServicesRequest
     );
 
@@ -82,7 +106,7 @@ const submitUpdatedServices = async (services: DueService[]) => {
       const serviceThatWasUpdated = services.find(s => s.id === updatedServiceResponse.id)
 
       // @ts-ignore serviceThatWasUpdated can not be undefined because it was submitted above
-      return convertUpdatedServiceResponseToDueService(updatedServiceResponse, serviceThatWasUpdated)
+      return convertServiceResponseToDueService(updatedServiceResponse, serviceThatWasUpdated)
     })
 
   } catch (error) {
@@ -110,8 +134,8 @@ const createUpdateServicesRequest = (service: DueService) => {
  * @param updatedServiceResponse UpdatedServiceResponse
  * @param correspondingService the DueService that corresponds with the UpdatedServiceResponse
  */
-const convertUpdatedServiceResponseToDueService = (updatedServiceResponse: UpdatedServiceResponse,
-                                                   correspondingService: DueService): DueService => {
+const convertServiceResponseToDueService = (updatedServiceResponse: ServiceResponse,
+                                            correspondingService: DueService): DueService => {
 
   return {
     id: updatedServiceResponse.id,
@@ -136,12 +160,11 @@ const convertServiceHistoryResponseToServiceHistory = (history: ServiceHistoryRe
 };
 
 // Get Due Services Data Types
-
 type GetDueServicesResponse = {
-  dueServices: DueServiceResponse[];
+  dueServices: ServiceQueryResponse[];
 };
 
-type DueServiceResponse = {
+type ServiceQueryResponse = {
   id: number;
   client: ClientResponse;
   contract: ContractResponse;
@@ -162,13 +185,18 @@ type ServiceHistoryResponse = {
   updateTime: string;
 }
 
+// Get Services for Contract Data Types
+type GetServicesForContractResponse = {
+  services: ServiceQueryResponse[]
+}
+
 // Submit Updated Services Data Types
 
 type SubmitUpdateServiceResponse = {
-  updatedServices: UpdatedServiceResponse[]
+  updatedServices: ServiceResponse[]
 }
 
-type UpdatedServiceResponse = {
+type ServiceResponse = {
   id: number;
   contractId: number;
   dueDate: string;
@@ -186,16 +214,17 @@ type UpdatedServicesRequest = {
 export {
   fetchDueServices,
   submitUpdatedServices,
-  convertDueServicesResponseToDueService,
-  convertUpdatedServiceResponseToDueService
+  convertServicesQueryResponseToDueService,
+  convertServiceResponseToDueService,
+  fetchServicesForContract
 };
 export type {
   GetDueServicesResponse,
-  DueServiceResponse,
+  ServiceQueryResponse,
   ClientResponse,
   ServiceHistoryResponse,
   SubmitUpdateServiceResponse,
-  UpdatedServiceResponse,
+  ServiceResponse,
   SubmitUpdateServiceRequest,
   UpdatedServicesRequest
 }

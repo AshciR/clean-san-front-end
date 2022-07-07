@@ -111,6 +111,106 @@ const getDueServicesResponse: GetDueServicesResponse = {
           "updateTime": "2022-05-13T20:00:12.669974Z"
         }
       ]
+    },
+    {
+      "id": 5,
+      "client": {
+        "id": 1,
+        "name": "Sash",
+        "email": "sash@gmail.com"
+      },
+      "contract": {
+        "id": 1,
+        "clientId": 1,
+        "startDate": "2022-02-10",
+        "endDate": "2023-02-09",
+        "serviceFrequency": "MONTHLY",
+        "status": "ACTIVE"
+      },
+      "dueDate": "2022-06-05",
+      "currentStatus": "NOT_COMPLETED",
+      "history": [
+        {
+          "id": 17,
+          "status": "NOT_COMPLETED",
+          "updateTime": "2022-05-13T19:59:48.508665Z"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "client": {
+        "id": 1,
+        "name": "Sash",
+        "email": "sash@gmail.com"
+      },
+      "contract": {
+        "id": 1,
+        "clientId": 1,
+        "startDate": "2022-02-10",
+        "endDate": "2023-02-09",
+        "serviceFrequency": "MONTHLY",
+        "status": "ACTIVE"
+      },
+      "dueDate": "2022-07-05",
+      "currentStatus": "NOT_COMPLETED",
+      "history": [
+        {
+          "id": 18,
+          "status": "NOT_COMPLETED",
+          "updateTime": "2022-05-13T19:59:48.508665Z"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "client": {
+        "id": 1,
+        "name": "Sash",
+        "email": "sash@gmail.com"
+      },
+      "contract": {
+        "id": 1,
+        "clientId": 1,
+        "startDate": "2022-02-10",
+        "endDate": "2023-02-09",
+        "serviceFrequency": "MONTHLY",
+        "status": "ACTIVE"
+      },
+      "dueDate": "2022-08-05",
+      "currentStatus": "NOT_COMPLETED",
+      "history": [
+        {
+          "id": 19,
+          "status": "NOT_COMPLETED",
+          "updateTime": "2022-05-13T19:59:48.508665Z"
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "client": {
+        "id": 2,
+        "name": "Richie",
+        "email": "rich@gmail.com"
+      },
+      "contract": {
+        "id": 2,
+        "clientId": 2,
+        "startDate": "2022-02-10",
+        "endDate": "2023-02-09",
+        "serviceFrequency": "FORTNIGHTLY",
+        "status": "ACTIVE"
+      },
+      "dueDate": "2022-03-24",
+      "currentStatus": "NOT_COMPLETED",
+      "history": [
+        {
+          "id": 20,
+          "status": "NOT_COMPLETED",
+          "updateTime": "2022-05-13T19:59:48.507424Z"
+        }
+      ]
     }
   ]
 }
