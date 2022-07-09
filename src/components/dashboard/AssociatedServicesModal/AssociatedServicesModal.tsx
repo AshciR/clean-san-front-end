@@ -5,6 +5,7 @@ import {
   Avatar,
   Box,
   Button,
+  Card,
   Chip,
   ChipProps,
   CircularProgress,
@@ -23,7 +24,6 @@ import {
 } from "@mui/lab";
 import {DateTime} from "luxon";
 import {AssociatedServicesModalState} from "./associatedServicesModal.reducer";
-import ServiceStatusChip from "../ServiceStatusChip/ServiceStatusChip";
 import ServiceStatus from "../../../shared/ServiceStatus.model";
 
 interface AssociatedServicesModalProps {
@@ -47,7 +47,9 @@ const AssociatedServicesModal: FC<AssociatedServicesModalProps> = ({
         elevation={2}
         sx={{
           padding: 3,
-          width: 800
+          width: 800,
+          height: 800,
+          overflow: 'auto'
         }}
       >
         <Typography
@@ -57,18 +59,11 @@ const AssociatedServicesModal: FC<AssociatedServicesModalProps> = ({
         >
           Related Services
         </Typography>
-        <Box
+        <Card
+          variant='outlined'
           sx={{
             display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'space-evenly',
-            marginTop: 2
-          }}>
-        </Box>
-        <Box
-          sx={{
-            display: 'flex',
-            justifyContent: 'center',
+            justifyContent: 'center'
           }}
         >
           {
@@ -97,7 +92,7 @@ const AssociatedServicesModal: FC<AssociatedServicesModalProps> = ({
                   />
                 </Timeline>
           }
-        </Box>
+        </Card>
         <Box
           sx={{
             display: 'flex',
@@ -140,7 +135,7 @@ const ServicesTimelineItem: FC<ServicesTimelineItemProps> = ({
   return (
     <TimelineItem>
       <TimelineOppositeContent sx={{paddingTop: '6px'}}>
-        <UpdateDateTimeChip
+        <DateChip
           label={latestUpdate.updateTime.toLocaleString(DateTime.DATETIME_MED)}
           status={latestUpdate.status}
           isFilled={isSelectedService}
@@ -159,7 +154,8 @@ const ServicesTimelineItem: FC<ServicesTimelineItemProps> = ({
         }
       </TimelineSeparator>
       <TimelineContent sx={{paddingTop: '6px'}}>
-        <ServiceStatusChip
+        <DateChip
+          label={service.dueDate.toLocaleString(DateTime.DATE_MED)}
           status={latestUpdate.status}
           isFilled={isSelectedService}
         />
@@ -174,7 +170,7 @@ interface UpdateDateTimeChipProps {
   isFilled?: boolean
 }
 
-const UpdateDateTimeChip = ({status, label, isFilled = false}: UpdateDateTimeChipProps) => {
+const DateChip = ({status, label, isFilled = false}: UpdateDateTimeChipProps) => {
 
   const chipProps = {
     [ServiceStatus.NOT_COMPLETED]: {color: 'warning'},
@@ -187,6 +183,7 @@ const UpdateDateTimeChip = ({status, label, isFilled = false}: UpdateDateTimeChi
     size='small'
     variant={isFilled ? 'filled' : 'outlined'}
     label={label}
+    sx={{width: 150}}
     {...chipProps[status] as ChipProps}
   />
 

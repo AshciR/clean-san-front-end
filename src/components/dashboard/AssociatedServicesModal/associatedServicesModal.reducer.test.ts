@@ -9,7 +9,7 @@ import {convertServicesQueryResponseToDueService} from "../../../services/servic
 
 describe('AssociatedServicesModal Reducer', () => {
 
-  const mockAssociatedServices = getDueServicesResponse.dueServices
+  const mockAssociatedServices = getDueServicesResponse.services
     .map(service => convertServicesQueryResponseToDueService(service))
     .filter(service => service.contract.id === 1);
 

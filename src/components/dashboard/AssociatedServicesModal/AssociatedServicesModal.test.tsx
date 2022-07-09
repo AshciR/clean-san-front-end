@@ -5,6 +5,7 @@ import AssociatedServicesModal from './AssociatedServicesModal';
 import {AssociatedServicesModalState} from "./associatedServicesModal.reducer";
 import {getDueServicesResponse} from "../../../mocks/servicesEndpointResponses";
 import {convertServicesQueryResponseToDueService} from "../../../services/services.services";
+import {DateTime} from "luxon";
 
 describe('<AssociatedServicesModal />', () => {
 
@@ -13,7 +14,7 @@ describe('<AssociatedServicesModal />', () => {
   it('should display the related services', () => {
 
     // Given: We have associated services
-    const contractOneServices = getDueServicesResponse.dueServices
+    const contractOneServices = getDueServicesResponse.services
       .map(service => convertServicesQueryResponseToDueService(service))
       .filter(service => service.contract.id === 1);
 
@@ -32,20 +33,20 @@ describe('<AssociatedServicesModal />', () => {
 
     // Then: The related services should be shown
     const nonCompletedService = contractOneServices[0];
-    const nonCompletedServicesElements = screen.getAllByText(toTitleCase(nonCompletedService.currentStatus));
-    expect(nonCompletedServicesElements.length).toBe(4)
+    const nonCompletedServiceDueDate = screen.getByText(nonCompletedService.dueDate.toLocaleString(DateTime.DATE_MED));
+    expect(nonCompletedServiceDueDate).toBeInTheDocument();
     expect(screen.getByText(nonCompletedService.id)).toBeInTheDocument();
 
     const inProgressService = contractOneServices[1];
-    const inProgressServicesElements = screen.getAllByText(toTitleCase(inProgressService.currentStatus));
-    expect(inProgressServicesElements.length).toBe(1)
+    const inProgressServiceDueDate = screen.getByText(inProgressService.dueDate.toLocaleString(DateTime.DATE_MED));
+    expect(inProgressServiceDueDate).toBeInTheDocument();
     expect(screen.getByText(inProgressService.id)).toBeInTheDocument();
   });
 
   it('should highlight the selected service', () => {
 
     // Given: We have associated services
-    const mockAssociatedServices = getDueServicesResponse.dueServices
+    const mockAssociatedServices = getDueServicesResponse.services
       .map(service => convertServicesQueryResponseToDueService(service))
       .filter(service => service.contract.id === 1);
 
@@ -116,7 +117,7 @@ describe('<AssociatedServicesModal />', () => {
   it('should close the modal', () => {
 
     // Given: The modal is open
-    const mockAssociatedServices = getDueServicesResponse.dueServices
+    const mockAssociatedServices = getDueServicesResponse.services
       .map(service => convertServicesQueryResponseToDueService(service))
       .filter(service => service.contract.id === 1);
 
@@ -139,12 +140,4 @@ describe('<AssociatedServicesModal />', () => {
     // Then: The close callback should be trigger
     expect(mockHandleCloseAssociatedServicesModal).toBeCalledTimes(1);
   });
-
-  const toTitleCase = (str: string) => str
-    // NOT_COMPLETED -> NOT COMPLETED
-    .replace('_', ' ')
-    // NOT COMPLETED -> Not Completed
-    .replace(/\w\S*/g, (txt: string) => txt.charAt(0).toUpperCase() + txt.substring(1).toLowerCase()
-    );
-
 });
