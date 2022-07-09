@@ -2,10 +2,11 @@ import {DateTime} from "luxon";
 import DueService from "../shared/DueService.model";
 import ServiceStatus from "../shared/ServiceStatus.model";
 import {
-  convertDueServicesResponseToDueService,
-  convertUpdatedServiceResponseToDueService,
-  DueServiceResponse,
+  convertServiceResponseToDueService,
+  convertServicesQueryResponseToDueService,
   fetchDueServices,
+  fetchServicesForContract,
+  ServiceQueryResponse,
   submitUpdatedServices
 } from "./services.services";
 import {ContractStatus, createContract, ServiceFrequency} from "../shared/Contract.model";
@@ -21,8 +22,8 @@ describe('Due Services Services', () => {
     const dueServices = await fetchDueServices();
 
     // Then: The services should be present
-    const expectedServices = getDueServicesResponse.dueServices.map((serviceResponse: DueServiceResponse) =>
-      convertDueServicesResponseToDueService(serviceResponse)
+    const expectedServices = getDueServicesResponse.dueServices.map((serviceResponse: ServiceQueryResponse) =>
+      convertServicesQueryResponseToDueService(serviceResponse)
     )
 
     expect(dueServices.length).toBe(expectedServices.length);
@@ -41,7 +42,23 @@ describe('Due Services Services', () => {
     // Then: The services should be present
     const expectedServices = getDueServicesResponse.dueServices
       .slice(0, 2) // Get the 1st two elements
-      .map((serviceResponse: DueServiceResponse) => convertDueServicesResponseToDueService(serviceResponse))
+      .map((serviceResponse: ServiceQueryResponse) => convertServicesQueryResponseToDueService(serviceResponse))
+
+    expect(dueServices).toStrictEqual(expectedServices);
+
+  });
+
+  it('fetches the services for a contract', async () => {
+
+    // Given: We have the contract id
+    const contractId = getDueServicesResponse.dueServices[1].contract.id;
+
+    // When: the services are fetched
+    const dueServices = await fetchServicesForContract(contractId);
+
+    // Then: The services should be present
+    const expectedServices = getDueServicesResponse.dueServices.filter(service => service.contract.id === contractId)
+      .map((serviceResponse: ServiceQueryResponse) => convertServicesQueryResponseToDueService(serviceResponse))
 
     expect(dueServices).toStrictEqual(expectedServices);
 
@@ -51,7 +68,7 @@ describe('Due Services Services', () => {
 
     // Given: We have due services that can be updated
     const currentDueServices = getDueServicesResponse.dueServices
-      .map(service => convertDueServicesResponseToDueService(service))
+      .map(service => convertServicesQueryResponseToDueService(service))
 
     // And: We update services with prospective statuses
     const servicesToBeUpdated: DueService[] = [
@@ -78,7 +95,7 @@ describe('Due Services Services', () => {
     const dueServiceResponse = getDueServicesResponse.dueServices[0]
 
     // When: We convert the response
-    const dueService = convertDueServicesResponseToDueService(dueServiceResponse);
+    const dueService = convertServicesQueryResponseToDueService(dueServiceResponse);
 
     // Then: The domain should be mapped correctly
     const expectedDueService: DueService = {
@@ -138,7 +155,7 @@ describe('Due Services Services', () => {
     };
 
     // When: We convert the response
-    const updatedService = convertUpdatedServiceResponseToDueService(updatedServiceResponse, correspondingService);
+    const updatedService = convertServiceResponseToDueService(updatedServiceResponse, correspondingService);
 
     // Then: The domain should be mapped correctly
     const expectedDueService: DueService = {

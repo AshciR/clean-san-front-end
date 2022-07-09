@@ -5,13 +5,13 @@ import {DateTime} from 'luxon';
 import DueService from '../../../shared/DueService.model';
 import ServiceStatus from '../../../shared/ServiceStatus.model';
 import {getDueServicesResponse} from "../../../mocks/servicesEndpointResponses";
-import {convertDueServicesResponseToDueService} from "../../../services/services.services";
+import {convertServicesQueryResponseToDueService} from "../../../services/services.services";
 
 
 describe('<DueServicesTable />', () => {
 
   const MOCK_DUE_SERVICES = getDueServicesResponse.dueServices.map(service =>
-    convertDueServicesResponseToDueService(service)
+    convertServicesQueryResponseToDueService(service)
   );
 
   beforeEach(() => {
@@ -91,7 +91,7 @@ describe('<DueServicesTable />', () => {
 
     // Given: The table has service rows
     const dueServices = getDueServicesResponse.dueServices.map(service =>
-      convertDueServicesResponseToDueService(service)
+      convertServicesQueryResponseToDueService(service)
     );
     render(<DueServicesTable
       dueServices={MOCK_DUE_SERVICES}

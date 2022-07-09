@@ -11,11 +11,7 @@ import snackbarNotificationReducer, {
   initialSnackbarNotificationState
 } from '../../shared/SnackbarNotification/snackbarNotification.reducer';
 import dueServicesReducer, {initialDueServicesState} from './dashboardPage.reducer';
-import {
-  convertDueServicesResponseToDueService,
-  fetchDueServices,
-  submitUpdatedServices
-} from '../../../services/services.services';
+import {fetchDueServices, fetchServicesForContract, submitUpdatedServices} from '../../../services/services.services';
 import NavBarWrapper from "../../shared/NavBarWrapper/NavBarWrapper";
 import {NAV_BAR_HEIGHT} from "../../shared/NavBar/NavBar";
 import AssociatedServicesModal from "../AssociatedServicesModal/AssociatedServicesModal";
@@ -23,7 +19,6 @@ import {
   associatedServicesReducer,
   initialAssociatedServicesModalState
 } from "../AssociatedServicesModal/associatedServicesModal.reducer";
-import {getDueServicesResponse} from "../../../mocks/servicesEndpointResponses";
 
 interface DashboardPageProps {
 
@@ -110,7 +105,7 @@ const DashboardPageContent: FC<DashboardPageContentProps> = ({distanceFromNavBar
     dispatchUpdateServiceNotification({type: 'SNACKBAR_NOTIFICATION_CLOSE'});
   };
 
-  const handleOpenViewAssociatedServicesModal = (selectedService: DueService) => {
+  const handleOpenViewAssociatedServicesModal = async (selectedService: DueService) => {
 
     // First select the service we're interested in
     dispatchAssociatedServicesModal({
@@ -125,10 +120,7 @@ const DashboardPageContent: FC<DashboardPageContentProps> = ({distanceFromNavBar
 
     try {
 
-      // TODO: Replace with real service call in upcoming PR
-      const mockAssociatedServices = getDueServicesResponse.dueServices
-        .map(service => convertDueServicesResponseToDueService(service))
-        .filter(service => service.contract.id === 1);
+      const mockAssociatedServices = await fetchServicesForContract(selectedService.contract.id);
 
       dispatchAssociatedServicesModal({
         type: 'ASSOCIATED_SERVICES_FETCH_SUCCESS',

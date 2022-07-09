@@ -4,7 +4,7 @@ import '@testing-library/jest-dom/extend-expect';
 import AssociatedServicesModal from './AssociatedServicesModal';
 import {AssociatedServicesModalState} from "./associatedServicesModal.reducer";
 import {getDueServicesResponse} from "../../../mocks/servicesEndpointResponses";
-import {convertDueServicesResponseToDueService} from "../../../services/services.services";
+import {convertServicesQueryResponseToDueService} from "../../../services/services.services";
 
 describe('<AssociatedServicesModal />', () => {
 
@@ -13,12 +13,12 @@ describe('<AssociatedServicesModal />', () => {
   it('should display the related services', () => {
 
     // Given: We have associated services
-    const mockAssociatedServices = getDueServicesResponse.dueServices
-      .map(service => convertDueServicesResponseToDueService(service))
+    const contractOneServices = getDueServicesResponse.dueServices
+      .map(service => convertServicesQueryResponseToDueService(service))
       .filter(service => service.contract.id === 1);
 
     const modalState: AssociatedServicesModalState = {
-      associatedServices: mockAssociatedServices,
+      associatedServices: contractOneServices,
       isFetchError: false,
       isLoading: false,
       isOpen: true
@@ -31,20 +31,22 @@ describe('<AssociatedServicesModal />', () => {
     />);
 
     // Then: The related services should be shown
-    const serviceOne = mockAssociatedServices[0];
-    expect(screen.getByText(toTitleCase(serviceOne.currentStatus))).toBeInTheDocument();
-    expect(screen.getByText(serviceOne.id)).toBeInTheDocument();
+    const nonCompletedService = contractOneServices[0];
+    const nonCompletedServicesElements = screen.getAllByText(toTitleCase(nonCompletedService.currentStatus));
+    expect(nonCompletedServicesElements.length).toBe(4)
+    expect(screen.getByText(nonCompletedService.id)).toBeInTheDocument();
 
-    const serviceTwo = mockAssociatedServices[1];
-    expect(screen.getByText(toTitleCase(serviceTwo.currentStatus))).toBeInTheDocument();
-    expect(screen.getByText(serviceOne.id)).toBeInTheDocument();
+    const inProgressService = contractOneServices[1];
+    const inProgressServicesElements = screen.getAllByText(toTitleCase(inProgressService.currentStatus));
+    expect(inProgressServicesElements.length).toBe(1)
+    expect(screen.getByText(inProgressService.id)).toBeInTheDocument();
   });
 
   it('should highlight the selected service', () => {
 
     // Given: We have associated services
     const mockAssociatedServices = getDueServicesResponse.dueServices
-      .map(service => convertDueServicesResponseToDueService(service))
+      .map(service => convertServicesQueryResponseToDueService(service))
       .filter(service => service.contract.id === 1);
 
     // And: A selected service
@@ -115,7 +117,7 @@ describe('<AssociatedServicesModal />', () => {
 
     // Given: The modal is open
     const mockAssociatedServices = getDueServicesResponse.dueServices
-      .map(service => convertDueServicesResponseToDueService(service))
+      .map(service => convertServicesQueryResponseToDueService(service))
       .filter(service => service.contract.id === 1);
 
     const modalState: AssociatedServicesModalState = {

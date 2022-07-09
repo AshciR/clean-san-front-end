@@ -5,12 +5,12 @@ import {
   initialAssociatedServicesModalState
 } from "./associatedServicesModal.reducer";
 import {getDueServicesResponse} from "../../../mocks/servicesEndpointResponses";
-import {convertDueServicesResponseToDueService} from "../../../services/services.services";
+import {convertServicesQueryResponseToDueService} from "../../../services/services.services";
 
 describe('AssociatedServicesModal Reducer', () => {
 
   const mockAssociatedServices = getDueServicesResponse.dueServices
-    .map(service => convertDueServicesResponseToDueService(service))
+    .map(service => convertServicesQueryResponseToDueService(service))
     .filter(service => service.contract.id === 1);
 
   it('init fetching associated services', () => {
