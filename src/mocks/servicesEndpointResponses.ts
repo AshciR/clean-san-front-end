@@ -1,7 +1,7 @@
 import {GetDueServicesResponse} from "../services/services.services";
 
 const getDueServicesResponse: GetDueServicesResponse = {
-  "dueServices": [
+  "services": [
     {
       "id": 1,
       "client": {

@@ -18,7 +18,7 @@ const fetchDueServices = async (beforeDate?: DateTime) => {
   try {
 
     const response = await axios.get<GetDueServicesResponse>(servicesEndpoint, {params});
-    const dueServices = response.data.dueServices.map(serviceResponse =>
+    const dueServices = response.data.services.map(serviceResponse =>
       convertServicesQueryResponseToDueService(serviceResponse)
     );
 
@@ -161,7 +161,7 @@ const convertServiceHistoryResponseToServiceHistory = (history: ServiceHistoryRe
 
 // Get Due Services Data Types
 type GetDueServicesResponse = {
-  dueServices: ServiceQueryResponse[];
+  services: ServiceQueryResponse[];
 };
 
 type ServiceQueryResponse = {
@@ -226,5 +226,6 @@ export type {
   SubmitUpdateServiceResponse,
   ServiceResponse,
   SubmitUpdateServiceRequest,
-  UpdatedServicesRequest
+  UpdatedServicesRequest,
+  GetServicesForContractResponse
 }

@@ -10,7 +10,7 @@ import {convertServicesQueryResponseToDueService} from "../../../services/servic
 
 describe('<DueServicesTable />', () => {
 
-  const MOCK_DUE_SERVICES = getDueServicesResponse.dueServices.map(service =>
+  const MOCK_DUE_SERVICES = getDueServicesResponse.services.map(service =>
     convertServicesQueryResponseToDueService(service)
   );
 
@@ -90,7 +90,7 @@ describe('<DueServicesTable />', () => {
   it('should call handleOpenViewAssociatedServicesModal when service id is clicked', () => {
 
     // Given: The table has service rows
-    const dueServices = getDueServicesResponse.dueServices.map(service =>
+    const dueServices = getDueServicesResponse.services.map(service =>
       convertServicesQueryResponseToDueService(service)
     );
     render(<DueServicesTable

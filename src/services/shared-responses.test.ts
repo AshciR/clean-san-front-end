@@ -8,7 +8,7 @@ describe('Shared responses', () => {
   it('converts Contract response to domain model', () => {
 
     // Given: We have a Contract response
-    const contractResponse = getDueServicesResponse.dueServices[0].contract;
+    const contractResponse = getDueServicesResponse.services[0].contract;
 
     // When: We convert the response
     const contract = convertContractResponseToContract(contractResponse);
