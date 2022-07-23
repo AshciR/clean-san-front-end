@@ -15,3 +15,13 @@ afterEach(() => server.resetHandlers())
 
 // Clean up after the tests are finished.
 afterAll(() => server.close())
+
+/**
+ * Util function to help convert enums into display values
+ * @param word
+ */
+const convertToSentenceCase = (word: string) => {
+  return word[0] + word.slice(1).toLowerCase();
+}
+
+export {convertToSentenceCase};

@@ -161,7 +161,12 @@ const ClientsPageContent: FC<ClientsPageContentProps> = ({distanceFromNavBar}) =
                 <Typography variant='h4'>
                   Sorry... we weren't able to get the clients at this time.
                 </Typography> :
-                <ClientsTable clients={clientsState.clients}/>
+                <>
+                  <ClientsTable clients={clientsState.clients}/>
+                  {/*TODO: Move once backdrop is ready*/}
+                  {/*TODO: Add Backdrop, reducer to handle close, and which client was clicked*/}
+                  {/*<AssociatedContractsModal clientWithContracts={clientsState.clients[0]}/>*/}
+                </>
           }
         </Box>
         <Box
@@ -181,17 +186,17 @@ const ClientsPageContent: FC<ClientsPageContentProps> = ({distanceFromNavBar}) =
           >
             Add Client
           </Fab>
-          <Backdrop
-            sx={{color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1}}
-            open={addClientModalOpen}
-            data-testid="AddClientModal"
-          >
-            <AddClientForm
-              handleCloseAddClientModal={handleCloseAddClientModal}
-              handleAddClient={handleAddClient}
-            />
-          </Backdrop>
         </Box>
+        <Backdrop
+          sx={{color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1}}
+          open={addClientModalOpen}
+          data-testid="AddClientModal"
+        >
+          <AddClientForm
+            handleCloseAddClientModal={handleCloseAddClientModal}
+            handleAddClient={handleAddClient}
+          />
+        </Backdrop>
       </Container>
     </Box>
   );
