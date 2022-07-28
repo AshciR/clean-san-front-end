@@ -27,8 +27,8 @@ describe('App', () => {
     fireEvent.click(clientsButton);
 
     // Then: we should be routed correctly
-    const clientsPageContent = await screen.findByText('Clients Page')
-    expect(clientsPageContent).toBeInTheDocument();
+    const clientsPageContent = await screen.findAllByText('Clients')
+    expect(clientsPageContent[1]).toBeInTheDocument();
 
   });
 

@@ -1,6 +1,6 @@
 import React, {FC} from 'react';
 import styles from './ClientsTable.module.scss';
-import {Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography} from "@mui/material";
+import {Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography} from "@mui/material";
 import {ClientWithContracts} from "../../../shared/ClientWithContracts.model";
 import ClientStatusChip from "../ClientStatusChip/ClientStatusChip";
 
@@ -9,24 +9,29 @@ const STATUS_CHIP_WIDTH = 120;
 
 interface ClientsTableProps {
   clients: ClientWithContracts[]
+  handleOpenViewAssociatedContractsModal: (client: ClientWithContracts) => void
 }
 
-const ClientsTable: FC<ClientsTableProps> = ({clients}: ClientsTableProps) => {
+const ClientsTable: FC<ClientsTableProps> = ({clients, handleOpenViewAssociatedContractsModal}: ClientsTableProps) => {
 
   const hasClients = clients.length !== 0;
 
   return (
     <div className={styles.ClientsTable} data-testid="clients-table">
-      {hasClients ? <VisibleClientsTable clients={clients}/> : <NoClientsDisplay/>}
+      {hasClients ? <VisibleClientsTable
+          clients={clients}
+          handleOpenViewAssociatedContractsModal={handleOpenViewAssociatedContractsModal}/> :
+        <NoClientsDisplay/>}
     </div>
   );
 };
 
 interface VisibleClientsTableProps {
   clients: ClientWithContracts[]
+  handleOpenViewAssociatedContractsModal: (client: ClientWithContracts) => void
 }
 
-const VisibleClientsTable = ({clients}: VisibleClientsTableProps) => (
+const VisibleClientsTable = ({clients, handleOpenViewAssociatedContractsModal}: VisibleClientsTableProps) => (
   <TableContainer data-testid="visible-clients-table">
     <Table aria-label="clients table">
       <TableHead>
@@ -38,7 +43,12 @@ const VisibleClientsTable = ({clients}: VisibleClientsTableProps) => (
         </TableRow>
       </TableHead>
       <TableBody>
-        {clients.map(client => <ClientRow key={client.id} client={client}/>)}
+        {clients.map(client =>
+          <ClientRow
+            key={client.id}
+            client={client}
+            handleOpenViewAssociatedContractsModal={handleOpenViewAssociatedContractsModal}/>)
+        }
       </TableBody>
     </Table>
   </TableContainer>
@@ -46,11 +56,20 @@ const VisibleClientsTable = ({clients}: VisibleClientsTableProps) => (
 
 interface ClientRowProps {
   client: ClientWithContracts
+  handleOpenViewAssociatedContractsModal: (client: ClientWithContracts) => void
 }
 
-const ClientRow = ({client}: ClientRowProps) => (
+const ClientRow = ({client, handleOpenViewAssociatedContractsModal}: ClientRowProps) => (
   <TableRow data-testid="client-table-row">
-    <TableCell sx={{width: 100}}>{client.id}</TableCell>
+    <TableCell sx={{width: 100}}>
+      <Button
+        size="small"
+        color="primary"
+        onClick={() => handleOpenViewAssociatedContractsModal(client)}
+      >
+        {client.id}
+      </Button>
+    </TableCell>
     <TableCell>{client.name}</TableCell>
     <TableCell>{client.email}</TableCell>
     <TableCell sx={{width: STATUS_CHIP_WIDTH}}>

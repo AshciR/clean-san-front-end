@@ -2,13 +2,17 @@ import React, {FC} from 'react';
 import styles from './AssociatedContractsModal.module.scss';
 import {Box, Button, Paper, Typography} from "@mui/material";
 import ContractCard from "../ContractCard/ContractCard";
-import {ClientWithContracts} from "../../../shared/ClientWithContracts.model";
+import {AssociatedContractsModalState} from "./associatedContractsModal.reducer";
 
 interface AssociatedContractsModalProps {
-  clientWithContracts: ClientWithContracts
+  modalState: AssociatedContractsModalState
+  handleCloseAssociatedContractsModal: () => void
 }
 
-const AssociatedContractsModal: FC<AssociatedContractsModalProps> = ({clientWithContracts}: AssociatedContractsModalProps) => {
+const AssociatedContractsModal: FC<AssociatedContractsModalProps> = ({
+                                                                       modalState,
+                                                                       handleCloseAssociatedContractsModal
+                                                                     }: AssociatedContractsModalProps) => {
 
   return (
     <Box
@@ -31,7 +35,7 @@ const AssociatedContractsModal: FC<AssociatedContractsModalProps> = ({clientWith
           color='primary'
           sx={{marginBottom: 1}}
         >
-          {`Contracts for ${clientWithContracts.name}`}
+          {`Contracts for ${modalState.clientWithContracts?.name}`}
         </Typography>
         <Box
           sx={{
@@ -41,7 +45,10 @@ const AssociatedContractsModal: FC<AssociatedContractsModalProps> = ({clientWith
             flexWrap: 'wrap',
           }}
         >
-          {clientWithContracts.contracts.map(contract => <ContractCard key={contract.id} contract={contract}/>)}
+          {
+            modalState.clientWithContracts?.contracts.map(contract =>
+              <ContractCard key={contract.id} contract={contract}/>)
+          }
         </Box>
         <Box
           sx={{
@@ -49,6 +56,17 @@ const AssociatedContractsModal: FC<AssociatedContractsModalProps> = ({clientWith
             flexDirection: 'row',
             justifyContent: 'right',
           }}>
+          <Button
+            color="primary"
+            variant="outlined"
+            sx={{
+              marginRight: 2,
+              marginLeft: 2
+            }}
+            onClick={() => handleCloseAssociatedContractsModal()}
+          >
+            Close
+          </Button>
           <Button
             color="primary"
             variant="contained"

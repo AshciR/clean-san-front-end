@@ -12,6 +12,11 @@ import snackbarNotificationReducer, {
   initialSnackbarNotificationState
 } from "../../shared/SnackbarNotification/snackbarNotification.reducer";
 import SnackbarNotification from "../../shared/SnackbarNotification/SnackbarNotification";
+import {
+  associatedContractsReducer,
+  initialAssociatedContractsModalState
+} from "../AssociatedContractsModal/associatedContractsModal.reducer";
+import AssociatedContractsModal from "../AssociatedContractsModal/AssociatedContractsModal";
 
 interface ClientsPageProps {
 
@@ -40,6 +45,11 @@ const ClientsPageContent: FC<ClientsPageContentProps> = ({distanceFromNavBar}) =
     snackbarNotificationReducer,
     initialSnackbarNotificationState
   );
+
+  const [associatedContractsModalState, dispatchAssociatedContractsModal] = React.useReducer(
+    associatedContractsReducer,
+    initialAssociatedContractsModalState
+  )
 
   const [addClientModalOpen, setAddClientModalOpen] = React.useState(false);
 
@@ -89,6 +99,23 @@ const ClientsPageContent: FC<ClientsPageContentProps> = ({distanceFromNavBar}) =
       return;
     }
     dispatchAddedClientNotification({type: 'SNACKBAR_NOTIFICATION_CLOSE'});
+  };
+
+  const handleOpenViewAssociatedContractsModal = (clientWithContracts: ClientWithContracts) => {
+
+    dispatchAssociatedContractsModal({
+      type: 'ASSOCIATED_CONTRACTS_SELECT_CLIENT',
+      payload: clientWithContracts
+    });
+
+  };
+
+  const handleCloseViewAssociatedContractsModal = () => {
+
+    dispatchAssociatedContractsModal({
+      type: 'ASSOCIATED_CONTRACTS_CLOSE_MODAL'
+    });
+
   };
 
   // @ts-ignore
@@ -142,6 +169,20 @@ const ClientsPageContent: FC<ClientsPageContentProps> = ({distanceFromNavBar}) =
         severity={addedClientNotificationState.severity}
         message={addedClientNotificationState.message}
       />
+      {
+        // Only render if the user wants to see the associated contracts
+        associatedContractsModalState.isOpen &&
+          <Backdrop
+              sx={{color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1}}
+              open={associatedContractsModalState.isOpen}
+              data-testid="ViewAssociatedContractsModal"
+          >
+              <AssociatedContractsModal
+                  modalState={associatedContractsModalState}
+                  handleCloseAssociatedContractsModal={handleCloseViewAssociatedContractsModal}
+              />
+          </Backdrop>
+      }
       <Container maxWidth='xl'>
         <Box
           sx={{
@@ -151,7 +192,7 @@ const ClientsPageContent: FC<ClientsPageContentProps> = ({distanceFromNavBar}) =
             margin: 1
           }}
         >
-          <Typography variant='h3' color='primary'>Clients Page</Typography>
+          <Typography variant='h3' color='primary'>Clients</Typography>
         </Box>
         <Box>
           {
@@ -162,10 +203,10 @@ const ClientsPageContent: FC<ClientsPageContentProps> = ({distanceFromNavBar}) =
                   Sorry... we weren't able to get the clients at this time.
                 </Typography> :
                 <>
-                  <ClientsTable clients={clientsState.clients}/>
-                  {/*TODO: Move once backdrop is ready*/}
-                  {/*TODO: Add Backdrop, reducer to handle close, and which client was clicked*/}
-                  {/*<AssociatedContractsModal clientWithContracts={clientsState.clients[0]}/>*/}
+                  <ClientsTable
+                    clients={clientsState.clients}
+                    handleOpenViewAssociatedContractsModal={handleOpenViewAssociatedContractsModal}
+                  />
                 </>
           }
         </Box>
