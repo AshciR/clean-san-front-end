@@ -1,9 +1,6 @@
 import {
   Box,
   Button,
-  Chip,
-  ChipProps,
-  createTheme,
   FormControl,
   MenuItem,
   Select,
@@ -13,7 +10,6 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  ThemeProvider,
   Typography
 } from '@mui/material';
 import {DateTime} from 'luxon';
@@ -21,8 +17,8 @@ import {FC} from 'react';
 import DueService from '../../../shared/DueService.model';
 import ServiceStatus from '../../../shared/ServiceStatus.model';
 import styles from './DueServicesTable.module.scss';
-import {ServiceFrequency} from "../../../shared/Contract.model";
 import ServiceStatusChip, {STATUS_CHIP_WIDTH} from "../ServiceStatusChip/ServiceStatusChip";
+import ServiceFrequencyChip from "../../shared/ServiceFrequencyChip/ServiceFrequencyChip";
 
 const SERVICE_ID_WIDTH = 100;
 const STATUS_COLUMN_WIDTH = STATUS_CHIP_WIDTH + 60;
@@ -163,41 +159,6 @@ const StatusDropDown = ({service, handleUpdateService}: StatusDropDownProps) => 
       </FormControl>
     </Box>
   );
-};
-
-interface ServiceFrequencyChipProps {
-  frequency: ServiceFrequency
-}
-
-const ServiceFrequencyChip = ({frequency}: ServiceFrequencyChipProps) => {
-
-  const chipProps = {
-    [ServiceFrequency.WEEKLY]: {color: 'info', label: 'Weekly'},
-    [ServiceFrequency.FORTNIGHTLY]: {color: 'secondary', label: 'Fortnightly'},
-    [ServiceFrequency.MONTHLY]: {color: 'primary', label: 'Monthly'},
-  };
-
-  const theme = createTheme({
-    palette: {
-      primary: {
-        main: '#729727' // Dark-green
-      },
-      secondary: {
-        main: '#c19c00' // Dark-orange
-      }
-    }
-  });
-
-  return (
-    <ThemeProvider theme={theme}>
-      <Chip
-        size='small'
-        variant='outlined'
-        sx={{width: 100}}
-        {...chipProps[frequency] as ChipProps} />
-    </ThemeProvider>
-  );
-
 };
 
 export default DueServicesTable;

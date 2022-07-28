@@ -1,7 +1,9 @@
 import React, {FC} from 'react';
 import styles from './ClientsTable.module.scss';
-import {Chip, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography} from "@mui/material";
+import {Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography} from "@mui/material";
 import {ClientWithContracts} from "../../../shared/ClientWithContracts.model";
+import ClientStatusChip from "../ClientStatusChip/ClientStatusChip";
+
 
 const STATUS_CHIP_WIDTH = 120;
 
@@ -52,7 +54,7 @@ const ClientRow = ({client}: ClientRowProps) => (
     <TableCell>{client.name}</TableCell>
     <TableCell>{client.email}</TableCell>
     <TableCell sx={{width: STATUS_CHIP_WIDTH}}>
-      <ServiceStatusChip isActive={client.isActive}/>
+      <ClientStatusChip isActive={client.isActive} chipWidth={STATUS_CHIP_WIDTH}/>
     </TableCell>
   </TableRow>
 );
@@ -61,27 +63,5 @@ const NoClientsDisplay = () => (
   <Typography variant='h5' data-testid="no-clients-display">There are no clients to display. Consider adding clients to
     the system.</Typography>
 );
-
-interface ClientStatusChipProps {
-  isActive: boolean
-}
-
-const ServiceStatusChip = ({isActive}: ClientStatusChipProps) => (
-
-  isActive ? <Chip
-    size='small'
-    variant='outlined'
-    sx={{width: STATUS_CHIP_WIDTH}}
-    color='success'
-    label='Active'
-  /> : <Chip
-    size='small'
-    variant='outlined'
-    sx={{width: STATUS_CHIP_WIDTH}}
-    color='error'
-    label='Inactive'
-  />
-
-)
 
 export default ClientsTable;
