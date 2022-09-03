@@ -17,6 +17,7 @@ import {
   initialAssociatedContractsModalState
 } from "../AssociatedContractsModal/associatedContractsModal.reducer";
 import AssociatedContractsModal from "../AssociatedContractsModal/AssociatedContractsModal";
+import AddContractForm from "../AddContractForm/AddContractForm";
 
 interface ClientsPageProps {
 
@@ -52,6 +53,7 @@ const ClientsPageContent: FC<ClientsPageContentProps> = ({distanceFromNavBar}) =
   )
 
   const [addClientModalOpen, setAddClientModalOpen] = React.useState(false);
+  const [addContractModalOpen, setAddContractModalOpen] = React.useState(false);
 
   // Handlers
   const handleCloseAddClientModal = () => {
@@ -60,6 +62,14 @@ const ClientsPageContent: FC<ClientsPageContentProps> = ({distanceFromNavBar}) =
 
   const handleOpenAddClientModal = () => {
     setAddClientModalOpen(true);
+  };
+
+  const handleCloseAddContractModal = () => {
+    setAddContractModalOpen(false);
+  }
+
+  const handleOpenAddContractModal = () => {
+    setAddContractModalOpen(true);
   };
 
   const handleAddClient = async (prospectiveClient: Client) => {
@@ -117,6 +127,10 @@ const ClientsPageContent: FC<ClientsPageContentProps> = ({distanceFromNavBar}) =
     });
 
   };
+
+  const handleAddContract = () => {
+    // TODO: Implement later
+  }
 
   // @ts-ignore
   React.useEffect(() => {
@@ -180,6 +194,22 @@ const ClientsPageContent: FC<ClientsPageContentProps> = ({distanceFromNavBar}) =
               <AssociatedContractsModal
                   modalState={associatedContractsModalState}
                   handleCloseAssociatedContractsModal={handleCloseViewAssociatedContractsModal}
+                  handleOpenAddContractModal={handleOpenAddContractModal}
+              />
+          </Backdrop>
+      }
+      {
+        // Only render if the user needs to add a new contract
+        addContractModalOpen &&
+          <Backdrop
+              sx={{color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1}}
+              open={addContractModalOpen}
+              onClick={() => handleCloseAddContractModal()}
+              data-testid="AddContractModal"
+          >
+              <AddContractForm
+                  handleCloseAddContractModal={handleCloseAddContractModal}
+                  handleAddContract={handleAddContract}
               />
           </Backdrop>
       }

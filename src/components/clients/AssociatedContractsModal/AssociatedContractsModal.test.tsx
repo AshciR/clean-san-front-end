@@ -15,11 +15,13 @@ describe('<AssociatedContractsModal />', () => {
   }
 
   const mockHandleCloseAssociatedContractsModal = jest.fn();
+  const mockHandleOpenAddContractModal = jest.fn();
 
   it("modal should display client's name", () => {
     render(<AssociatedContractsModal
       modalState={modalState}
       handleCloseAssociatedContractsModal={mockHandleCloseAssociatedContractsModal}
+      handleOpenAddContractModal={mockHandleOpenAddContractModal}
     />);
     const clientName = screen.getByText(`Contracts for ${clientWithContracts.name}`);
     expect(clientName).toBeInTheDocument();
@@ -29,25 +31,34 @@ describe('<AssociatedContractsModal />', () => {
     render(<AssociatedContractsModal
       modalState={modalState}
       handleCloseAssociatedContractsModal={mockHandleCloseAssociatedContractsModal}
+      handleOpenAddContractModal={mockHandleOpenAddContractModal}
     />);
     const numberOfContracts = clientWithContracts.contracts.length;
     const contractCards = screen.getAllByText(/Start date:/);
     expect(contractCards.length).toBe(numberOfContracts)
   });
 
-  it("modal should have add contract button", () => {
+  it("modal should close when add contract button is pressed and open add contract modal", () => {
     render(<AssociatedContractsModal
       modalState={modalState}
       handleCloseAssociatedContractsModal={mockHandleCloseAssociatedContractsModal}
+      handleOpenAddContractModal={mockHandleOpenAddContractModal}
     />);
     const addContractButton = screen.getByRole('button', {name: 'Add Contract'});
-    expect(addContractButton).toBeInTheDocument();
+
+    // When: the add contract button is clicked
+    fireEvent.click(addContractButton);
+
+    // Then: The associated modal should be closed, and the add contact modal is opened
+    expect(mockHandleCloseAssociatedContractsModal).toBeCalledTimes(1);
+    expect(mockHandleOpenAddContractModal).toBeCalledTimes(1);
   });
 
   it("modal should close when the close button is clicked", () => {
     render(<AssociatedContractsModal
       modalState={modalState}
       handleCloseAssociatedContractsModal={mockHandleCloseAssociatedContractsModal}
+      handleOpenAddContractModal={mockHandleOpenAddContractModal}
     />);
     const closeButton = screen.getByRole('button', {name: 'Close'});
 
