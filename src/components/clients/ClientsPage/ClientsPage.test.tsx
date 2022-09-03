@@ -17,7 +17,7 @@ describe('<ClientsPage />', () => {
 
   it('should display the clients page', async () => {
     render(<ClientsPage/>);
-    const clientsPage = screen.getByText(/Clients Page/);
+    const clientsPage = screen.getAllByText(/Clients/)[1];
 
     await waitFor(() => expect(clientsPage).toBeInTheDocument());
   });
