@@ -7,11 +7,13 @@ import {AssociatedContractsModalState} from "./associatedContractsModal.reducer"
 interface AssociatedContractsModalProps {
   modalState: AssociatedContractsModalState
   handleCloseAssociatedContractsModal: () => void
+  handleOpenAddContractModal: () => void
 }
 
 const AssociatedContractsModal: FC<AssociatedContractsModalProps> = ({
                                                                        modalState,
-                                                                       handleCloseAssociatedContractsModal
+                                                                       handleCloseAssociatedContractsModal,
+                                                                       handleOpenAddContractModal
                                                                      }: AssociatedContractsModalProps) => {
 
   return (
@@ -74,6 +76,12 @@ const AssociatedContractsModal: FC<AssociatedContractsModalProps> = ({
             sx={{
               marginRight: 2,
               marginLeft: 2
+            }}
+            onClick={() => {
+              // Have to close the view modal before opening
+              // the add contracts modal
+              handleOpenAddContractModal()
+              handleCloseAssociatedContractsModal()
             }}
           >
             Add Contract
