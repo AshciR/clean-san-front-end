@@ -18,6 +18,7 @@ import {
 } from "../AssociatedContractsModal/associatedContractsModal.reducer";
 import AssociatedContractsModal from "../AssociatedContractsModal/AssociatedContractsModal";
 import AddContractForm from "../AddContractForm/AddContractForm";
+import Contract from "../../../shared/Contract.model";
 
 interface ClientsPageProps {
 
@@ -42,7 +43,7 @@ const ClientsPageContent: FC<ClientsPageContentProps> = ({distanceFromNavBar}) =
     initialClientsState
   );
 
-  const [addedClientNotificationState, dispatchAddedClientNotification] = React.useReducer(
+  const [clientsPageNotificationState, dispatchClientsPageNotification] = React.useReducer(
     snackbarNotificationReducer,
     initialSnackbarNotificationState
   );
@@ -81,7 +82,7 @@ const ClientsPageContent: FC<ClientsPageContentProps> = ({distanceFromNavBar}) =
         payload: addedClient
       });
 
-      dispatchAddedClientNotification({
+      dispatchClientsPageNotification({
         type: 'SNACKBAR_NOTIFICATION_OPEN',
         payload: {
           severity: 'success',
@@ -94,7 +95,7 @@ const ClientsPageContent: FC<ClientsPageContentProps> = ({distanceFromNavBar}) =
         type: 'CLIENTS_ADD_CLIENT_FAILURE'
       });
 
-      dispatchAddedClientNotification({
+      dispatchClientsPageNotification({
         type: 'SNACKBAR_NOTIFICATION_OPEN',
         payload: {
           severity: 'error',
@@ -108,7 +109,7 @@ const ClientsPageContent: FC<ClientsPageContentProps> = ({distanceFromNavBar}) =
     if (reason === 'clickaway') {
       return;
     }
-    dispatchAddedClientNotification({type: 'SNACKBAR_NOTIFICATION_CLOSE'});
+    dispatchClientsPageNotification({type: 'SNACKBAR_NOTIFICATION_CLOSE'});
   };
 
   const handleOpenViewAssociatedContractsModal = (clientWithContracts: ClientWithContracts) => {
@@ -128,8 +129,25 @@ const ClientsPageContent: FC<ClientsPageContentProps> = ({distanceFromNavBar}) =
 
   };
 
-  const handleAddContract = () => {
-    // TODO: Implement later
+  const handleAddContract = (prospectiveContract: Contract) => {
+
+    dispatchClients({
+      type: 'CLIENTS_ADD_CONTRACT_SUCCESS',
+      payload: prospectiveContract // TODO: Replace with service call
+    });
+
+    const contractFrequency = prospectiveContract.serviceFrequency.charAt(0) + prospectiveContract.serviceFrequency.substring(1).toLowerCase();
+
+    dispatchClientsPageNotification({
+      type: 'SNACKBAR_NOTIFICATION_OPEN',
+      payload: {
+        severity: 'success',
+        message: `${contractFrequency} contract was added`
+      }
+    });
+
+    // TODO: Add catch for service call failure
+
   }
 
   // @ts-ignore
@@ -178,10 +196,10 @@ const ClientsPageContent: FC<ClientsPageContentProps> = ({distanceFromNavBar}) =
       }}
     >
       <SnackbarNotification
-        open={addedClientNotificationState.isNotificationOpen}
+        open={clientsPageNotificationState.isNotificationOpen}
         handleClose={handleCloseUpdateServiceNotificationOpen}
-        severity={addedClientNotificationState.severity}
-        message={addedClientNotificationState.message}
+        severity={clientsPageNotificationState.severity}
+        message={clientsPageNotificationState.message}
       />
       {
         // Only render if the user wants to see the associated contracts
@@ -204,10 +222,10 @@ const ClientsPageContent: FC<ClientsPageContentProps> = ({distanceFromNavBar}) =
           <Backdrop
               sx={{color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1}}
               open={addContractModalOpen}
-              onClick={() => handleCloseAddContractModal()}
               data-testid="AddContractModal"
           >
               <AddContractForm
+                  associatedClient={associatedContractsModalState.clientWithContracts}
                   handleCloseAddContractModal={handleCloseAddContractModal}
                   handleAddContract={handleAddContract}
               />

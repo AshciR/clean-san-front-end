@@ -40,8 +40,7 @@ const associatedContractsReducer = (
     case "ASSOCIATED_CONTRACTS_CLOSE_MODAL":
       const closeModalState: AssociatedContractsModalState = {
         ...state,
-        isOpen: false,
-        clientWithContracts: undefined
+        isOpen: false
       };
       return closeModalState
     default:

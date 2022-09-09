@@ -52,7 +52,7 @@ describe('AssociatedContractsModal Reducer', () => {
     // Then: The expected state should be produced
     const expectedState: AssociatedContractsModalState = {
       isOpen: false,
-      clientWithContracts: undefined
+      clientWithContracts: clientWithContracts
     }
 
     expect(updatedState).toStrictEqual(expectedState);

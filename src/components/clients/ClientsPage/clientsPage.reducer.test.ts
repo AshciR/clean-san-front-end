@@ -2,6 +2,7 @@ import {ClientsAction, clientsReducer, ClientsState, initialClientsState} from "
 import MOCK_CLIENTS_WITH_CONTRACTS from "../../../shared/mockClientsWithContractsData";
 import {createClient} from "../../../shared/Client.model";
 import {createClientWithContracts} from "../../../shared/ClientWithContracts.model";
+import {createDefaultContract} from "../../../shared/Contract.model";
 
 describe('ClientPage Reducer', () => {
 
@@ -21,7 +22,8 @@ describe('ClientPage Reducer', () => {
       isLoading: true,
       clients: [],
       isFetchError: false,
-      isAddClientError: false
+      isAddClientError: false,
+      isAddContractError: false
     }
     expect(updatedState).toStrictEqual(expectedState);
   });
@@ -43,7 +45,8 @@ describe('ClientPage Reducer', () => {
       isLoading: false,
       clients: MOCK_CLIENTS_WITH_CONTRACTS,
       isFetchError: false,
-      isAddClientError: false
+      isAddClientError: false,
+      isAddContractError: false
     }
     expect(updatedState).toStrictEqual(expectedState);
   });
@@ -64,7 +67,8 @@ describe('ClientPage Reducer', () => {
       isLoading: false,
       clients: [],
       isFetchError: true,
-      isAddClientError: false
+      isAddClientError: false,
+      isAddContractError: false
     }
     expect(updatedState).toStrictEqual(expectedState);
   });
@@ -91,7 +95,8 @@ describe('ClientPage Reducer', () => {
       clients: [],
       isLoading: false,
       isFetchError: true,
-      isAddClientError: false
+      isAddClientError: false,
+      isAddContractError: false
     };
 
     expect(updatedState).toStrictEqual(expectedState);
@@ -129,7 +134,8 @@ describe('ClientPage Reducer', () => {
       isLoading: false,
       clients: [addedClientWithEmptyContract],
       isFetchError: false,
-      isAddClientError: false
+      isAddClientError: false,
+      isAddContractError: false
     }
 
     expect(updatedState).toStrictEqual(expectedState);
@@ -139,12 +145,12 @@ describe('ClientPage Reducer', () => {
 
     // Given: We have a current state and an action
     const state = initialClientsState;
-    const addClientSuccessAction: ClientsAction = {
+    const addClientFailureAction: ClientsAction = {
       type: 'CLIENTS_ADD_CLIENT_FAILURE',
     };
 
     // When: We call the reducer
-    const updatedState = clientsReducer(state, addClientSuccessAction);
+    const updatedState = clientsReducer(state, addClientFailureAction);
 
     // Then: The expected state should be produced
     const expectedState: ClientsState = {
@@ -152,6 +158,93 @@ describe('ClientPage Reducer', () => {
       clients: [],
       isFetchError: false,
       isAddClientError: true,
+      isAddContractError: false
+    }
+
+    expect(updatedState).toStrictEqual(expectedState);
+  });
+
+  it('adds a contract successfully', () => {
+
+    // Given: We have a current state with a client
+    const initialState = {
+      isLoading: false,
+      clients: [
+        createClientWithContracts({
+          id: 1,
+          name: "Rick",
+          email: "rick@gmail.com",
+          isActive: false,
+          contracts: []
+        }),
+        createClientWithContracts({
+          id: 2,
+          name: "Morty",
+          email: "morty@gmail.com",
+          isActive: false,
+          contracts: []
+        })
+      ],
+      isFetchError: false,
+      isAddClientError: false,
+      isAddContractError: false
+    };
+
+    // And: We have an action
+    const newContract = createDefaultContract()
+    const addContractSuccessAction: ClientsAction = {
+      type: 'CLIENTS_ADD_CONTRACT_SUCCESS',
+      payload: newContract
+    };
+
+    // When: We call the reducer
+    const updatedState = clientsReducer(initialState, addContractSuccessAction);
+
+    // Then: The expected state should be produced
+    const expectedState: ClientsState = {
+      isLoading: false,
+      clients: [
+        createClientWithContracts({
+          id: 1,
+          name: "Rick",
+          email: "rick@gmail.com",
+          isActive: false,
+          contracts: [newContract]
+        }),
+        createClientWithContracts({
+          id: 2,
+          name: "Morty",
+          email: "morty@gmail.com",
+          isActive: false,
+          contracts: []
+        })
+      ],
+      isFetchError: false,
+      isAddClientError: false,
+      isAddContractError: false
+    }
+
+    expect(updatedState).toStrictEqual(expectedState);
+  });
+
+  it('fails to add a contract', () => {
+
+    // Given: We have a current state and an action
+    const state = initialClientsState;
+    const addClientFailureAction: ClientsAction = {
+      type: 'CLIENTS_ADD_CONTRACT_FAILURE',
+    };
+
+    // When: We call the reducer
+    const updatedState = clientsReducer(state, addClientFailureAction);
+
+    // Then: The expected state should be produced
+    const expectedState: ClientsState = {
+      isLoading: false,
+      clients: [],
+      isFetchError: false,
+      isAddClientError: false,
+      isAddContractError: true
     }
 
     expect(updatedState).toStrictEqual(expectedState);

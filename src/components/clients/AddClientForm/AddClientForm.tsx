@@ -89,7 +89,7 @@ const AddClientForm: FC<AddClientFormProps> = ({handleCloseAddClientModal, handl
             sx={{
               display: 'flex',
               flexDirection: 'row',
-              justifyContent: 'center',
+              justifyContent: 'right',
             }}>
             <Button
               color="primary"
