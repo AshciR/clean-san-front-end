@@ -1,7 +1,7 @@
 import axios from "../axiosConfig";
 import {ContractResponse, convertContractResponseToContract} from "./shared-responses";
 import {ClientWithContracts} from "../shared/ClientWithContracts.model";
-import {ContractStatus} from "../shared/Contract.model";
+import Contract, {ContractStatus} from "../shared/Contract.model";
 import Client from "../shared/Client.model";
 
 /**
@@ -68,6 +68,33 @@ const addClient = async (prospectiveClient: Client): Promise<Client> => {
 }
 
 /**
+ * Submits a contract to be added to a client
+ * @param contract the contract to be added
+ */
+const addContractToClient = async (contract: Contract): Promise<Contract> => {
+
+  try {
+
+    const contractRequest: AddContractRequest = {
+      startDate: contract.startDate.toISODate(),
+      endDate: contract.endDate.toISODate(),
+      serviceFrequency: contract.serviceFrequency
+    };
+
+    const response = await axios.post<ContractResponse>(
+      `/v1/clients/${contract.clientId}/contracts`,
+      contractRequest
+    );
+
+    return convertContractResponseToContract(response.data);
+
+  } catch (error) {
+    throw error
+  }
+
+}
+
+/**
  * Helper method to convert the AddClientResponse response into the Client domain model
  * @param response
  */
@@ -100,10 +127,23 @@ type AddClientResponse = {
   email: string;
 };
 
-export type {GetClientsResponse, GetClientResponse, AddClientRequest, AddClientResponse}
+type AddContractRequest = {
+  startDate: string;
+  endDate: string;
+  serviceFrequency: string;
+}
+
+export type {
+  GetClientsResponse,
+  GetClientResponse,
+  AddClientRequest,
+  AddClientResponse,
+  AddContractRequest,
+}
 export {
   fetchClientsWithContracts,
   convertClientResponseToClientWithContracts,
   addClient,
-  convertAddedClientResponseToClient
+  convertAddedClientResponseToClient,
+  addContractToClient
 }

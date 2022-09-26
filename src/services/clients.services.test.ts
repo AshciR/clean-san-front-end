@@ -1,6 +1,7 @@
 import {
   addClient,
   AddClientResponse,
+  addContractToClient,
   convertAddedClientResponseToClient,
   convertClientResponseToClientWithContracts,
   fetchClientsWithContracts,
@@ -97,6 +98,35 @@ describe('Clients Services', () => {
     };
 
     expect(client).toStrictEqual(expectedClient);
+
+  });
+
+  it('adds a contract successfully', async () => {
+
+    // Given: We have a new contract for a client
+    const clientId = 1;
+    const startDate = DateTime.local(2022, 9, 27);
+    const endDate = DateTime.local(2023, 9, 26);
+
+    const contract = createContract({
+      id: 0,
+      clientId: clientId,
+      startDate: startDate,
+      endDate: endDate,
+      serviceFrequency: ServiceFrequency.MONTHLY,
+      status: ContractStatus.INACTIVE
+    });
+
+    // When: we add the client
+    const addedContract = await addContractToClient(contract);
+
+    // Then: The client info should be correct
+    expect(addedContract.id).toEqual(7); // There are currently 6 contracts in getClientsResponse
+    expect(addedContract.clientId).toEqual(clientId);
+    expect(addedContract.startDate).toEqual(startDate);
+    expect(addedContract.endDate).toEqual(endDate);
+    expect(addedContract.serviceFrequency).toEqual(ServiceFrequency.MONTHLY);
+    expect(addedContract.status).toEqual(ContractStatus.INACTIVE);
 
   });
 

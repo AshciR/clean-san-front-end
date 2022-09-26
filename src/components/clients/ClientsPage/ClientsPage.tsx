@@ -4,7 +4,7 @@ import NavBarWrapper from "../../shared/NavBarWrapper/NavBarWrapper";
 import {NAV_BAR_HEIGHT} from "../../shared/NavBar/NavBar";
 import {clientsReducer, initialClientsState} from "./clientsPage.reducer";
 import ClientsTable from "../ClientsTable/ClientsTable";
-import {addClient, fetchClientsWithContracts} from "../../../services/clients.services";
+import {addClient, addContractToClient, fetchClientsWithContracts} from "../../../services/clients.services";
 import {ClientWithContracts} from "../../../shared/ClientWithContracts.model";
 import AddClientForm from "../AddClientForm/AddClientForm";
 import Client from "../../../shared/Client.model";
@@ -129,24 +129,37 @@ const ClientsPageContent: FC<ClientsPageContentProps> = ({distanceFromNavBar}) =
 
   };
 
-  const handleAddContract = (prospectiveContract: Contract) => {
+  const handleAddContract = async (prospectiveContract: Contract) => {
 
-    dispatchClients({
-      type: 'CLIENTS_ADD_CONTRACT_SUCCESS',
-      payload: prospectiveContract // TODO: Replace with service call
-    });
+    try {
+      const addedContract = await addContractToClient(prospectiveContract);
 
-    const contractFrequency = prospectiveContract.serviceFrequency.charAt(0) + prospectiveContract.serviceFrequency.substring(1).toLowerCase();
+      dispatchClients({
+        type: 'CLIENTS_ADD_CONTRACT_SUCCESS',
+        payload: addedContract
+      });
 
-    dispatchClientsPageNotification({
-      type: 'SNACKBAR_NOTIFICATION_OPEN',
-      payload: {
-        severity: 'success',
-        message: `${contractFrequency} contract was added`
-      }
-    });
+      const contractFrequency = addedContract.serviceFrequency.charAt(0) + prospectiveContract.serviceFrequency.substring(1).toLowerCase();
 
-    // TODO: Add catch for service call failure
+      dispatchClientsPageNotification({
+        type: 'SNACKBAR_NOTIFICATION_OPEN',
+        payload: {
+          severity: 'success',
+          message: `${contractFrequency} contract was added`
+        }
+      });
+
+    } catch {
+
+      dispatchClientsPageNotification({
+        type: 'SNACKBAR_NOTIFICATION_OPEN',
+        payload: {
+          severity: 'error',
+          message: 'There was an error adding the new contract. Please try again later.'
+        }
+      });
+
+    }
 
   }
 

@@ -17,6 +17,7 @@ const AssociatedContractsModal: FC<AssociatedContractsModalProps> = ({
                                                                      }: AssociatedContractsModalProps) => {
 
   return (
+
     <Box
       className={styles.AssociatedContractsModal}
       data-testid="AssociatedContractsModal"
@@ -48,8 +49,14 @@ const AssociatedContractsModal: FC<AssociatedContractsModalProps> = ({
           }}
         >
           {
-            modalState.clientWithContracts?.contracts.map(contract =>
-              <ContractCard key={contract.id} contract={contract}/>)
+            modalState.clientWithContracts?.contracts.length !== 0 ? modalState.clientWithContracts?.contracts.map(contract =>
+                <ContractCard
+                  key={contract.id}
+                  contract={contract}
+                />) :
+              <Typography variant='h5'>
+                There are no contracts for this client
+              </Typography>
           }
         </Box>
         <Box
