@@ -80,8 +80,8 @@ const AssociatedContractsModal: FC<AssociatedContractsModalProps> = ({
             onClick={() => {
               // Have to close the view modal before opening
               // the add contracts modal
-              handleOpenAddContractModal()
               handleCloseAssociatedContractsModal()
+              handleOpenAddContractModal()
             }}
           >
             Add Contract

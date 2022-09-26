@@ -4,9 +4,10 @@ import {Chip, ChipProps, createTheme, ThemeProvider} from "@mui/material";
 
 interface ServiceFrequencyChipProps {
   frequency: ServiceFrequency
+  width?: number
 }
 
-const ServiceFrequencyChip: FC<ServiceFrequencyChipProps> = ({frequency}: ServiceFrequencyChipProps) => {
+const ServiceFrequencyChip: FC<ServiceFrequencyChipProps> = ({frequency, width = 100}: ServiceFrequencyChipProps) => {
 
   const chipProps = {
     [ServiceFrequency.WEEKLY]: {color: 'info', label: 'Weekly'},
@@ -30,7 +31,7 @@ const ServiceFrequencyChip: FC<ServiceFrequencyChipProps> = ({frequency}: Servic
       <Chip
         size='small'
         variant='outlined'
-        sx={{width: 100}}
+        sx={{width: width}}
         {...chipProps[frequency] as ChipProps} />
     </ThemeProvider>
   );
