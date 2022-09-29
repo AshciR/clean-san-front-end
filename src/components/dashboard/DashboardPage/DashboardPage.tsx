@@ -275,11 +275,12 @@ const TitleAndDatePicker: FC<TitleAndDatePickerProps> = ({
         <DatePicker
           label='Due services date'
           value={dueServicesDate}
+          inputFormat="dd/MM/yyyy"
           onChange={(newDueServicesDate) => {
             setDueServicesDate(newDueServicesDate)
           }}
           renderInput={props => {
-            return <TextField {...props} helperText={'mm/dd/yyyy'}/>
+            return <TextField {...props} helperText={'dd/mm/yyyy'}/>
           }}
         >
         </DatePicker>
