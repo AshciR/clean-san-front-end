@@ -75,10 +75,25 @@ describe('<AddContractForm />', () => {
     const endDateField = dateInputFields[1];
 
     // Change all the fields
-    const newStartDate = DateTime.now().minus({day: 1});
+    // const newStartDate = DateTime.now().minus({day: 1});
+    // The datepicker only shows the days for the current month.
+    // If it's the 1st day of the month, the test will fail b/c
+    // it will not find yesterday's date on the calendar
+    const newStartDate = isYesterdayAndTodayInTheSameMonth() ?
+      DateTime.now().minus({day: 1}) :
+      DateTime.now().plus({day: 1});
+
     await changeDate(startDateField, newStartDate);
 
-    const newEndDate = DateTime.now().plus({year: 1});
+    // The datepicker only shows the days for the current month.
+    // If it's the 1st day of the month, the test will fail b/c
+    // it will not find yesterday's date on the calendar
+    const newEndDate = isYesterdayAndTodayInTheSameMonth() ?
+      DateTime.now().plus({year: 1}) :
+      DateTime.now()
+        .minus({day: 1})
+        .plus({year: 1});
+
     await changeDate(endDateField, newEndDate);
 
     fireEvent.change(await screen.findByDisplayValue(ServiceFrequency.MONTHLY), {
@@ -119,14 +134,30 @@ describe('<AddContractForm />', () => {
     const dateInputFields = await screen.findAllByRole('textbox', {
       name: /choose date, selected date is .+/i
     });
+
     const startDateField = dateInputFields[0];
     const endDateField = dateInputFields[1];
 
-    // End date is before start date
-    const newStartDate = DateTime.now().minus({day: 1});
+    // Change all the fields
+    // const newStartDate = DateTime.now().minus({day: 1});
+    // The datepicker only shows the days for the current month.
+    // If it's the 1st day of the month, the test will fail b/c
+    // it will not find yesterday's date on the calendar
+    const newStartDate = isYesterdayAndTodayInTheSameMonth() ?
+      DateTime.now().minus({day: 1}) :
+      DateTime.now().plus({day: 1});
+
     await changeDate(startDateField, newStartDate);
 
-    const newEndDate = DateTime.now().minus({day: 2});
+    // The datepicker only shows the days for the current month.
+    // If it's the 1st day of the month, the test will fail b/c
+    // it will not find yesterday's date on the calendar
+    const newEndDate = isYesterdayAndTodayInTheSameMonth() ?
+      DateTime.now().minus({day: 1}) : // End date and start date are the same (will cause error)
+      DateTime.now() // End date will be 1 day behind the current date (default start date)
+        .minus({day: 1})
+        .minus({year: 1});
+
     await changeDate(endDateField, newEndDate);
 
     await userEvent.click(await screen.findByRole('button', {name: /submit/i}));
@@ -177,5 +208,7 @@ describe('<AddContractForm />', () => {
     // There's an invisible ok button that needs to be clicked
     await userEvent.click(screen.getByRole('button', {name: /ok/i}));
   }
+
+  const isYesterdayAndTodayInTheSameMonth = () => DateTime.now().minus({day: 1}).month === DateTime.now().month;
 
 });
