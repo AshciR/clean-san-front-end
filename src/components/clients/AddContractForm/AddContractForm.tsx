@@ -55,8 +55,8 @@ const AddContractForm: FC<AddContractFormProps> = ({
         // without selecting a client prior
         clientId: associatedClient?.id || 0,
         // We don't care about the time for the dates
-        startDate: DateTime.fromJSDate(values.startDate).set({ hour: 0, minute: 0, second: 0, millisecond: 0 }),
-        endDate: DateTime.fromJSDate(values.endDate).set({ hour: 0, minute: 0, second: 0, millisecond: 0 }),
+        startDate: DateTime.fromJSDate(values.startDate).set({hour: 0, minute: 0, second: 0, millisecond: 0}),
+        endDate: DateTime.fromJSDate(values.endDate).set({hour: 0, minute: 0, second: 0, millisecond: 0}),
         serviceFrequency: values.serviceFrequency,
         status: ContractStatus.INACTIVE
       });

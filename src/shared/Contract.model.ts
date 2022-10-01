@@ -40,5 +40,7 @@ const createDefaultContract = (): Contract => createContract({
   status: ContractStatus.ACTIVE
 });
 
+const convertToSentenceCase = (frequency: ServiceFrequency) => frequency.charAt(0) + frequency.slice(1).toLowerCase();
+
 export default Contract;
-export {createContract, createDefaultContract, ServiceFrequency, ContractStatus};
+export {createContract, createDefaultContract, ServiceFrequency, ContractStatus, convertToSentenceCase};

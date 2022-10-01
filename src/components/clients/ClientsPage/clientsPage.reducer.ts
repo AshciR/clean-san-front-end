@@ -1,6 +1,6 @@
 import {ClientWithContracts, createClientWithContracts} from "../../../shared/ClientWithContracts.model";
 import Client from "../../../shared/Client.model";
-import Contract from "../../../shared/Contract.model";
+import Contract, {ContractStatus} from "../../../shared/Contract.model";
 
 interface ClientsState {
   isLoading: boolean;
@@ -8,6 +8,7 @@ interface ClientsState {
   isFetchError: boolean;
   isAddClientError: boolean;
   isAddContractError: boolean;
+  isUpdateContractError: boolean;
 }
 
 const initialClientsState: ClientsState = {
@@ -15,7 +16,8 @@ const initialClientsState: ClientsState = {
   clients: [],
   isFetchError: false,
   isAddClientError: false,
-  isAddContractError: false
+  isAddContractError: false,
+  isUpdateContractError: false
 }
 
 interface ClientsFetchInitAction {
@@ -49,6 +51,15 @@ interface AddContractFailureAction {
   type: 'CLIENTS_ADD_CONTRACT_FAILURE'
 }
 
+interface StartContractSuccessAction {
+  type: 'CLIENTS_START_CONTRACT_SUCCESS'
+  payload: Contract
+}
+
+interface StartContractFailureAction {
+  type: 'CLIENTS_START_CONTRACT_FAILURE'
+}
+
 type ClientsAction =
   ClientsFetchInitAction
   | ClientsFetchSuccessAction
@@ -57,6 +68,8 @@ type ClientsAction =
   | AddClientFailureAction
   | AddContractSuccessAction
   | AddContractFailureAction
+  | StartContractSuccessAction
+  | StartContractFailureAction
 
 const clientsReducer = (state: ClientsState, action: ClientsAction) => {
 
@@ -107,13 +120,27 @@ const clientsReducer = (state: ClientsState, action: ClientsAction) => {
         // @ts-ignore There will be an associated client b/c the user had to click on it in the 1st place
         clients: addContractToClient(state.clients, action.payload)
       }
-      return addContractSuccessState
+      return addContractSuccessState;
     case "CLIENTS_ADD_CONTRACT_FAILURE":
       const addContractFailureState: ClientsState = {
         ...state,
         isAddContractError: true
+      };
+      return addContractFailureState;
+    case "CLIENTS_START_CONTRACT_SUCCESS":
+      const startContractSuccessState: ClientsState = {
+        ...state,
+        isUpdateContractError: false,
+        // @ts-ignore There will be an associated client b/c the user had to click on it in the 1st place
+        clients: startContract(state.clients, action.payload)
       }
-      return addContractFailureState
+      return startContractSuccessState;
+    case "CLIENTS_START_CONTRACT_FAILURE":
+      const startContractFailureState: ClientsState = {
+        ...state,
+        isUpdateContractError: true
+      };
+      return startContractFailureState;
     default:
       throw new Error(`Illegal Client action was provided`);
   }
@@ -142,11 +169,47 @@ const addContractToClient = (currentClients: ClientWithContracts[], newlyAddedCo
     ...associatedClient,
     // @ts-ignore There will be an associated client b/c the user had to click on it in the 1st place
     contracts: [...associatedClient.contracts, newlyAddedContract]
-  }
+  } as ClientWithContracts
+
+  return updateClients(currentClients, updatedClient);
+
+};
+
+const startContract = (currentClients: ClientWithContracts[], updatedContract: Contract) => {
+
+  const associatedClient = currentClients.find(client => client.id === updatedContract.clientId);
+
+  const updatedClient = {
+    ...associatedClient,
+    // @ts-ignore we're guaranteed to find the client
+    contracts: activateContract(associatedClient.contracts, updatedContract)
+  } as ClientWithContracts
+
+  return updateClients(currentClients, updatedClient);
+};
+
+const activateContract = (contracts: Contract[], activatedContract: Contract) => {
+
+  const associatedContract = contracts.find(contract => contract.id === activatedContract.id);
+
+  // @ts-ignore We know we'll find a contract b/c listed
+  associatedContract.status = ContractStatus.ACTIVE;
+
+  const indexOfContract = contracts.findIndex(contract => contract.id === activatedContract.id);
+
+  return [
+    ...contracts.slice(0, indexOfContract),
+    activatedContract,
+    ...contracts.slice(indexOfContract + 1)
+  ];
+
+};
+
+const updateClients = (currentClients: ClientWithContracts[], updatedClient: ClientWithContracts) => {
+
+  const indexOfClient = currentClients.findIndex(client => client.id === updatedClient.id);
 
   // We want to preserve the ordering of the clients
-  const indexOfClient = currentClients.findIndex(client => client.id === newlyAddedContract.clientId);
-
   return [
     ...currentClients.slice(0, indexOfClient),
     updatedClient,

@@ -19,14 +19,14 @@ describe('<DashboardPage />', () => {
 
   test('it should mount', async () => {
     render(<DashboardPage/>);
-    const dashboardPage = screen.getByTestId('DashboardPage');
+    const dashboardPage = await screen.findByTestId('DashboardPage');
 
     await waitFor(() => expect(dashboardPage).toBeInTheDocument());
   });
 
   it('renders shows the loading component before the due services are fetched', async () => {
     render(<DashboardPage/>);
-    const loadingComponent = screen.getByTestId('DueServicesTable-Skeleton');
+    const loadingComponent = await screen.findByTestId('DueServicesTable-Skeleton');
 
     await waitFor(() => expect(loadingComponent).toBeInTheDocument());
   });
@@ -77,7 +77,8 @@ describe('<DashboardPage />', () => {
 
     // Then: We expect the current date to be in the date selector
     const today = DateTime.now().setLocale('en-GB').toLocaleString();
-    await screen.findByDisplayValue(today);
+    const datePicker = await screen.findByDisplayValue(today)
+    await waitFor(() => expect(datePicker).toBeInTheDocument());
   });
 
   it('should update the service status correctly', async () => {
@@ -107,7 +108,8 @@ describe('<DashboardPage />', () => {
     render(<DashboardPage/>);
 
     // Then: We expect the change status button to be disabled
-    await waitFor(() => expect(screen.getByRole('button', {name: 'Change Statuses'})).toBeDisabled());
+    const changeStatusButton = await screen.findByRole('button', {name: 'Change Statuses'});
+    await waitFor(() => expect(changeStatusButton).toBeDisabled());
   });
 
   it('the change statuses button should be enabled when status changes', async () => {
