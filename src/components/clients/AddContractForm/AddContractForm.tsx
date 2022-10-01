@@ -167,7 +167,7 @@ const FormDatePicker: FC<FormDatePickerProps> = ({label, date, formik, dateField
     const invalidDateRegex = /must be a `date` type*/;
     const isEmptyDateErrorMsg = errorMap && !invalidDateRegex.test(errorMap[1] as string);
 
-    return isEmptyDateErrorMsg ? errorMap[1] as string : 'mm/dd/yyyy';
+    return isEmptyDateErrorMsg ? errorMap[1] as string : 'dd/mm/yyyy';
 
   };
 
@@ -190,7 +190,7 @@ const FormDatePicker: FC<FormDatePickerProps> = ({label, date, formik, dateField
         <DatePicker
           value={date}
           onChange={(date) => formik.setFieldValue(dateField, date?.toJSDate())}
-          inputFormat="MM/dd/yyyy"
+          inputFormat="dd/MM/yyyy"
           renderInput={props => {
             return <TextField
               {...props}

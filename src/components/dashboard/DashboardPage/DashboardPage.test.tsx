@@ -76,7 +76,7 @@ describe('<DashboardPage />', () => {
     render(<DashboardPage/>);
 
     // Then: We expect the current date to be in the date selector
-    const today = DateTime.now().toLocaleString();
+    const today = DateTime.now().setLocale('en-GB').toLocaleString();
     await screen.findByDisplayValue(today);
   });
 
@@ -164,7 +164,7 @@ describe('<DashboardPage />', () => {
 
   });
 
-  it('unsuccessful update notifcation is displayed is called after submit button is clicked', async () => {
+  it('unsuccessful update notification is displayed is called after submit button is clicked', async () => {
 
     // Given: The DashboardPage renders with services
     render(<DashboardPage/>);
