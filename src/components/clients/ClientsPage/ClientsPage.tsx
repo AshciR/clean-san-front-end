@@ -4,7 +4,12 @@ import NavBarWrapper from "../../shared/NavBarWrapper/NavBarWrapper";
 import {NAV_BAR_HEIGHT} from "../../shared/NavBar/NavBar";
 import {clientsReducer, initialClientsState} from "./clientsPage.reducer";
 import ClientsTable from "../ClientsTable/ClientsTable";
-import {addClient, addContractToClient, fetchClientsWithContracts} from "../../../services/clients.services";
+import {
+  addClient,
+  addContractToClient,
+  fetchClientsWithContracts,
+  updateContract
+} from "../../../services/clients.services";
 import {ClientWithContracts} from "../../../shared/ClientWithContracts.model";
 import AddClientForm from "../AddClientForm/AddClientForm";
 import Client from "../../../shared/Client.model";
@@ -18,7 +23,7 @@ import {
 } from "../AssociatedContractsModal/associatedContractsModal.reducer";
 import AssociatedContractsModal from "../AssociatedContractsModal/AssociatedContractsModal";
 import AddContractForm from "../AddContractForm/AddContractForm";
-import Contract, {ContractStatus, convertToSentenceCase} from "../../../shared/Contract.model";
+import Contract, {convertToSentenceCase} from "../../../shared/Contract.model";
 import StartContractAlert from "../StartContractAlert/StartContractAlert";
 
 interface ClientsPageProps {
@@ -183,13 +188,11 @@ const ClientsPageContent: FC<ClientsPageContentProps> = ({distanceFromNavBar}) =
 
   };
 
-  const handleStartContract = (contractToBeStarted: Contract) => {
+  const handleStartContract = async (contractToBeStarted: Contract) => {
 
     try {
 
-      //TODO: Add service call
-      //TODO: Replace with correct payload
-      const startedContract = {...contractToBeStarted, status: ContractStatus.ACTIVE};
+      const startedContract = await updateContract(contractToBeStarted);
 
       dispatchClients({
         type: 'CLIENTS_START_CONTRACT_SUCCESS',
