@@ -1,28 +1,36 @@
 import {ClientWithContracts} from "../../../shared/ClientWithContracts.model";
+import Contract from "../../../shared/Contract.model";
 
 interface AssociatedContractsModalState {
   isOpen: boolean
   clientWithContracts?: ClientWithContracts
+  selectedContract?: Contract
 }
 
 const initialAssociatedContractsModalState: AssociatedContractsModalState = {
   isOpen: false,
   clientWithContracts: undefined,
+  selectedContract: undefined
 }
 
-interface AssociatedContractsClientSelectAction {
+interface AssociatedContractsSelectClientAction {
   type: 'ASSOCIATED_CONTRACTS_SELECT_CLIENT';
-  payload: ClientWithContracts
+  payload: ClientWithContracts;
 }
 
 interface AssociatedContractsCloseModalAction {
   type: 'ASSOCIATED_CONTRACTS_CLOSE_MODAL';
 }
 
-type AssociatedContractsAction =
-  AssociatedContractsClientSelectAction
-  | AssociatedContractsCloseModalAction
+interface AssociatedContractsOpenStartContractAlertAction {
+  type: 'ASSOCIATED_CONTRACTS_OPEN_START_CONTRACT_ALERT';
+  payload: Contract;
+}
 
+type AssociatedContractsAction =
+  AssociatedContractsSelectClientAction
+  | AssociatedContractsCloseModalAction
+  | AssociatedContractsOpenStartContractAlertAction
 
 const associatedContractsReducer = (
   state: AssociatedContractsModalState,
@@ -34,15 +42,24 @@ const associatedContractsReducer = (
       const selectedClientState: AssociatedContractsModalState = {
         ...state,
         isOpen: true,
-        clientWithContracts: action.payload
+        clientWithContracts: action.payload,
+        selectedContract: undefined
       };
       return selectedClientState;
     case "ASSOCIATED_CONTRACTS_CLOSE_MODAL":
       const closeModalState: AssociatedContractsModalState = {
         ...state,
-        isOpen: false
+        isOpen: false,
+        selectedContract: undefined
       };
-      return closeModalState
+      return closeModalState;
+    case "ASSOCIATED_CONTRACTS_OPEN_START_CONTRACT_ALERT":
+      const selectedContractState: AssociatedContractsModalState = {
+        ...state,
+        isOpen: true,
+        selectedContract: action.payload
+      };
+      return selectedContractState;
     default:
       throw new Error(`Illegal AssociatedContracts action was provided`);
   }

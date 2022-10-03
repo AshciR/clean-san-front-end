@@ -16,12 +16,14 @@ describe('<AssociatedContractsModal />', () => {
 
   const mockHandleCloseAssociatedContractsModal = jest.fn();
   const mockHandleOpenAddContractModal = jest.fn();
+  const mockHandleOpenStartContractAlert = jest.fn();
 
   it("modal should display client's name", () => {
     render(<AssociatedContractsModal
       modalState={modalState}
       handleCloseAssociatedContractsModal={mockHandleCloseAssociatedContractsModal}
       handleOpenAddContractModal={mockHandleOpenAddContractModal}
+      handleOpenStartContractAlert={mockHandleOpenStartContractAlert}
     />);
     const clientName = screen.getByText(`Contracts for ${clientWithContracts.name}`);
     expect(clientName).toBeInTheDocument();
@@ -32,6 +34,7 @@ describe('<AssociatedContractsModal />', () => {
       modalState={modalState}
       handleCloseAssociatedContractsModal={mockHandleCloseAssociatedContractsModal}
       handleOpenAddContractModal={mockHandleOpenAddContractModal}
+      handleOpenStartContractAlert={mockHandleOpenStartContractAlert}
     />);
     const numberOfContracts = clientWithContracts.contracts.length;
     const contractCards = screen.getAllByText(/Start date:/);
@@ -43,6 +46,7 @@ describe('<AssociatedContractsModal />', () => {
       modalState={modalState}
       handleCloseAssociatedContractsModal={mockHandleCloseAssociatedContractsModal}
       handleOpenAddContractModal={mockHandleOpenAddContractModal}
+      handleOpenStartContractAlert={mockHandleOpenStartContractAlert}
     />);
     const addContractButton = screen.getByRole('button', {name: 'Add Contract'});
 
@@ -59,6 +63,7 @@ describe('<AssociatedContractsModal />', () => {
       modalState={modalState}
       handleCloseAssociatedContractsModal={mockHandleCloseAssociatedContractsModal}
       handleOpenAddContractModal={mockHandleOpenAddContractModal}
+      handleOpenStartContractAlert={mockHandleOpenStartContractAlert}
     />);
     const closeButton = screen.getByRole('button', {name: 'Close'});
 
@@ -69,5 +74,4 @@ describe('<AssociatedContractsModal />', () => {
     expect(mockHandleCloseAssociatedContractsModal).toBeCalledTimes(1);
 
   });
-
 });

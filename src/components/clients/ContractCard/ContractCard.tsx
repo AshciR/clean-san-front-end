@@ -7,9 +7,10 @@ import {DateTime} from "luxon";
 
 interface ContractCardProps {
   contract: Contract;
+  handleOpenStartContractAlert: (contract: Contract) => void
 }
 
-const ContractCard: FC<ContractCardProps> = ({contract}: ContractCardProps) => {
+const ContractCard: FC<ContractCardProps> = ({contract, handleOpenStartContractAlert}: ContractCardProps) => {
 
   const textWidth = 100;
   const cardContentMargin = 1; // translates to 8px
@@ -86,7 +87,16 @@ const ContractCard: FC<ContractCardProps> = ({contract}: ContractCardProps) => {
           flexDirection: 'row',
           justifyContent: 'flex-end'
         }}>
-        <Button size="small" variant='outlined' disabled={isStartButtonDisabled(contract.status)}>Start</Button>
+        <Button
+          size="small"
+          variant='outlined'
+          disabled={isStartButtonDisabled(contract.status)}
+          onClick={() => {
+            handleOpenStartContractAlert(contract)
+          }}
+        >
+          Start
+        </Button>
         <Button size="small" disabled={isCancelButtonDisabled(contract.status)}>Cancel</Button>
       </CardActions>
     </Card>

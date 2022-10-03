@@ -3,17 +3,20 @@ import styles from './AssociatedContractsModal.module.scss';
 import {Box, Button, Paper, Typography} from "@mui/material";
 import ContractCard from "../ContractCard/ContractCard";
 import {AssociatedContractsModalState} from "./associatedContractsModal.reducer";
+import Contract from "../../../shared/Contract.model";
 
 interface AssociatedContractsModalProps {
   modalState: AssociatedContractsModalState
   handleCloseAssociatedContractsModal: () => void
   handleOpenAddContractModal: () => void
+  handleOpenStartContractAlert: (contract: Contract) => void
 }
 
 const AssociatedContractsModal: FC<AssociatedContractsModalProps> = ({
                                                                        modalState,
                                                                        handleCloseAssociatedContractsModal,
-                                                                       handleOpenAddContractModal
+                                                                       handleOpenAddContractModal,
+                                                                       handleOpenStartContractAlert
                                                                      }: AssociatedContractsModalProps) => {
 
   return (
@@ -53,6 +56,7 @@ const AssociatedContractsModal: FC<AssociatedContractsModalProps> = ({
                 <ContractCard
                   key={contract.id}
                   contract={contract}
+                  handleOpenStartContractAlert={handleOpenStartContractAlert}
                 />) :
               <Typography variant='h5'>
                 There are no contracts for this client

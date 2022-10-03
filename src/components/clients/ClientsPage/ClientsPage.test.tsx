@@ -17,14 +17,14 @@ describe('<ClientsPage />', () => {
 
   it('should display the clients page', async () => {
     render(<ClientsPage/>);
-    const clientsPage = screen.getAllByText(/Clients/)[1];
+    const clientsPage = await screen.findByRole('heading',{name: /Clients/});
 
     await waitFor(() => expect(clientsPage).toBeInTheDocument());
   });
 
   it('renders shows the loading component before the clients are fetched', async () => {
     render(<ClientsPage/>);
-    const loadingComponent = screen.getByTestId('ClientsTable-Skeleton');
+    const loadingComponent = await screen.findByTestId('ClientsTable-Skeleton');
 
     await waitFor(() => expect(loadingComponent).toBeInTheDocument());
   });
@@ -75,7 +75,7 @@ describe('<ClientsPage />', () => {
     render(<ClientsPage/>);
 
     // When: The Add Client button is pressed
-    const addClientButton = screen.getByRole('button', {name: 'Add Client'});
+    const addClientButton = await screen.findByRole('button', {name: 'Add Client'});
     fireEvent.click(addClientButton);
 
     // Then: The Add Client modal is opened

@@ -144,7 +144,7 @@ describe('<AddContractForm />', () => {
     // If it's the 1st day of the month, the test will fail b/c
     // it will not find yesterday's date on the calendar
     const newStartDate = isYesterdayAndTodayInTheSameMonth() ?
-      DateTime.now().minus({day: 1}) :
+      DateTime.now() :
       DateTime.now().plus({day: 1});
 
     await changeDate(startDateField, newStartDate);
