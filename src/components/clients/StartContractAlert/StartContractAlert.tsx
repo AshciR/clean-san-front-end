@@ -1,6 +1,6 @@
 import React, {FC} from 'react';
 import {Button, Dialog, DialogActions, DialogContent, DialogTitle} from "@mui/material";
-import Contract, {convertToSentenceCase} from "../../../shared/Contract.model";
+import Contract, {ContractStatus, convertToSentenceCase} from "../../../shared/Contract.model";
 import {DateTime} from "luxon";
 
 interface StartContractAlertProps {
@@ -28,8 +28,11 @@ const StartContractAlert: FC<StartContractAlertProps> = ({
     <DialogActions>
       <Button onClick={() => handleCloseStartContractAlert()}>Cancel</Button>
       <Button onClick={() => {
-        handleStartContract(contract)
-        handleCloseStartContractAlert()
+
+        const startedContract = {...contract, status: ContractStatus.ACTIVE};
+        handleStartContract(startedContract);
+
+        handleCloseStartContractAlert();
       }}>
         Confirm
       </Button>

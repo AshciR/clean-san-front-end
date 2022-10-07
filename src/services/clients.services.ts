@@ -68,6 +68,17 @@ const addClient = async (prospectiveClient: Client): Promise<Client> => {
 }
 
 /**
+ * Helper method to convert the AddClientResponse response into the Client domain model
+ * @param response
+ */
+const convertAddedClientResponseToClient = (response: AddClientResponse): Client => ({
+  id: response.id,
+  name: response.name,
+  email: response.email,
+  isActive: false
+});
+
+/**
  * Submits a contract to be added to a client
  * @param contract the contract to be added
  */
@@ -94,16 +105,31 @@ const addContractToClient = async (contract: Contract): Promise<Contract> => {
 
 }
 
-/**
- * Helper method to convert the AddClientResponse response into the Client domain model
- * @param response
- */
-const convertAddedClientResponseToClient = (response: AddClientResponse): Client => ({
-  id: response.id,
-  name: response.name,
-  email: response.email,
-  isActive: false
-});
+const updateContract = async (contract: Contract): Promise<Contract> => {
+
+  try {
+
+    const contractRequest: UpdateContractRequest = {
+      id: contract.id,
+      clientId: contract.clientId,
+      startDate: contract.startDate.toISODate(),
+      endDate: contract.endDate.toISODate(),
+      serviceFrequency: contract.serviceFrequency,
+      status: contract.status
+    }
+
+    const response = await axios.put<ContractResponse>(
+      `/v1/clients/${contract.clientId}/contracts/${contract.id}`,
+      contractRequest
+    )
+
+    return convertContractResponseToContract(response.data);
+
+  } catch (error) {
+    throw error
+  }
+
+}
 
 type GetClientsResponse = {
   clients: GetClientResponse[];
@@ -133,17 +159,28 @@ type AddContractRequest = {
   serviceFrequency: string;
 }
 
+type UpdateContractRequest = {
+  id: number;
+  clientId: number;
+  startDate: string;
+  endDate: string;
+  serviceFrequency: string;
+  status: string;
+}
+
 export type {
   GetClientsResponse,
   GetClientResponse,
   AddClientRequest,
   AddClientResponse,
   AddContractRequest,
+  UpdateContractRequest
 }
 export {
   fetchClientsWithContracts,
   convertClientResponseToClientWithContracts,
   addClient,
   convertAddedClientResponseToClient,
-  addContractToClient
+  addContractToClient,
+  updateContract
 }

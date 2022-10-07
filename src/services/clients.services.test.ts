@@ -5,7 +5,8 @@ import {
   convertAddedClientResponseToClient,
   convertClientResponseToClientWithContracts,
   fetchClientsWithContracts,
-  GetClientResponse
+  GetClientResponse,
+  updateContract
 } from "./clients.services";
 import {getClientsResponse} from "../mocks/clientsEndpointResponses";
 import {ContractStatus, createContract, ServiceFrequency} from "../shared/Contract.model";
@@ -127,6 +128,29 @@ describe('Clients Services', () => {
     expect(addedContract.endDate).toEqual(endDate);
     expect(addedContract.serviceFrequency).toEqual(ServiceFrequency.MONTHLY);
     expect(addedContract.status).toEqual(ContractStatus.INACTIVE);
+
+  });
+
+  it('updates a contract successfully', async () => {
+
+    // Given: A contract exists
+    const inactiveContract = getClientsResponse.clients[0].contracts[2];
+
+    // And: We have the updated contract request
+    const updateContractRequest = createContract({
+      id: inactiveContract.id,
+      clientId: inactiveContract.clientId,
+      startDate: DateTime.fromISO(inactiveContract.startDate),
+      endDate: DateTime.fromISO(inactiveContract.endDate),
+      serviceFrequency: inactiveContract.serviceFrequency as ServiceFrequency,
+      status: ContractStatus.ACTIVE
+    });
+
+    // When: We update the contract
+    const updatedContract = await updateContract(updateContractRequest)
+
+    // Then: It has the updated values
+    expect(updatedContract).toStrictEqual(updateContractRequest);
 
   });
 
