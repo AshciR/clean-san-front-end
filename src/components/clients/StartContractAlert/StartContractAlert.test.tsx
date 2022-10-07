@@ -2,12 +2,12 @@ import React from 'react';
 import {render, screen} from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import StartContractAlert from './StartContractAlert';
-import {createDefaultContract} from "../../../shared/Contract.model";
+import {ContractStatus, createContract, createDefaultContract, ServiceFrequency} from "../../../shared/Contract.model";
 import {convertToSentenceCase} from "../../../setupTests";
 import {DateTime} from "luxon";
 import userEvent from "@testing-library/user-event";
 
-describe('<StartContractAlert />', () => {
+describe('<CancelContractAlert />', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -42,7 +42,14 @@ describe('<StartContractAlert />', () => {
   it('should start contract when confirm is clicked', async () => {
 
     userEvent.setup();
-    const contract = createDefaultContract();
+    const contract = createContract({
+      id: 10,
+      clientId: 1,
+      startDate: DateTime.now(),
+      endDate: DateTime.now().plus({years: 1}),
+      serviceFrequency: ServiceFrequency.MONTHLY,
+      status: ContractStatus.INACTIVE
+    });
 
     // Given: The alert is on the screen
     render(<StartContractAlert
@@ -57,8 +64,9 @@ describe('<StartContractAlert />', () => {
     await userEvent.click(confirmButton);
 
     // Then: The contract info should be in the alert
+    const activatedContract = {...contract, status: ContractStatus.ACTIVE}
     expect(mockHandleStartContract).toBeCalledTimes(1);
-    expect(mockHandleStartContract).toBeCalledWith(contract);
+    expect(mockHandleStartContract).toBeCalledWith(activatedContract);
     expect(mockHandleCloseStartContractAlert).toBeCalledTimes(1);
 
   });

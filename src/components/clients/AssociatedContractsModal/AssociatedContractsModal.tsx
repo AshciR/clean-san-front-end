@@ -10,13 +10,15 @@ interface AssociatedContractsModalProps {
   handleCloseAssociatedContractsModal: () => void
   handleOpenAddContractModal: () => void
   handleOpenStartContractAlert: (contract: Contract) => void
+  handleOpenCancelContractAlert: (contract: Contract) => void
 }
 
 const AssociatedContractsModal: FC<AssociatedContractsModalProps> = ({
                                                                        modalState,
                                                                        handleCloseAssociatedContractsModal,
                                                                        handleOpenAddContractModal,
-                                                                       handleOpenStartContractAlert
+                                                                       handleOpenStartContractAlert,
+                                                                       handleOpenCancelContractAlert
                                                                      }: AssociatedContractsModalProps) => {
 
   return (
@@ -57,7 +59,7 @@ const AssociatedContractsModal: FC<AssociatedContractsModalProps> = ({
                   key={contract.id}
                   contract={contract}
                   handleOpenStartContractAlert={handleOpenStartContractAlert}
-                />) :
+                  handleOpenCancelContractAlert={handleOpenCancelContractAlert}/>) :
               <Typography variant='h5'>
                 There are no contracts for this client
               </Typography>

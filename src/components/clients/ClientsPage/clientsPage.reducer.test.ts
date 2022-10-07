@@ -346,4 +346,90 @@ describe('ClientPage Reducer', () => {
     expect(updatedState).toStrictEqual(expectedState);
   });
 
+  it('cancels a contract successfully', () => {
+
+    // Given: We have a current state with a client who has a contract
+    const activeContract = createDefaultContract();
+    const inactiveContract = createContract({
+      id: 11,
+      clientId: 1,
+      startDate: DateTime.now(),
+      endDate: DateTime.now().plus({years: 1}),
+      serviceFrequency: ServiceFrequency.WEEKLY,
+      status: ContractStatus.INACTIVE
+    });
+
+    const initialState = {
+      isLoading: false,
+      clients: [
+        createClientWithContracts({
+          id: 1,
+          name: "Rick",
+          email: "rick@gmail.com",
+          isActive: false,
+          contracts: [activeContract, inactiveContract]
+        }),
+      ],
+      isFetchError: false,
+      isAddClientError: false,
+      isAddContractError: false,
+      isUpdateContractError: false
+    };
+
+    // And: We have an action
+    const cancelledContract = {...activeContract, status: ContractStatus.CANCELLED};
+    const cancelContractSuccessAction: ClientsAction = {
+      type: 'CLIENTS_CANCEL_CONTRACT_SUCCESS',
+      payload: cancelledContract
+    };
+
+    // When: We call the reducer
+    const updatedState = clientsReducer(initialState, cancelContractSuccessAction);
+
+    // Then: The expected state should be produced
+    const expectedState: ClientsState = {
+      isLoading: false,
+      clients: [
+        createClientWithContracts({
+          id: 1,
+          name: "Rick",
+          email: "rick@gmail.com",
+          isActive: false,
+          contracts: [cancelledContract, inactiveContract]
+        }),
+      ],
+      isFetchError: false,
+      isAddClientError: false,
+      isAddContractError: false,
+      isUpdateContractError: false
+    };
+
+    expect(updatedState).toStrictEqual(expectedState);
+
+  });
+
+  it('fails to cancel a contract', () => {
+
+    // Given: We have a current state and an action
+    const state = initialClientsState;
+    const startContractFailureAction: ClientsAction = {
+      type: 'CLIENTS_CANCEL_CONTRACT_FAILURE',
+    };
+
+    // When: We call the reducer
+    const updatedState = clientsReducer(state, startContractFailureAction);
+
+    // Then: The expected state should be produced
+    const expectedState: ClientsState = {
+      isLoading: false,
+      clients: [],
+      isFetchError: false,
+      isAddClientError: false,
+      isAddContractError: false,
+      isUpdateContractError: true
+    }
+
+    expect(updatedState).toStrictEqual(expectedState);
+  });
+
 });

@@ -61,7 +61,7 @@ describe('AssociatedContractsModal Reducer', () => {
 
   });
 
-  it('selects the contract', () => {
+  it('selects the contract for starting', () => {
 
     // Given: We have a current state and an action
     const state: AssociatedContractsModalState = {
@@ -74,6 +74,36 @@ describe('AssociatedContractsModal Reducer', () => {
 
     const action: AssociatedContractsAction = {
       type: "ASSOCIATED_CONTRACTS_OPEN_START_CONTRACT_ALERT",
+      payload: firstContract
+    };
+
+    // When: We call the reducer
+    const updatedState = associatedContractsReducer(state, action);
+
+    // Then: The expected state should be produced
+    const expectedState: AssociatedContractsModalState = {
+      isOpen: true,
+      clientWithContracts: clientWithContracts,
+      selectedContract: firstContract
+    }
+
+    expect(updatedState).toStrictEqual(expectedState);
+
+  });
+
+  it('selects the contract for cancelling', () => {
+
+    // Given: We have a current state and an action
+    const state: AssociatedContractsModalState = {
+      isOpen: true,
+      clientWithContracts: clientWithContracts,
+      selectedContract: undefined
+    };
+
+    const firstContract = clientWithContracts.contracts[0];
+
+    const action: AssociatedContractsAction = {
+      type: "ASSOCIATED_CONTRACTS_OPEN_CANCEL_CONTRACT_ALERT",
       payload: firstContract
     };
 

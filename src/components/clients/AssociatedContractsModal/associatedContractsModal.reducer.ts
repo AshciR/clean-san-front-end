@@ -27,10 +27,16 @@ interface AssociatedContractsOpenStartContractAlertAction {
   payload: Contract;
 }
 
+interface AssociatedContractsOpenCancelContractAlertAction {
+  type: 'ASSOCIATED_CONTRACTS_OPEN_CANCEL_CONTRACT_ALERT';
+  payload: Contract;
+}
+
 type AssociatedContractsAction =
   AssociatedContractsSelectClientAction
   | AssociatedContractsCloseModalAction
   | AssociatedContractsOpenStartContractAlertAction
+  | AssociatedContractsOpenCancelContractAlertAction
 
 const associatedContractsReducer = (
   state: AssociatedContractsModalState,
@@ -54,12 +60,19 @@ const associatedContractsReducer = (
       };
       return closeModalState;
     case "ASSOCIATED_CONTRACTS_OPEN_START_CONTRACT_ALERT":
-      const selectedContractState: AssociatedContractsModalState = {
+      const selectedContractStartState: AssociatedContractsModalState = {
         ...state,
         isOpen: true,
         selectedContract: action.payload
       };
-      return selectedContractState;
+      return selectedContractStartState;
+    case "ASSOCIATED_CONTRACTS_OPEN_CANCEL_CONTRACT_ALERT":
+      const selectedContractCancelState: AssociatedContractsModalState = {
+        ...state,
+        isOpen: true,
+        selectedContract: action.payload
+      };
+      return selectedContractCancelState;
     default:
       throw new Error(`Illegal AssociatedContracts action was provided`);
   }
