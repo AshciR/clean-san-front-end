@@ -9,12 +9,14 @@ interface ContractCardProps {
   contract: Contract;
   handleOpenStartContractAlert: (contract: Contract) => void
   handleOpenCancelContractAlert: (contract: Contract) => void
+  isAnyContractActive: boolean
 }
 
 const ContractCard: FC<ContractCardProps> = ({
                                                contract,
                                                handleOpenStartContractAlert,
-                                               handleOpenCancelContractAlert
+                                               handleOpenCancelContractAlert,
+                                               isAnyContractActive
                                              }: ContractCardProps) => {
 
   const textWidth = 100;
@@ -95,7 +97,7 @@ const ContractCard: FC<ContractCardProps> = ({
         <Button
           size="small"
           variant='outlined'
-          disabled={isStartButtonDisabled(contract.status)}
+          disabled={isStartButtonDisabled(contract.status, isAnyContractActive)}
           onClick={() => {
             handleOpenStartContractAlert(contract)
           }}
@@ -116,8 +118,8 @@ const ContractCard: FC<ContractCardProps> = ({
   );
 };
 
-const isStartButtonDisabled = (status: ContractStatus) => {
-  return status !== ContractStatus.INACTIVE;
+const isStartButtonDisabled = (status: ContractStatus, isAnyContractActive: boolean) => {
+  return isAnyContractActive || status !== ContractStatus.INACTIVE;
 };
 
 const isCancelButtonDisabled = (status: ContractStatus) => {

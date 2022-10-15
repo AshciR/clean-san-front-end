@@ -3,7 +3,7 @@ import styles from './AssociatedContractsModal.module.scss';
 import {Box, Button, Paper, Typography} from "@mui/material";
 import ContractCard from "../ContractCard/ContractCard";
 import {AssociatedContractsModalState} from "./associatedContractsModal.reducer";
-import Contract from "../../../shared/Contract.model";
+import Contract, {ContractStatus} from "../../../shared/Contract.model";
 
 interface AssociatedContractsModalProps {
   modalState: AssociatedContractsModalState
@@ -59,7 +59,9 @@ const AssociatedContractsModal: FC<AssociatedContractsModalProps> = ({
                   key={contract.id}
                   contract={contract}
                   handleOpenStartContractAlert={handleOpenStartContractAlert}
-                  handleOpenCancelContractAlert={handleOpenCancelContractAlert}/>) :
+                  handleOpenCancelContractAlert={handleOpenCancelContractAlert}
+                  isAnyContractActive={isAnyContractActive(modalState.clientWithContracts?.contracts)}
+                />) :
               <Typography variant='h5'>
                 There are no contracts for this client
               </Typography>
@@ -105,5 +107,9 @@ const AssociatedContractsModal: FC<AssociatedContractsModalProps> = ({
 
   );
 };
+
+const isAnyContractActive = (contracts: Contract[] | undefined) => {
+  return contracts?.some(contract => contract.status === ContractStatus.ACTIVE) || false;
+}
 
 export default AssociatedContractsModal;
