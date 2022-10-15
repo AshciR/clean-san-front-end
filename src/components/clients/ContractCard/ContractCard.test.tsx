@@ -13,11 +13,13 @@ describe('<ContractCard />', () => {
   const contract = contracts[0];
 
   const mockHandleOpenStartContractAlert = jest.fn();
+  const mockHandleOpenCancelContractAlert = jest.fn();
 
   it('should display start date', () => {
     render(<ContractCard
       contract={contract}
       handleOpenStartContractAlert={mockHandleOpenStartContractAlert}
+      handleOpenCancelContractAlert={mockHandleOpenCancelContractAlert}
     />);
     const contractCard = screen.getByText(contract.startDate.toLocaleString(DateTime.DATE_MED));
     expect(contractCard).toBeInTheDocument();
@@ -27,6 +29,7 @@ describe('<ContractCard />', () => {
     render(<ContractCard
       contract={contract}
       handleOpenStartContractAlert={mockHandleOpenStartContractAlert}
+      handleOpenCancelContractAlert={mockHandleOpenCancelContractAlert}
     />);
     const contractCard = screen.getByText(contract.endDate.toLocaleString(DateTime.DATE_MED));
     expect(contractCard).toBeInTheDocument();
@@ -36,6 +39,7 @@ describe('<ContractCard />', () => {
     render(<ContractCard
       contract={contract}
       handleOpenStartContractAlert={mockHandleOpenStartContractAlert}
+      handleOpenCancelContractAlert={mockHandleOpenCancelContractAlert}
     />);
     const contractCard = screen.getByText(convertToSentenceCase(contract.serviceFrequency));
     expect(contractCard).toBeInTheDocument();
@@ -45,6 +49,7 @@ describe('<ContractCard />', () => {
     render(<ContractCard
       contract={contract}
       handleOpenStartContractAlert={mockHandleOpenStartContractAlert}
+      handleOpenCancelContractAlert={mockHandleOpenCancelContractAlert}
     />);
     const contractCard = screen.getByText(convertToSentenceCase(contract.status));
     expect(contractCard).toBeInTheDocument();
@@ -57,6 +62,7 @@ describe('<ContractCard />', () => {
     render(<ContractCard
       contract={inactiveContract}
       handleOpenStartContractAlert={mockHandleOpenStartContractAlert}
+      handleOpenCancelContractAlert={mockHandleOpenCancelContractAlert}
     />);
 
     const startButton = screen.getByRole('button', {name: /start/i});
@@ -67,6 +73,27 @@ describe('<ContractCard />', () => {
     // Then: the handler should be invoked
     expect(mockHandleOpenStartContractAlert).toBeCalledTimes(1);
     expect(mockHandleOpenStartContractAlert).toBeCalledWith(inactiveContract);
+
+  });
+
+  it("should open cancel contract alert start button is clicked", () => {
+
+    // Given: The contract is active, b/c only active contracts can be cancelled
+    const activeContract = contracts[0];
+    render(<ContractCard
+      contract={activeContract}
+      handleOpenStartContractAlert={mockHandleOpenStartContractAlert}
+      handleOpenCancelContractAlert={mockHandleOpenCancelContractAlert}
+    />);
+
+    const startButton = screen.getByRole('button', {name: /cancel/i});
+
+    // When: the start button is clicked
+    fireEvent.click(startButton);
+
+    // Then: the handler should be invoked
+    expect(mockHandleOpenCancelContractAlert).toBeCalledTimes(1);
+    expect(mockHandleOpenCancelContractAlert).toBeCalledWith(activeContract);
 
   });
 

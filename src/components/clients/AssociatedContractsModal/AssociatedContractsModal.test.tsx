@@ -17,6 +17,7 @@ describe('<AssociatedContractsModal />', () => {
   const mockHandleCloseAssociatedContractsModal = jest.fn();
   const mockHandleOpenAddContractModal = jest.fn();
   const mockHandleOpenStartContractAlert = jest.fn();
+  const mockHandleOpenCancelContractAlert = jest.fn();
 
   it("modal should display client's name", () => {
     render(<AssociatedContractsModal
@@ -24,6 +25,7 @@ describe('<AssociatedContractsModal />', () => {
       handleCloseAssociatedContractsModal={mockHandleCloseAssociatedContractsModal}
       handleOpenAddContractModal={mockHandleOpenAddContractModal}
       handleOpenStartContractAlert={mockHandleOpenStartContractAlert}
+      handleOpenCancelContractAlert={mockHandleOpenCancelContractAlert}
     />);
     const clientName = screen.getByText(`Contracts for ${clientWithContracts.name}`);
     expect(clientName).toBeInTheDocument();
@@ -35,6 +37,7 @@ describe('<AssociatedContractsModal />', () => {
       handleCloseAssociatedContractsModal={mockHandleCloseAssociatedContractsModal}
       handleOpenAddContractModal={mockHandleOpenAddContractModal}
       handleOpenStartContractAlert={mockHandleOpenStartContractAlert}
+      handleOpenCancelContractAlert={mockHandleOpenCancelContractAlert}
     />);
     const numberOfContracts = clientWithContracts.contracts.length;
     const contractCards = screen.getAllByText(/Start date:/);
@@ -47,6 +50,7 @@ describe('<AssociatedContractsModal />', () => {
       handleCloseAssociatedContractsModal={mockHandleCloseAssociatedContractsModal}
       handleOpenAddContractModal={mockHandleOpenAddContractModal}
       handleOpenStartContractAlert={mockHandleOpenStartContractAlert}
+      handleOpenCancelContractAlert={mockHandleOpenCancelContractAlert}
     />);
     const addContractButton = screen.getByRole('button', {name: 'Add Contract'});
 
@@ -64,6 +68,7 @@ describe('<AssociatedContractsModal />', () => {
       handleCloseAssociatedContractsModal={mockHandleCloseAssociatedContractsModal}
       handleOpenAddContractModal={mockHandleOpenAddContractModal}
       handleOpenStartContractAlert={mockHandleOpenStartContractAlert}
+      handleOpenCancelContractAlert={mockHandleOpenCancelContractAlert}
     />);
     const closeButton = screen.getByRole('button', {name: 'Close'});
 

@@ -60,6 +60,15 @@ interface StartContractFailureAction {
   type: 'CLIENTS_START_CONTRACT_FAILURE'
 }
 
+interface CancelContractSuccessAction {
+  type: 'CLIENTS_CANCEL_CONTRACT_SUCCESS'
+  payload: Contract
+}
+
+interface CancelContractFailureAction {
+  type: 'CLIENTS_CANCEL_CONTRACT_FAILURE'
+}
+
 type ClientsAction =
   ClientsFetchInitAction
   | ClientsFetchSuccessAction
@@ -70,6 +79,8 @@ type ClientsAction =
   | AddContractFailureAction
   | StartContractSuccessAction
   | StartContractFailureAction
+  | CancelContractSuccessAction
+  | CancelContractFailureAction
 
 const clientsReducer = (state: ClientsState, action: ClientsAction) => {
 
@@ -141,6 +152,20 @@ const clientsReducer = (state: ClientsState, action: ClientsAction) => {
         isUpdateContractError: true
       };
       return startContractFailureState;
+    case "CLIENTS_CANCEL_CONTRACT_SUCCESS":
+      const cancelContractSuccessState: ClientsState = {
+        ...state,
+        isUpdateContractError: false,
+        // @ts-ignore There will be an associated client b/c the user had to click on it in the 1st place
+        clients: cancelContract(state.clients, action.payload)
+      }
+      return cancelContractSuccessState;
+    case "CLIENTS_CANCEL_CONTRACT_FAILURE":
+      const cancelContractFailureState: ClientsState = {
+        ...state,
+        isUpdateContractError: true
+      }
+      return cancelContractFailureState;
     default:
       throw new Error(`Illegal Client action was provided`);
   }
@@ -195,13 +220,32 @@ const activateContract = (contracts: Contract[], activatedContract: Contract) =>
   // @ts-ignore We know we'll find a contract b/c listed
   associatedContract.status = ContractStatus.ACTIVE;
 
-  const indexOfContract = contracts.findIndex(contract => contract.id === activatedContract.id);
+  // @ts-ignore We know we'll find a contract b/c listed
+  return updateContracts(contracts, associatedContract);
 
-  return [
-    ...contracts.slice(0, indexOfContract),
-    activatedContract,
-    ...contracts.slice(indexOfContract + 1)
-  ];
+};
+
+const cancelContract = (currentClients: ClientWithContracts[], contractToBeCancelled: Contract) => {
+  const associatedClient = currentClients.find(client => client.id === contractToBeCancelled.clientId);
+
+  const updatedClient = {
+    ...associatedClient,
+    // @ts-ignore we're guaranteed to find the client
+    contracts: deactivateContract(associatedClient.contracts, contractToBeCancelled)
+  } as ClientWithContracts
+
+  return updateClients(currentClients, updatedClient);
+};
+
+const deactivateContract = (contracts: Contract[], deactivatedContract: Contract) => {
+
+  const associatedContract = contracts.find(contract => contract.id === deactivatedContract.id);
+
+  // @ts-ignore We know we'll find a contract b/c listed
+  associatedContract.status = ContractStatus.CANCELLED;
+
+  // @ts-ignore We know we'll find a contract b/c listed
+  return updateContracts(contracts, associatedContract)
 
 };
 
@@ -216,6 +260,16 @@ const updateClients = (currentClients: ClientWithContracts[], updatedClient: Cli
     ...currentClients.slice(indexOfClient + 1)
   ]
 
+};
+
+const updateContracts = (contracts: Contract[], contractToBeUpdated: Contract) => {
+  const indexOfContract = contracts.findIndex(contract => contract.id === contractToBeUpdated.id);
+
+  return [
+    ...contracts.slice(0, indexOfContract),
+    contractToBeUpdated,
+    ...contracts.slice(indexOfContract + 1)
+  ];
 };
 
 export {initialClientsState, clientsReducer}

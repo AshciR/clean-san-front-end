@@ -25,6 +25,7 @@ import AssociatedContractsModal from "../AssociatedContractsModal/AssociatedCont
 import AddContractForm from "../AddContractForm/AddContractForm";
 import Contract, {convertToSentenceCase} from "../../../shared/Contract.model";
 import StartContractAlert from "../StartContractAlert/StartContractAlert";
+import CancelContractAlert from "../CancelContractAlert/CancelContractAlert";
 
 interface ClientsPageProps {
 
@@ -62,6 +63,7 @@ const ClientsPageContent: FC<ClientsPageContentProps> = ({distanceFromNavBar}) =
   const [addClientModalOpen, setAddClientModalOpen] = React.useState(false);
   const [addContractModalOpen, setAddContractModalOpen] = React.useState(false);
   const [startContractAlertOpen, setStartContractAlertOpen] = React.useState(false);
+  const [cancelContractAlertOpen, setCancelContractAlertOpen] = React.useState(false);
 
   // Handlers
   const handleCloseAddClientModal = () => {
@@ -150,6 +152,20 @@ const ClientsPageContent: FC<ClientsPageContentProps> = ({distanceFromNavBar}) =
     setStartContractAlertOpen(false);
   }
 
+  const handleOpenCancelContractAlert = (contract: Contract) => {
+
+    dispatchAssociatedContractsModal({
+      type: 'ASSOCIATED_CONTRACTS_OPEN_CANCEL_CONTRACT_ALERT',
+      payload: contract
+    });
+
+    setCancelContractAlertOpen(true);
+  };
+
+  const handleCloseCancelContractAlert = () => {
+    setCancelContractAlertOpen(false);
+  }
+
   const handleAddContract = async (prospectiveContract: Contract) => {
 
     try {
@@ -221,6 +237,39 @@ const ClientsPageContent: FC<ClientsPageContentProps> = ({distanceFromNavBar}) =
 
   }
 
+  const handleCancelContract = async (contractToBeCancelled: Contract) => {
+
+    try {
+
+      const cancelledContract = await updateContract(contractToBeCancelled);
+
+      dispatchClients({
+        type: 'CLIENTS_CANCEL_CONTRACT_SUCCESS',
+        payload: cancelledContract
+      });
+
+      dispatchClientsPageNotification({
+        type: 'SNACKBAR_NOTIFICATION_OPEN',
+        payload: {
+          severity: 'success',
+          message: `${(convertToSentenceCase(cancelledContract.serviceFrequency))} contract was cancelled`
+        }
+      });
+
+    } catch {
+
+      dispatchClientsPageNotification({
+        type: 'SNACKBAR_NOTIFICATION_OPEN',
+        payload: {
+          severity: 'error',
+          message: 'There was an error cancelling the contract. Please try again later.'
+        }
+      });
+
+    }
+
+  }
+
   // @ts-ignore
   React.useEffect(() => {
 
@@ -285,17 +334,25 @@ const ClientsPageContent: FC<ClientsPageContentProps> = ({distanceFromNavBar}) =
                   handleCloseAssociatedContractsModal={handleCloseViewAssociatedContractsModal}
                   handleOpenAddContractModal={handleOpenAddContractModal}
                   handleOpenStartContractAlert={handleOpenStartContractAlert}
-              />
+                  handleOpenCancelContractAlert={handleOpenCancelContractAlert}/>
           </Backdrop>
       }
       {
         associatedContractsModalState.selectedContract &&
-          <StartContractAlert
-              isOpen={startContractAlertOpen}
-              contract={associatedContractsModalState.selectedContract}
-              handleStartContract={handleStartContract}
-              handleCloseStartContractAlert={handleCloseStartContractAlert}
-          />
+          <>
+              <StartContractAlert
+                  isOpen={startContractAlertOpen}
+                  contract={associatedContractsModalState.selectedContract}
+                  handleStartContract={handleStartContract}
+                  handleCloseStartContractAlert={handleCloseStartContractAlert}
+              />
+              <CancelContractAlert
+                  isOpen={cancelContractAlertOpen}
+                  contract={associatedContractsModalState.selectedContract}
+                  handleCancelContract={handleCancelContract}
+                  handleCloseCancelContractAlert={handleCloseCancelContractAlert}
+              />
+          </>
       }
       {
         // Only render if the user needs to add a new contract
