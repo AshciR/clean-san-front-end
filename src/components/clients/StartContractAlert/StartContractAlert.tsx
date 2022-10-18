@@ -33,7 +33,9 @@ const StartContractAlert: FC<StartContractAlertProps> = ({
         handleStartContract(startedContract);
 
         handleCloseStartContractAlert();
-      }}>
+      }}
+              variant='outlined'
+      >
         Confirm
       </Button>
     </DialogActions>

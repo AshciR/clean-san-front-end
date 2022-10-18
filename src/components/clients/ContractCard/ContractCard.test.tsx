@@ -20,6 +20,7 @@ describe('<ContractCard />', () => {
       contract={contract}
       handleOpenStartContractAlert={mockHandleOpenStartContractAlert}
       handleOpenCancelContractAlert={mockHandleOpenCancelContractAlert}
+      isAnyContractActive={false}
     />);
     const contractCard = screen.getByText(contract.startDate.toLocaleString(DateTime.DATE_MED));
     expect(contractCard).toBeInTheDocument();
@@ -30,6 +31,7 @@ describe('<ContractCard />', () => {
       contract={contract}
       handleOpenStartContractAlert={mockHandleOpenStartContractAlert}
       handleOpenCancelContractAlert={mockHandleOpenCancelContractAlert}
+      isAnyContractActive={false}
     />);
     const contractCard = screen.getByText(contract.endDate.toLocaleString(DateTime.DATE_MED));
     expect(contractCard).toBeInTheDocument();
@@ -40,6 +42,7 @@ describe('<ContractCard />', () => {
       contract={contract}
       handleOpenStartContractAlert={mockHandleOpenStartContractAlert}
       handleOpenCancelContractAlert={mockHandleOpenCancelContractAlert}
+      isAnyContractActive={false}
     />);
     const contractCard = screen.getByText(convertToSentenceCase(contract.serviceFrequency));
     expect(contractCard).toBeInTheDocument();
@@ -50,6 +53,7 @@ describe('<ContractCard />', () => {
       contract={contract}
       handleOpenStartContractAlert={mockHandleOpenStartContractAlert}
       handleOpenCancelContractAlert={mockHandleOpenCancelContractAlert}
+      isAnyContractActive={false}
     />);
     const contractCard = screen.getByText(convertToSentenceCase(contract.status));
     expect(contractCard).toBeInTheDocument();
@@ -63,6 +67,7 @@ describe('<ContractCard />', () => {
       contract={inactiveContract}
       handleOpenStartContractAlert={mockHandleOpenStartContractAlert}
       handleOpenCancelContractAlert={mockHandleOpenCancelContractAlert}
+      isAnyContractActive={false}
     />);
 
     const startButton = screen.getByRole('button', {name: /start/i});
@@ -84,6 +89,7 @@ describe('<ContractCard />', () => {
       contract={activeContract}
       handleOpenStartContractAlert={mockHandleOpenStartContractAlert}
       handleOpenCancelContractAlert={mockHandleOpenCancelContractAlert}
+      isAnyContractActive={false}
     />);
 
     const startButton = screen.getByRole('button', {name: /cancel/i});
@@ -94,6 +100,57 @@ describe('<ContractCard />', () => {
     // Then: the handler should be invoked
     expect(mockHandleOpenCancelContractAlert).toBeCalledTimes(1);
     expect(mockHandleOpenCancelContractAlert).toBeCalledWith(activeContract);
+
+  });
+
+  it("should disable start button if any contract is active", () => {
+
+    // Given: At least one contract is active
+    const activeContract = contracts[0];
+    render(<ContractCard
+      contract={activeContract}
+      handleOpenStartContractAlert={mockHandleOpenStartContractAlert}
+      handleOpenCancelContractAlert={mockHandleOpenCancelContractAlert}
+      isAnyContractActive={true}
+    />);
+
+    // Then: the start button should be disabled
+    const startButton = screen.getByRole('button', {name: /start/i});
+    expect(startButton).toBeDisabled();
+
+  });
+
+  it("should disable start button if contract is not inactive", () => {
+
+    // Given: At least one contract is active
+    const activeContract = contracts[0];
+    render(<ContractCard
+      contract={activeContract}
+      handleOpenStartContractAlert={mockHandleOpenStartContractAlert}
+      handleOpenCancelContractAlert={mockHandleOpenCancelContractAlert}
+      isAnyContractActive={false}
+    />);
+
+    // Then: the start button should be disabled
+    const startButton = screen.getByRole('button', {name: /start/i});
+    expect(startButton).toBeDisabled();
+
+  });
+
+  it("should enable start button if contract is inactive and no other contracts are active", () => {
+
+    // Given: At least one contract is inactive
+    const activeContract = contracts[2];
+    render(<ContractCard
+      contract={activeContract}
+      handleOpenStartContractAlert={mockHandleOpenStartContractAlert}
+      handleOpenCancelContractAlert={mockHandleOpenCancelContractAlert}
+      isAnyContractActive={false}
+    />);
+
+    // Then: the start button should be disabled
+    const startButton = screen.getByRole('button', {name: /start/i});
+    expect(startButton).toBeEnabled();
 
   });
 

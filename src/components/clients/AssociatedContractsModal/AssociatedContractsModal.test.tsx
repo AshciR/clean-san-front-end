@@ -79,4 +79,21 @@ describe('<AssociatedContractsModal />', () => {
     expect(mockHandleCloseAssociatedContractsModal).toBeCalledTimes(1);
 
   });
+
+  it('should disable all start buttons if any contract is active', () => {
+
+    // Given: At least one contract is active. getClientsResponse.clients[0] has an active contract
+    render(<AssociatedContractsModal
+      modalState={modalState}
+      handleCloseAssociatedContractsModal={mockHandleCloseAssociatedContractsModal}
+      handleOpenAddContractModal={mockHandleOpenAddContractModal}
+      handleOpenStartContractAlert={mockHandleOpenStartContractAlert}
+      handleOpenCancelContractAlert={mockHandleOpenCancelContractAlert}
+    />);
+
+    // Then: All the start buttons should be disabled
+    const startButtons = screen.getAllByRole('button', {name: 'Start'});
+    startButtons.forEach(button => expect(button).toBeDisabled());
+  });
+
 });

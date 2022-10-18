@@ -30,7 +30,9 @@ const CancelContractAlert: FC<CancelContractAlertProps> = ({
         handleCancelContract(cancelledContract);
 
         handleCloseCancelContractAlert();
-      }}>
+      }}
+              variant='outlined'
+      >
         Confirm
       </Button>
     </DialogActions>
