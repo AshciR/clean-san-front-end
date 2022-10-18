@@ -308,7 +308,7 @@ describe('ClientPage Reducer', () => {
           id: 1,
           name: "Rick",
           email: "rick@gmail.com",
-          isActive: false,
+          isActive: true,
           contracts: [startedContract, activeContract]
         }),
       ],
@@ -366,7 +366,7 @@ describe('ClientPage Reducer', () => {
           id: 1,
           name: "Rick",
           email: "rick@gmail.com",
-          isActive: false,
+          isActive: true,
           contracts: [activeContract, inactiveContract]
         }),
       ],

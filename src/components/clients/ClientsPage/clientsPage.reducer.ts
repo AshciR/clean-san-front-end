@@ -207,7 +207,8 @@ const startContract = (currentClients: ClientWithContracts[], updatedContract: C
   const updatedClient = {
     ...associatedClient,
     // @ts-ignore we're guaranteed to find the client
-    contracts: activateContract(associatedClient.contracts, updatedContract)
+    contracts: activateContract(associatedClient.contracts, updatedContract),
+    isActive: true
   } as ClientWithContracts
 
   return updateClients(currentClients, updatedClient);
@@ -231,7 +232,8 @@ const cancelContract = (currentClients: ClientWithContracts[], contractToBeCance
   const updatedClient = {
     ...associatedClient,
     // @ts-ignore we're guaranteed to find the client
-    contracts: deactivateContract(associatedClient.contracts, contractToBeCancelled)
+    contracts: deactivateContract(associatedClient.contracts, contractToBeCancelled),
+    isActive: false
   } as ClientWithContracts
 
   return updateClients(currentClients, updatedClient);
