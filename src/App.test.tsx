@@ -32,6 +32,20 @@ describe('App', () => {
 
   });
 
+  it('navigates to the Not Found Page', () => {
+
+    // When: The App is navigated to a non-existent page
+    const badRoute = '/not-a-valid-route';
+    render(
+      <MemoryRouter initialEntries={[badRoute]}>
+        <App/>
+      </MemoryRouter>,
+    );
+
+    // Then: The Not Found page should be displayed
+    expect(screen.getByTestId('NotFoundPage')).toBeInTheDocument();
+  });
+
 });
 
 
