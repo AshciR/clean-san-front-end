@@ -26,6 +26,8 @@ import {DateTime} from "luxon";
 import {AssociatedServicesModalState} from "./associatedServicesModal.reducer";
 import ServiceStatus from "../../../shared/ServiceStatus.model";
 
+const CHIP_WIDTH = 200;
+
 interface AssociatedServicesModalProps {
   modalState: AssociatedServicesModalState
   handleCloseAssociatedServicesModal: () => void
@@ -74,6 +76,7 @@ const AssociatedServicesModal: FC<AssociatedServicesModalProps> = ({
                   Sorry... we are unable to get the related services at this time.
                 </Typography> :
                 <Timeline position="left">
+                  <ServicesTimelineHeader/>
                   {
                     associatedServicesExceptTheLastOne.map(service =>
                       <ServicesTimelineItem
@@ -116,6 +119,49 @@ const AssociatedServicesModal: FC<AssociatedServicesModalProps> = ({
     </Box>
   );
 };
+
+interface ServicesTimelineHeaderProps {
+}
+
+const ServicesTimelineHeader: FC<ServicesTimelineHeaderProps> = () => {
+
+  return (
+    <TimelineItem>
+      <TimelineOppositeContent sx={{paddingTop: '6px'}}>
+        <Chip
+          size='small'
+          variant={'outlined'}
+          label={'Last Updated'}
+          sx={{width: CHIP_WIDTH}}
+        />
+      </TimelineOppositeContent>
+      <TimelineSeparator>
+        <Avatar
+          sx={{
+            width: 36,
+            height: 36,
+            bgcolor: '#FFFFFF',
+            color: 'black',
+            border: 'solid',
+            borderColor: 'black'
+          }}
+          data-testid="service-header-id"
+        >
+          Id
+        </Avatar>
+        <TimelineConnector/>
+      </TimelineSeparator>
+      <TimelineContent sx={{paddingTop: '6px'}}>
+        <Chip
+          size='small'
+          variant={'outlined'}
+          label={'Due Date'}
+          sx={{width: CHIP_WIDTH}}
+        />
+      </TimelineContent>
+    </TimelineItem>
+  );
+}
 
 interface ServicesTimelineItemProps {
   service: DueService
@@ -183,7 +229,7 @@ const DateChip = ({status, label, isFilled = false}: UpdateDateTimeChipProps) =>
     size='small'
     variant={isFilled ? 'filled' : 'outlined'}
     label={label}
-    sx={{width: 150}}
+    sx={{width: CHIP_WIDTH}}
     {...chipProps[status] as ChipProps}
   />
 

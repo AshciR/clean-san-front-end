@@ -140,4 +140,32 @@ describe('<AssociatedServicesModal />', () => {
     // Then: The close callback should be trigger
     expect(mockHandleCloseAssociatedServicesModal).toBeCalledTimes(1);
   });
+
+  it('should display the timeline header', () => {
+
+    // Given: We have associated services
+    const contractOneServices = getDueServicesResponse.services
+      .map(service => convertServicesQueryResponseToDueService(service))
+      .filter(service => service.contract.id === 1);
+
+    const modalState: AssociatedServicesModalState = {
+      associatedServices: contractOneServices,
+      isFetchError: false,
+      isLoading: false,
+      isOpen: true
+    }
+
+    // When: the modal renders
+    render(<AssociatedServicesModal
+      modalState={modalState}
+      handleCloseAssociatedServicesModal={mockHandleCloseAssociatedServicesModal}
+    />);
+
+    // Then: The timeline headers should be present
+    expect(screen.getByText(/last updated/i)).toBeInTheDocument();
+    expect(screen.getByText(/id/i)).toBeInTheDocument();
+    expect(screen.getByText(/due date/i)).toBeInTheDocument();
+
+  });
+
 });
