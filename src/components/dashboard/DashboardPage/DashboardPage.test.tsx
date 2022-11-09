@@ -6,6 +6,7 @@ import {fetchDueServices, submitUpdatedServices} from '../../../services/service
 import {DateTime} from 'luxon';
 import ServiceStatus from '../../../shared/ServiceStatus.model';
 
+
 jest.mock('../../../services/services.services.ts');
 
 describe('<DashboardPage />', () => {
@@ -14,7 +15,13 @@ describe('<DashboardPage />', () => {
   const mockSubmitUpdatedServices = submitUpdatedServices as jest.MockedFunction<typeof submitUpdatedServices>
 
   beforeEach(() => {
-    mockFetchDueServices.mockResolvedValue(MOCK_DUE_SERVICES);
+    const mockResponse = {
+      totalItems: 4,
+      totalPages: 1,
+      currentPage: 0,
+      services: MOCK_DUE_SERVICES
+    }
+    mockFetchDueServices.mockResolvedValue(mockResponse);
   });
 
   test('it should mount', async () => {
@@ -25,6 +32,7 @@ describe('<DashboardPage />', () => {
   });
 
   it('renders shows the loading component before the due services are fetched', async () => {
+
     render(<DashboardPage/>);
     const loadingComponent = await screen.findByTestId('DueServicesTable-Skeleton');
 
@@ -34,7 +42,12 @@ describe('<DashboardPage />', () => {
   it('shows no services if the fetch is empty', async () => {
 
     // Given: No due services will be fetched
-    mockFetchDueServices.mockResolvedValue([]);
+    mockFetchDueServices.mockResolvedValue({
+      totalItems: 0,
+      totalPages: 0,
+      currentPage: 0,
+      services: []
+    });
 
     // When: The DashboardPage renders
     render(<DashboardPage/>);

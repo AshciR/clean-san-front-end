@@ -8,7 +8,7 @@ import {
   TableBody,
   TableCell,
   TableContainer,
-  TableHead,
+  TableHead, TablePagination,
   TableRow,
   Typography
 } from '@mui/material';
@@ -60,30 +60,49 @@ const VisibleDueServiceTable = ({
                                   handleUpdateService,
                                   handleOpenViewAssociatedServicesModal
                                 }: VisibleDueServiceTableProps) => (
-  <TableContainer data-testid="visible-due-services-table">
-    <Table aria-label="due services table">
-      <TableHead>
-        <TableRow>
-          <TableCell sx={{width: SERVICE_ID_WIDTH}}>Service Id</TableCell>
-          <TableCell>Client</TableCell>
-          <TableCell>Frequency</TableCell>
-          <TableCell>Due Date</TableCell>
-          <TableCell sx={{width: STATUS_COLUMN_WIDTH}}>Current Status</TableCell>
-          <TableCell sx={{width: STATUS_COLUMN_WIDTH}}>New Status</TableCell>
-        </TableRow>
-      </TableHead>
-      <TableBody>
-        {services.map(service =>
-          <DueServiceRow
-            key={service.id}
-            service={service}
-            handleUpdateService={handleUpdateService}
-            handleOpenViewAssociatedServicesModal={handleOpenViewAssociatedServicesModal}
-          />
-        )}
-      </TableBody>
-    </Table>
-  </TableContainer>
+
+  <Box>
+    <TableContainer
+      data-testid="visible-due-services-table"
+      sx={{maxHeight: 550}}
+    >
+      <Table
+        aria-label="due services table"
+        stickyHeader={true}
+      >
+        <TableHead>
+          <TableRow>
+            <TableCell sx={{width: SERVICE_ID_WIDTH}}>Service Id</TableCell>
+            <TableCell>Client</TableCell>
+            <TableCell>Frequency</TableCell>
+            <TableCell>Due Date</TableCell>
+            <TableCell sx={{width: STATUS_COLUMN_WIDTH}}>Current Status</TableCell>
+            <TableCell sx={{width: STATUS_COLUMN_WIDTH}}>New Status</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {services.map(service =>
+            <DueServiceRow
+              key={service.id}
+              service={service}
+              handleUpdateService={handleUpdateService}
+              handleOpenViewAssociatedServicesModal={handleOpenViewAssociatedServicesModal}
+            />
+          )}
+        </TableBody>
+      </Table>
+    </TableContainer>
+    {/*TODO: Replace with logic*/}
+    <TablePagination
+      rowsPerPageOptions={[5, 10, 25]}
+      component="div"
+      count={10}
+      rowsPerPage={5}
+      page={0}
+      onPageChange={() => {}}
+      onRowsPerPageChange={() => {}}
+    />
+  </Box>
 );
 
 interface DueServiceRowProps {
