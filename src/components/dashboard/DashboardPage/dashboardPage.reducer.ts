@@ -6,41 +6,55 @@ interface DueServicesState {
   dueServices: Array<DueService>;
   isFetchError: boolean;
   isSubmitUpdateError: boolean;
-};
+  pageNumber: number;
+  itemsPerPage: number;
+}
 
 const initialDueServicesState: DueServicesState = {
   isLoading: false,
   dueServices: [],
   isFetchError: false,
-  isSubmitUpdateError: false
+  isSubmitUpdateError: false,
+  pageNumber: 0,
+  itemsPerPage: 50,
 };
 
 interface DueServicesFetchInitAction {
   type: 'DUE_SERVICES_FETCH_INIT';
-};
+}
 
 interface DueServicesFetchSuccessAction {
   type: 'DUE_SERVICES_FETCH_SUCCESS';
   payload: Array<DueService>;
-};
+}
 
 interface DueServicesFetchFailureAction {
   type: 'DUE_SERVICES_FETCH_FAILURE';
-};
+}
 
 interface DueServicesUpdateServiceAction {
   type: 'DUE_SERVICES_UPDATE_SERVICE';
   payload: DueService;
-};
+}
 
 interface DueServicesUpdateServiceSuccessAction {
   type: 'DUE_SERVICES_UPDATE_SERVICE_SUBMIT_SUCCESS';
   payload: DueService[];
-};
+}
 
 interface DueServicesUpdateServiceFailureAction {
   type: 'DUE_SERVICES_UPDATE_SERVICE_SUBMIT_FAILURE';
-};
+}
+
+interface DueServicesChangePageNumberAction {
+  type: 'DUE_SERVICES_CHANGE_PAGE_NUMBER';
+  payload: number;
+}
+
+interface DueServicesChangeItemsPerPageAction {
+  type: 'DUE_SERVICES_CHANGE_ITEMS_PER_PAGE';
+  payload: number;
+}
 
 type DueServicesAction =
   | DueServicesFetchInitAction
@@ -49,6 +63,8 @@ type DueServicesAction =
   | DueServicesUpdateServiceAction
   | DueServicesUpdateServiceSuccessAction
   | DueServicesUpdateServiceFailureAction
+  | DueServicesChangePageNumberAction
+  | DueServicesChangeItemsPerPageAction
 
 const dueServicesReducer = (
   state: DueServicesState,
@@ -98,6 +114,18 @@ const dueServicesReducer = (
         isSubmitUpdateError: true
       }
       return updatedServiceSubmitFailureState;
+    case "DUE_SERVICES_CHANGE_PAGE_NUMBER":
+      const updatedChangePageState: DueServicesState = {
+        ...state,
+        pageNumber: action.payload
+      };
+      return updatedChangePageState
+    case "DUE_SERVICES_CHANGE_ITEMS_PER_PAGE":
+      const updatedChangeItemsPerPageState: DueServicesState = {
+        ...state,
+        itemsPerPage: action.payload
+      };
+      return updatedChangeItemsPerPageState
     default:
       throw new Error(`Illegal Dashboard action was provided`);
   }

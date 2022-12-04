@@ -10,19 +10,21 @@ const servicesEndpoint = '/v1/services';
 /**
  * Fetches the due services from the backend
  * @param beforeDate services due before and on this date
+ * @param page the paginated page for service
+ * @param itemsPerPage the number of items per page
  */
-const fetchDueServices = async (beforeDate?: DateTime) => {
+const fetchDueServices = async (beforeDate?: DateTime, page?: number, itemsPerPage?: number) => {
 
-  const params = (beforeDate) ? {dueDate: beforeDate.toISODate()} : null
+  const params = (beforeDate) ? {
+    dueDate: beforeDate.toISODate(),
+    page: page,
+    itemsPerPage: itemsPerPage
+  } : null
 
   try {
 
     const response = await axios.get<GetDueServicesResponse>(servicesEndpoint, {params});
-    const dueServices = response.data.services.map(serviceResponse =>
-      convertServicesQueryResponseToDueService(serviceResponse)
-    );
-
-    return dueServices || [];
+    return convertGetDueServicesResponseToDueServices(response.data);
 
   } catch (error) {
     throw error
@@ -50,6 +52,21 @@ const fetchServicesForContract = async (contractId: number) => {
   } catch (error) {
     throw error
   }
+};
+
+const convertGetDueServicesResponseToDueServices = (response: GetDueServicesResponse) => {
+
+  const dueServices = response.services.map(serviceResponse =>
+    convertServicesQueryResponseToDueService(serviceResponse)
+  );
+
+  return {
+    totalItems: response.totalItems,
+    totalPages: response.totalPages,
+    currentPage: response.currentPage,
+    services: dueServices
+  };
+
 };
 
 /**
@@ -161,6 +178,9 @@ const convertServiceHistoryResponseToServiceHistory = (history: ServiceHistoryRe
 
 // Get Due Services Data Types
 type GetDueServicesResponse = {
+  totalItems: number;
+  totalPages: number;
+  currentPage: number;
   services: ServiceQueryResponse[];
 };
 
@@ -187,6 +207,9 @@ type ServiceHistoryResponse = {
 
 // Get Services for Contract Data Types
 type GetServicesForContractResponse = {
+  totalItems: number;
+  totalPages: number;
+  currentPage: number;
   services: ServiceQueryResponse[]
 }
 
@@ -215,6 +238,7 @@ export {
   fetchDueServices,
   submitUpdatedServices,
   convertServicesQueryResponseToDueService,
+  convertGetDueServicesResponseToDueServices,
   convertServiceResponseToDueService,
   fetchServicesForContract
 };

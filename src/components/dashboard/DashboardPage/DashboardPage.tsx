@@ -137,6 +137,8 @@ const DashboardPageContent: FC<DashboardPageContentProps> = ({distanceFromNavBar
     dispatchAssociatedServicesModal({type: 'ASSOCIATED_SERVICES_CLOSE_MODAL'});
   };
 
+  //TODO: Create handlePaginatedFetchDueServices(dueServicesDate, page, itemsPerPage)
+
   // Effects
   // @ts-ignore
   React.useEffect(() => {
@@ -154,7 +156,7 @@ const DashboardPageContent: FC<DashboardPageContentProps> = ({distanceFromNavBar
         if (isSubscribed) {
           dispatchDueServices({
             type: 'DUE_SERVICES_FETCH_SUCCESS',
-            payload: dueServices
+            payload: dueServices.services
           });
 
         }

@@ -2,6 +2,7 @@ import {DateTime} from "luxon";
 import DueService from "../shared/DueService.model";
 import ServiceStatus from "../shared/ServiceStatus.model";
 import {
+  convertGetDueServicesResponseToDueServices,
   convertServiceResponseToDueService,
   convertServicesQueryResponseToDueService,
   fetchDueServices,
@@ -22,11 +23,7 @@ describe('Due Services Services', () => {
     const dueServices = await fetchDueServices();
 
     // Then: The services should be present
-    const expectedServices = getDueServicesResponse.services.map((serviceResponse: ServiceQueryResponse) =>
-      convertServicesQueryResponseToDueService(serviceResponse)
-    )
-
-    expect(dueServices.length).toBe(expectedServices.length);
+    const expectedServices = convertGetDueServicesResponseToDueServices(getDueServicesResponse)
     expect(dueServices).toStrictEqual(expectedServices);
 
   });
@@ -44,7 +41,28 @@ describe('Due Services Services', () => {
       .slice(0, 2) // Get the 1st two elements
       .map((serviceResponse: ServiceQueryResponse) => convertServicesQueryResponseToDueService(serviceResponse))
 
-    expect(dueServices).toStrictEqual(expectedServices);
+    expect(dueServices.services).toStrictEqual(expectedServices);
+
+  });
+
+  it('fetches the paginated due services successfully', async () => {
+
+    // Given: We have a before date
+    const dueDate = DateTime.fromISO(getDueServicesResponse.services[2].dueDate);
+
+    // When: the due services are fetched
+    const dueServices = await fetchDueServices(dueDate, 1, 3);
+
+    // Then: The services should be present
+    const expectedDueServices = convertServicesQueryResponseToDueService(getDueServicesResponse.services[7])
+    const expectedServiceResponse = {
+      totalItems: 4,
+      totalPages: 2,
+      currentPage: 1,
+      services: [expectedDueServices]
+    };
+
+    expect(dueServices).toStrictEqual(expectedServiceResponse);
 
   });
 

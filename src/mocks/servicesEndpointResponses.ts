@@ -1,6 +1,9 @@
 import {GetDueServicesResponse} from "../services/services.services";
 
 const getDueServicesResponse: GetDueServicesResponse = {
+  "totalItems": 8,
+  "totalPages": 1,
+  "currentPage": 0,
   "services": [
     {
       "id": 1,
