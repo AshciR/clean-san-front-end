@@ -8,7 +8,11 @@ interface DueServicesState {
   isSubmitUpdateError: boolean;
   pageNumber: number;
   itemsPerPage: number;
+  totalItems: number
 }
+
+const ITEMS_PER_PAGE_OPTIONS: number[] = [25, 50, 100];
+const defaultItemsPerPage = ITEMS_PER_PAGE_OPTIONS[0];
 
 const initialDueServicesState: DueServicesState = {
   isLoading: false,
@@ -16,7 +20,8 @@ const initialDueServicesState: DueServicesState = {
   isFetchError: false,
   isSubmitUpdateError: false,
   pageNumber: 0,
-  itemsPerPage: 50,
+  itemsPerPage: defaultItemsPerPage,
+  totalItems: 0
 };
 
 interface DueServicesFetchInitAction {
@@ -56,6 +61,11 @@ interface DueServicesChangeItemsPerPageAction {
   payload: number;
 }
 
+interface DueServicesSetTotalItemsAction {
+  type: 'DUE_SERVICES_SET_TOTAL_ITEMS';
+  payload: number;
+}
+
 type DueServicesAction =
   | DueServicesFetchInitAction
   | DueServicesFetchSuccessAction
@@ -65,6 +75,7 @@ type DueServicesAction =
   | DueServicesUpdateServiceFailureAction
   | DueServicesChangePageNumberAction
   | DueServicesChangeItemsPerPageAction
+  | DueServicesSetTotalItemsAction
 
 const dueServicesReducer = (
   state: DueServicesState,
@@ -126,6 +137,12 @@ const dueServicesReducer = (
         itemsPerPage: action.payload
       };
       return updatedChangeItemsPerPageState
+    case "DUE_SERVICES_SET_TOTAL_ITEMS":
+      const updatedTotalItemsState: DueServicesState = {
+        ...state,
+        totalItems: action.payload
+      }
+      return updatedTotalItemsState
     default:
       throw new Error(`Illegal Dashboard action was provided`);
   }
@@ -169,6 +186,6 @@ const updateServicesAfterSubmittal = (dueServicesBeforeSubmittal: DueService[], 
 }
 
 export default dueServicesReducer;
-export {initialDueServicesState, dueServicesReducer};
+export {initialDueServicesState, dueServicesReducer, ITEMS_PER_PAGE_OPTIONS};
 export type {DueServicesAction as DashboardAction, DueServicesState}
 
