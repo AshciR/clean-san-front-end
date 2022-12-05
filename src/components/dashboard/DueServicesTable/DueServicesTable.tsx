@@ -8,7 +8,8 @@ import {
   TableBody,
   TableCell,
   TableContainer,
-  TableHead, TablePagination,
+  TableHead,
+  TablePagination,
   TableRow,
   Typography
 } from '@mui/material';
@@ -19,20 +20,29 @@ import ServiceStatus from '../../../shared/ServiceStatus.model';
 import styles from './DueServicesTable.module.scss';
 import ServiceStatusChip, {STATUS_CHIP_WIDTH} from "../ServiceStatusChip/ServiceStatusChip";
 import ServiceFrequencyChip from "../../shared/ServiceFrequencyChip/ServiceFrequencyChip";
+import {ITEMS_PER_PAGE_OPTIONS} from "../DashboardPage/dashboardPage.reducer";
 
 const SERVICE_ID_WIDTH = 100;
 const STATUS_COLUMN_WIDTH = STATUS_CHIP_WIDTH + 60;
 
 interface DueServicesTableProps {
   dueServices: Array<DueService>
+  totalServices: number
+  servicesPerPage: number
+  currentPage: number
   handleUpdateService: (updatedService: DueService) => void
   handleOpenViewAssociatedServicesModal: (selectedService: DueService) => void
+  handleChangePage: (newPageNumber: number) => void
 }
 
 const DueServicesTable: FC<DueServicesTableProps> = ({
                                                        dueServices,
+                                                       totalServices,
+                                                       servicesPerPage,
+                                                       currentPage,
                                                        handleUpdateService,
-                                                       handleOpenViewAssociatedServicesModal
+                                                       handleOpenViewAssociatedServicesModal,
+                                                       handleChangePage
                                                      }: DueServicesTableProps) => {
 
   const hasServices = dueServices.length !== 0;
@@ -41,8 +51,12 @@ const DueServicesTable: FC<DueServicesTableProps> = ({
     <div className={styles.DueServicesTable} data-testid="due-services-table">
       {hasServices ? <VisibleDueServiceTable
           services={dueServices}
+          totalServices={totalServices}
+          servicesPerPage={servicesPerPage}
+          currentPage={currentPage}
           handleUpdateService={handleUpdateService}
           handleOpenViewAssociatedServicesModal={handleOpenViewAssociatedServicesModal}
+          handleChangePage={handleChangePage}
         /> :
         <NoDueServicesDisplay/>}
     </div>
@@ -51,14 +65,22 @@ const DueServicesTable: FC<DueServicesTableProps> = ({
 
 interface VisibleDueServiceTableProps {
   services: Array<DueService>
+  totalServices: number
+  servicesPerPage: number
+  currentPage: number
   handleUpdateService: (updatedService: DueService) => void
   handleOpenViewAssociatedServicesModal: (selectedService: DueService) => void
+  handleChangePage: (newPageNumber: number) => void
 }
 
 const VisibleDueServiceTable = ({
                                   services,
+                                  totalServices,
+                                  servicesPerPage,
+                                  currentPage,
                                   handleUpdateService,
-                                  handleOpenViewAssociatedServicesModal
+                                  handleOpenViewAssociatedServicesModal,
+                                  handleChangePage
                                 }: VisibleDueServiceTableProps) => (
 
   <Box>
@@ -94,13 +116,16 @@ const VisibleDueServiceTable = ({
     </TableContainer>
     {/*TODO: Replace with logic*/}
     <TablePagination
-      rowsPerPageOptions={[5, 10, 25]}
+      rowsPerPageOptions={ITEMS_PER_PAGE_OPTIONS}
       component="div"
-      count={10}
-      rowsPerPage={5}
-      page={0}
-      onPageChange={() => {}}
-      onRowsPerPageChange={() => {}}
+      count={totalServices}
+      rowsPerPage={servicesPerPage}
+      page={currentPage}
+      onPageChange={(event, newPage) => {
+        handleChangePage(newPage);
+      }}
+      onRowsPerPageChange={() => {
+      }}
     />
   </Box>
 );

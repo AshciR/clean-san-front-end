@@ -20,12 +20,17 @@ describe('<DueServicesTable />', () => {
 
   const mockHandleUpdateService = jest.fn();
   const mockHandleOpenViewAssociatedServicesModal = jest.fn();
+  const mockHandleChangePage = jest.fn();
 
   it('should mount', () => {
     render(<DueServicesTable
       dueServices={[]}
+      totalServices={200}
+      servicesPerPage={50}
+      currentPage={0}
       handleUpdateService={mockHandleUpdateService}
       handleOpenViewAssociatedServicesModal={mockHandleOpenViewAssociatedServicesModal}
+      handleChangePage={mockHandleChangePage}
     />);
 
     const dueServicesTable = screen.getByTestId('due-services-table');
@@ -38,8 +43,12 @@ describe('<DueServicesTable />', () => {
     // When: the Due Services Table is rendered with services
     render(<DueServicesTable
       dueServices={MOCK_DUE_SERVICES}
+      totalServices={200}
+      servicesPerPage={50}
+      currentPage={0}
       handleUpdateService={mockHandleUpdateService}
       handleOpenViewAssociatedServicesModal={mockHandleOpenViewAssociatedServicesModal}
+      handleChangePage={mockHandleChangePage}
     />);
 
     // Then: All the rows should have the correct info
@@ -54,8 +63,12 @@ describe('<DueServicesTable />', () => {
     // When: the Due Services Table is rendered without any services 
     render(<DueServicesTable
       dueServices={[]}
+      totalServices={200}
+      servicesPerPage={50}
+      currentPage={0}
       handleUpdateService={mockHandleUpdateService}
       handleOpenViewAssociatedServicesModal={mockHandleOpenViewAssociatedServicesModal}
+      handleChangePage={mockHandleChangePage}
     />);
 
     // Then: The no services display message should be present
@@ -69,8 +82,12 @@ describe('<DueServicesTable />', () => {
     // Given: The table has service rows
     render(<DueServicesTable
       dueServices={MOCK_DUE_SERVICES}
+      totalServices={200}
+      servicesPerPage={50}
+      currentPage={0}
       handleUpdateService={mockHandleUpdateService}
       handleOpenViewAssociatedServicesModal={mockHandleOpenViewAssociatedServicesModal}
+      handleChangePage={mockHandleChangePage}
     />);
     const serviceToUpdate = MOCK_DUE_SERVICES[0];
     const newStatusDropdown = screen.getAllByDisplayValue(serviceToUpdate.currentStatus)[0]
@@ -95,8 +112,12 @@ describe('<DueServicesTable />', () => {
     );
     render(<DueServicesTable
       dueServices={MOCK_DUE_SERVICES}
+      totalServices={200}
+      servicesPerPage={50}
+      currentPage={0}
       handleUpdateService={mockHandleUpdateService}
       handleOpenViewAssociatedServicesModal={mockHandleOpenViewAssociatedServicesModal}
+      handleChangePage={mockHandleChangePage}
     />);
     const serviceOfInterest = dueServices[3]; // service id: 4, contract id: 1
     const serviceButton = screen.getByRole('button', {name: `${serviceOfInterest.id}`})
@@ -108,6 +129,58 @@ describe('<DueServicesTable />', () => {
     expect(mockHandleOpenViewAssociatedServicesModal).toBeCalledTimes(1);
     // Should be called with the contract id for the service
     expect(mockHandleOpenViewAssociatedServicesModal).toBeCalledWith(serviceOfInterest);
+
+  });
+
+  it('should change the page when the next page button is clicked', () => {
+
+    // Given: The table is on page 0
+    const currentPage = 0;
+    render(<DueServicesTable
+      dueServices={MOCK_DUE_SERVICES}
+      totalServices={200}
+      servicesPerPage={50}
+      currentPage={currentPage}
+      handleUpdateService={mockHandleUpdateService}
+      handleOpenViewAssociatedServicesModal={mockHandleOpenViewAssociatedServicesModal}
+      handleChangePage={mockHandleChangePage}
+    />);
+
+    const nextPageButton = screen.getByRole('button', {name: 'Go to next page'});
+
+    // When: the next page button is clicked
+    fireEvent.click(nextPageButton);
+
+    // Then: the table should fetch the paginated response of the next page
+    expect(mockHandleChangePage).toBeCalledTimes(1);
+    const nextPage = currentPage + 1;
+    expect(mockHandleChangePage).toBeCalledWith(nextPage);
+
+  });
+
+  it('should change the page when the previous page button is clicked', () => {
+
+    // Given: The table is on page 1
+    const currentPage = 1;
+    render(<DueServicesTable
+      dueServices={MOCK_DUE_SERVICES}
+      totalServices={200}
+      servicesPerPage={50}
+      currentPage={currentPage}
+      handleUpdateService={mockHandleUpdateService}
+      handleOpenViewAssociatedServicesModal={mockHandleOpenViewAssociatedServicesModal}
+      handleChangePage={mockHandleChangePage}
+    />);
+
+    const previousPageButton = screen.getByRole('button', {name: 'Go to previous page'});
+
+    // When: the previous page button is clicked
+    fireEvent.click(previousPageButton);
+
+    // Then: the table should fetch the paginated response of the next page
+    expect(mockHandleChangePage).toBeCalledTimes(1);
+    const previousPage = currentPage - 1;
+    expect(mockHandleChangePage).toBeCalledWith(previousPage);
 
   });
 

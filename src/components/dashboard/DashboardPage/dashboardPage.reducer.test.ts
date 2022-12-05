@@ -1,7 +1,12 @@
 import DueService from "../../../shared/DueService.model";
 import ServiceStatus from "../../../shared/ServiceStatus.model";
 import MOCK_DUE_SERVICES from "../../../shared/mockDueServicesData";
-import dueServicesReducer, {DashboardAction, DueServicesState, initialDueServicesState} from "./dashboardPage.reducer";
+import dueServicesReducer, {
+  DashboardAction,
+  DueServicesState,
+  initialDueServicesState,
+  ITEMS_PER_PAGE_OPTIONS
+} from "./dashboardPage.reducer";
 
 describe('DashboardPage Reducer', () => {
 
@@ -23,7 +28,8 @@ describe('DashboardPage Reducer', () => {
       isFetchError: false,
       isSubmitUpdateError: false,
       pageNumber: 0,
-      itemsPerPage: 50,
+      itemsPerPage:ITEMS_PER_PAGE_OPTIONS[0],
+      totalItems: 0
     };
 
     expect(updatedState).toStrictEqual(expectedState);
@@ -49,7 +55,8 @@ describe('DashboardPage Reducer', () => {
       isFetchError: false,
       isSubmitUpdateError: false,
       pageNumber: 0,
-      itemsPerPage: 50,
+      itemsPerPage:ITEMS_PER_PAGE_OPTIONS[0],
+      totalItems: 0
     };
 
     expect(updatedState).toStrictEqual(expectedState);
@@ -74,7 +81,8 @@ describe('DashboardPage Reducer', () => {
       isFetchError: true,
       isSubmitUpdateError: false,
       pageNumber: 0,
-      itemsPerPage: 50,
+      itemsPerPage:ITEMS_PER_PAGE_OPTIONS[0],
+      totalItems: 0
     };
 
     expect(updatedState).toStrictEqual(expectedState);
@@ -105,7 +113,8 @@ describe('DashboardPage Reducer', () => {
       isFetchError: true,
       isSubmitUpdateError: false,
       pageNumber: 0,
-      itemsPerPage: 50,
+      itemsPerPage:ITEMS_PER_PAGE_OPTIONS[0],
+      totalItems: 0
     };
 
     expect(updatedState).toStrictEqual(expectedState);
@@ -121,7 +130,8 @@ describe('DashboardPage Reducer', () => {
       isFetchError: false,
       isSubmitUpdateError: false,
       pageNumber: 0,
-      itemsPerPage: 50
+      itemsPerPage:ITEMS_PER_PAGE_OPTIONS[0],
+      totalItems: 0
     };
 
     // And: We have the service we want to update
@@ -145,7 +155,8 @@ describe('DashboardPage Reducer', () => {
       isFetchError: false,
       isSubmitUpdateError: false,
       pageNumber: 0,
-      itemsPerPage: 50,
+      itemsPerPage:ITEMS_PER_PAGE_OPTIONS[0],
+      totalItems: 0
     };
 
     expect(updatedState).toStrictEqual(expectedState);
@@ -161,7 +172,8 @@ describe('DashboardPage Reducer', () => {
       isFetchError: false,
       isSubmitUpdateError: false,
       pageNumber: 0,
-      itemsPerPage: 50
+      itemsPerPage:ITEMS_PER_PAGE_OPTIONS[0],
+      totalItems: 0
     };
 
     // And: We want to update the 3rd service
@@ -190,7 +202,8 @@ describe('DashboardPage Reducer', () => {
       isFetchError: false,
       isSubmitUpdateError: false,
       pageNumber: 0,
-      itemsPerPage: 50,
+      itemsPerPage:ITEMS_PER_PAGE_OPTIONS[0],
+      totalItems: 0
     };
 
     expect(updatedState).toStrictEqual(expectedState);
@@ -205,7 +218,8 @@ describe('DashboardPage Reducer', () => {
       isFetchError: false,
       isSubmitUpdateError: false,
       pageNumber: 0,
-      itemsPerPage: 50
+      itemsPerPage:ITEMS_PER_PAGE_OPTIONS[0],
+      totalItems: 0
     };
 
     // And: We have the services after a successful submittal
@@ -238,7 +252,8 @@ describe('DashboardPage Reducer', () => {
       isFetchError: false,
       isSubmitUpdateError: false,
       pageNumber: 0,
-      itemsPerPage: 50,
+      itemsPerPage:ITEMS_PER_PAGE_OPTIONS[0],
+      totalItems: 0
     };
 
     expect(updatedState).toStrictEqual(expectedState);
@@ -254,7 +269,8 @@ describe('DashboardPage Reducer', () => {
       isFetchError: false,
       isSubmitUpdateError: false,
       pageNumber: 0,
-      itemsPerPage: 50
+      itemsPerPage:ITEMS_PER_PAGE_OPTIONS[0],
+      totalItems: 0
     };
 
     // And: There was a submittal failure
@@ -272,7 +288,8 @@ describe('DashboardPage Reducer', () => {
       isFetchError: false,
       isSubmitUpdateError: true,
       pageNumber: 0,
-      itemsPerPage: 50,
+      itemsPerPage:ITEMS_PER_PAGE_OPTIONS[0],
+      totalItems: 0
     };
 
     expect(updatedState).toStrictEqual(expectedState);
@@ -300,7 +317,8 @@ describe('DashboardPage Reducer', () => {
       isFetchError: false,
       isSubmitUpdateError: false,
       pageNumber: pageNumber,
-      itemsPerPage: 50,
+      itemsPerPage:ITEMS_PER_PAGE_OPTIONS[0],
+      totalItems: 0
     };
 
     expect(updatedState).toStrictEqual(expectedState);
@@ -329,6 +347,36 @@ describe('DashboardPage Reducer', () => {
       isSubmitUpdateError: false,
       pageNumber: 0,
       itemsPerPage: itemsPerPage,
+      totalItems: 0
+    };
+
+    expect(updatedState).toStrictEqual(expectedState);
+
+  });
+
+  it('sets the total items correctly', () => {
+
+    // Given: We have an initial state
+    const state = initialDueServicesState
+    const totalItems = 100;
+
+    const action: DashboardAction = {
+      type: 'DUE_SERVICES_SET_TOTAL_ITEMS',
+      payload: totalItems
+    };
+
+    // When: We update the page number
+    const updatedState = dueServicesReducer(state, action);
+
+    // Then: The page number is updated correctly
+    const expectedState = {
+      isLoading: false,
+      dueServices: [],
+      isFetchError: false,
+      isSubmitUpdateError: false,
+      pageNumber: 0,
+      itemsPerPage:ITEMS_PER_PAGE_OPTIONS[0],
+      totalItems: totalItems
     };
 
     expect(updatedState).toStrictEqual(expectedState);

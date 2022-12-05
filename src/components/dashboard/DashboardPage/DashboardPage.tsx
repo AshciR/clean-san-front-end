@@ -137,7 +137,24 @@ const DashboardPageContent: FC<DashboardPageContentProps> = ({distanceFromNavBar
     dispatchAssociatedServicesModal({type: 'ASSOCIATED_SERVICES_CLOSE_MODAL'});
   };
 
-  //TODO: Create handlePaginatedFetchDueServices(dueServicesDate, page, itemsPerPage)
+  // TODO: Enable in the upcoming PR
+  // const handleChangeRowsPerPage = (itemsPerPage: number) => {
+  //
+  //   dispatchDueServices({
+  //     type: 'DUE_SERVICES_CHANGE_ITEMS_PER_PAGE',
+  //     payload: itemsPerPage
+  //   });
+  //
+  // };
+
+  const handleChangePage = (newPageNumber: number) => {
+
+    dispatchDueServices({
+      type: 'DUE_SERVICES_CHANGE_PAGE_NUMBER',
+      payload: newPageNumber
+    });
+
+  };
 
   // Effects
   // @ts-ignore
@@ -151,12 +168,21 @@ const DashboardPageContent: FC<DashboardPageContentProps> = ({distanceFromNavBar
       dispatchDueServices({type: 'DUE_SERVICES_FETCH_INIT'});
 
       try {
-        const dueServices = await fetchDueServices(dueServicesDate || DateTime.now());
+        const dueServices = await fetchDueServices(
+          dueServicesDate || DateTime.now(),
+          dueServicesState.pageNumber,
+          dueServicesState.itemsPerPage
+        );
 
         if (isSubscribed) {
           dispatchDueServices({
             type: 'DUE_SERVICES_FETCH_SUCCESS',
             payload: dueServices.services
+          });
+
+          dispatchDueServices({
+            type: 'DUE_SERVICES_SET_TOTAL_ITEMS',
+            payload: dueServices.totalItems
           });
 
         }
@@ -173,7 +199,7 @@ const DashboardPageContent: FC<DashboardPageContentProps> = ({distanceFromNavBar
     // Cancel subscription to useEffect
     return () => (isSubscribed = false)
 
-  }, [dueServicesDate]);
+  }, [dueServicesDate, dueServicesState.itemsPerPage, dueServicesState.pageNumber]);
 
   // Rendered components
   return (
@@ -229,8 +255,12 @@ const DashboardPageContent: FC<DashboardPageContentProps> = ({distanceFromNavBar
                 </Typography> :
                 <DueServicesTable
                   dueServices={dueServicesState.dueServices}
+                  totalServices={dueServicesState.totalItems}
+                  servicesPerPage={dueServicesState.itemsPerPage}
+                  currentPage={dueServicesState.pageNumber}
                   handleUpdateService={handleUpdateService}
                   handleOpenViewAssociatedServicesModal={handleOpenViewAssociatedServicesModal}
+                  handleChangePage={handleChangePage}
                 />
           }
         </Box>
