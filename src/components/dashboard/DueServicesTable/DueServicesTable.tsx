@@ -33,6 +33,7 @@ interface DueServicesTableProps {
   handleUpdateService: (updatedService: DueService) => void
   handleOpenViewAssociatedServicesModal: (selectedService: DueService) => void
   handleChangePage: (newPageNumber: number) => void
+  handleChangeRowsPerPage: (newRowsPerPage: number) => void
 }
 
 const DueServicesTable: FC<DueServicesTableProps> = ({
@@ -42,7 +43,8 @@ const DueServicesTable: FC<DueServicesTableProps> = ({
                                                        currentPage,
                                                        handleUpdateService,
                                                        handleOpenViewAssociatedServicesModal,
-                                                       handleChangePage
+                                                       handleChangePage,
+                                                       handleChangeRowsPerPage
                                                      }: DueServicesTableProps) => {
 
   const hasServices = dueServices.length !== 0;
@@ -57,6 +59,7 @@ const DueServicesTable: FC<DueServicesTableProps> = ({
           handleUpdateService={handleUpdateService}
           handleOpenViewAssociatedServicesModal={handleOpenViewAssociatedServicesModal}
           handleChangePage={handleChangePage}
+          handleChangeRowsPerPage={handleChangeRowsPerPage}
         /> :
         <NoDueServicesDisplay/>}
     </div>
@@ -71,6 +74,7 @@ interface VisibleDueServiceTableProps {
   handleUpdateService: (updatedService: DueService) => void
   handleOpenViewAssociatedServicesModal: (selectedService: DueService) => void
   handleChangePage: (newPageNumber: number) => void
+  handleChangeRowsPerPage: (newRowsPerPage: number) => void
 }
 
 const VisibleDueServiceTable = ({
@@ -80,7 +84,8 @@ const VisibleDueServiceTable = ({
                                   currentPage,
                                   handleUpdateService,
                                   handleOpenViewAssociatedServicesModal,
-                                  handleChangePage
+                                  handleChangePage,
+                                  handleChangeRowsPerPage
                                 }: VisibleDueServiceTableProps) => (
 
   <Box>
@@ -114,7 +119,6 @@ const VisibleDueServiceTable = ({
         </TableBody>
       </Table>
     </TableContainer>
-    {/*TODO: Replace with logic*/}
     <TablePagination
       rowsPerPageOptions={ITEMS_PER_PAGE_OPTIONS}
       component="div"
@@ -124,7 +128,9 @@ const VisibleDueServiceTable = ({
       onPageChange={(event, newPage) => {
         handleChangePage(newPage);
       }}
-      onRowsPerPageChange={() => {
+      onRowsPerPageChange={(event) => {
+        const newRowsPerPage = parseInt(event.target.value, 10);
+        handleChangeRowsPerPage(newRowsPerPage)
       }}
     />
   </Box>

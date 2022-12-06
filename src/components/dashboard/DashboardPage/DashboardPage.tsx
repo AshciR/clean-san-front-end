@@ -137,15 +137,21 @@ const DashboardPageContent: FC<DashboardPageContentProps> = ({distanceFromNavBar
     dispatchAssociatedServicesModal({type: 'ASSOCIATED_SERVICES_CLOSE_MODAL'});
   };
 
-  // TODO: Enable in the upcoming PR
-  // const handleChangeRowsPerPage = (itemsPerPage: number) => {
-  //
-  //   dispatchDueServices({
-  //     type: 'DUE_SERVICES_CHANGE_ITEMS_PER_PAGE',
-  //     payload: itemsPerPage
-  //   });
-  //
-  // };
+  const handleChangeRowsPerPage = (itemsPerPage: number) => {
+
+    dispatchDueServices({
+      type: 'DUE_SERVICES_CHANGE_ITEMS_PER_PAGE',
+      payload: itemsPerPage
+    });
+
+    // Have to set the page number back to 0 when we
+    // switch the number of rows per page
+    dispatchDueServices({
+      type: 'DUE_SERVICES_CHANGE_PAGE_NUMBER',
+      payload: 0
+    });
+
+  };
 
   const handleChangePage = (newPageNumber: number) => {
 
@@ -261,6 +267,7 @@ const DashboardPageContent: FC<DashboardPageContentProps> = ({distanceFromNavBar
                   handleUpdateService={handleUpdateService}
                   handleOpenViewAssociatedServicesModal={handleOpenViewAssociatedServicesModal}
                   handleChangePage={handleChangePage}
+                  handleChangeRowsPerPage={handleChangeRowsPerPage}
                 />
           }
         </Box>
