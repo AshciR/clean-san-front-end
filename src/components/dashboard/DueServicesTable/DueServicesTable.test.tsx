@@ -21,6 +21,7 @@ describe('<DueServicesTable />', () => {
   const mockHandleUpdateService = jest.fn();
   const mockHandleOpenViewAssociatedServicesModal = jest.fn();
   const mockHandleChangePage = jest.fn();
+  const mockHandleChangeRowsPerPage = jest.fn();
 
   it('should mount', () => {
     render(<DueServicesTable
@@ -31,6 +32,7 @@ describe('<DueServicesTable />', () => {
       handleUpdateService={mockHandleUpdateService}
       handleOpenViewAssociatedServicesModal={mockHandleOpenViewAssociatedServicesModal}
       handleChangePage={mockHandleChangePage}
+      handleChangeRowsPerPage={mockHandleChangeRowsPerPage}
     />);
 
     const dueServicesTable = screen.getByTestId('due-services-table');
@@ -49,6 +51,7 @@ describe('<DueServicesTable />', () => {
       handleUpdateService={mockHandleUpdateService}
       handleOpenViewAssociatedServicesModal={mockHandleOpenViewAssociatedServicesModal}
       handleChangePage={mockHandleChangePage}
+      handleChangeRowsPerPage={mockHandleChangeRowsPerPage}
     />);
 
     // Then: All the rows should have the correct info
@@ -69,6 +72,7 @@ describe('<DueServicesTable />', () => {
       handleUpdateService={mockHandleUpdateService}
       handleOpenViewAssociatedServicesModal={mockHandleOpenViewAssociatedServicesModal}
       handleChangePage={mockHandleChangePage}
+      handleChangeRowsPerPage={mockHandleChangeRowsPerPage}
     />);
 
     // Then: The no services display message should be present
@@ -88,6 +92,7 @@ describe('<DueServicesTable />', () => {
       handleUpdateService={mockHandleUpdateService}
       handleOpenViewAssociatedServicesModal={mockHandleOpenViewAssociatedServicesModal}
       handleChangePage={mockHandleChangePage}
+      handleChangeRowsPerPage={mockHandleChangeRowsPerPage}
     />);
     const serviceToUpdate = MOCK_DUE_SERVICES[0];
     const newStatusDropdown = screen.getAllByDisplayValue(serviceToUpdate.currentStatus)[0]
@@ -118,6 +123,7 @@ describe('<DueServicesTable />', () => {
       handleUpdateService={mockHandleUpdateService}
       handleOpenViewAssociatedServicesModal={mockHandleOpenViewAssociatedServicesModal}
       handleChangePage={mockHandleChangePage}
+      handleChangeRowsPerPage={mockHandleChangeRowsPerPage}
     />);
     const serviceOfInterest = dueServices[3]; // service id: 4, contract id: 1
     const serviceButton = screen.getByRole('button', {name: `${serviceOfInterest.id}`})
@@ -144,6 +150,7 @@ describe('<DueServicesTable />', () => {
       handleUpdateService={mockHandleUpdateService}
       handleOpenViewAssociatedServicesModal={mockHandleOpenViewAssociatedServicesModal}
       handleChangePage={mockHandleChangePage}
+      handleChangeRowsPerPage={mockHandleChangeRowsPerPage}
     />);
 
     const nextPageButton = screen.getByRole('button', {name: 'Go to next page'});
@@ -170,6 +177,7 @@ describe('<DueServicesTable />', () => {
       handleUpdateService={mockHandleUpdateService}
       handleOpenViewAssociatedServicesModal={mockHandleOpenViewAssociatedServicesModal}
       handleChangePage={mockHandleChangePage}
+      handleChangeRowsPerPage={mockHandleChangeRowsPerPage}
     />);
 
     const previousPageButton = screen.getByRole('button', {name: 'Go to previous page'});
