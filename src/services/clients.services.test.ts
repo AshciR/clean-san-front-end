@@ -19,15 +19,35 @@ describe('Clients Services', () => {
   it('fetches the clients successfully', async () => {
 
     // When: the clients are fetched
-    const clients = await fetchClientsWithContracts();
+    const paginatedClients = await fetchClientsWithContracts();
 
     // Then: The clients should be present
-    const expectedServices = getClientsResponse.clients.map((clientResponse: GetClientResponse) =>
+    const expectedClients = getClientsResponse.clients.map((clientResponse: GetClientResponse) =>
       convertClientResponseToClientWithContracts(clientResponse)
     )
 
-    expect(clients.length).toBe(expectedServices.length);
-    expect(clients).toStrictEqual(expectedServices);
+    expect(paginatedClients.clients.length).toBe(expectedClients.length);
+    expect(paginatedClients.clients).toStrictEqual(expectedClients);
+
+  });
+
+  it('fetches the paginated clients successfully', async () => {
+
+    // When: the clients are fetched using pagination
+    const paginatedClients = await fetchClientsWithContracts(1, 2);
+
+    // Then: The clients should be present
+    const expectedClients = getClientsResponse.clients.slice(-2)
+      .map(it => convertClientResponseToClientWithContracts(it))
+
+    const expectedClientsResponse = {
+      totalItems: 4,
+      totalPages: 2,
+      currentPage: 1,
+      clients: expectedClients
+    }
+
+    expect(paginatedClients).toStrictEqual(expectedClientsResponse)
 
   });
 

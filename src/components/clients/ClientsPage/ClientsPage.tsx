@@ -270,6 +270,31 @@ const ClientsPageContent: FC<ClientsPageContentProps> = ({distanceFromNavBar}) =
 
   }
 
+  const handleChangeRowsPerPage = (itemsPerPage: number) => {
+
+    dispatchClients({
+      type: 'CLIENTS_CHANGE_ITEMS_PER_PAGE',
+      payload: itemsPerPage
+    });
+
+    // Have to set the page number back to 0 when we
+    // switch the number of rows per page
+    dispatchClients({
+      type: 'CLIENTS_CHANGE_PAGE_NUMBER',
+      payload: 0
+    });
+
+  };
+
+  const handleChangePage = (newPageNumber: number) => {
+
+    dispatchClients({
+      type: 'CLIENTS_CHANGE_PAGE_NUMBER',
+      payload: newPageNumber
+    });
+
+  };
+
   // @ts-ignore
   React.useEffect(() => {
 
@@ -281,13 +306,21 @@ const ClientsPageContent: FC<ClientsPageContentProps> = ({distanceFromNavBar}) =
       dispatchClients({type: 'CLIENTS_FETCH_INIT'});
 
       try {
-        const clients: ClientWithContracts[] = await fetchClientsWithContracts();
+        const paginatedClients = await fetchClientsWithContracts(
+          clientsState.pageNumber,
+          clientsState.itemsPerPage
+        );
 
         if (isSubscribed) {
           dispatchClients({
             type: 'CLIENTS_FETCH_SUCCESS',
-            payload: clients
+            payload: paginatedClients.clients
           });
+
+          dispatchClients({
+            type: 'CLIENTS_SET_TOTAL_ITEMS',
+            payload: paginatedClients.totalItems
+          })
 
         }
       } catch {
@@ -301,7 +334,7 @@ const ClientsPageContent: FC<ClientsPageContentProps> = ({distanceFromNavBar}) =
 
     // Cancel subscription to useEffect
     return () => (isSubscribed = false)
-  }, []);
+  }, [clientsState.itemsPerPage, clientsState.pageNumber]);
 
   return (
     <Box
@@ -391,7 +424,12 @@ const ClientsPageContent: FC<ClientsPageContentProps> = ({distanceFromNavBar}) =
                 <>
                   <ClientsTable
                     clients={clientsState.clients}
+                    totalClients={clientsState.totalItems}
+                    clientsPerPage={clientsState.itemsPerPage}
+                    currentPage={clientsState.pageNumber}
                     handleOpenViewAssociatedContractsModal={handleOpenViewAssociatedContractsModal}
+                    handleChangePage={handleChangePage}
+                    handleChangeRowsPerPage={handleChangeRowsPerPage}
                   />
                 </>
           }

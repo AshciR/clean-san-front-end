@@ -11,8 +11,23 @@ describe('<ClientsPage />', () => {
 
   const mockFetchClientsWithContracts = fetchClientsWithContracts as jest.MockedFunction<typeof fetchClientsWithContracts>
 
+  const PAGINATED_EMPTY_CLIENTS = {
+    totalItems: 0,
+    totalPages: 1,
+    currentPage: 0,
+    clients: []
+  };
+
   beforeEach(() => {
-    mockFetchClientsWithContracts.mockResolvedValue(MOCK_CLIENTS_WITH_CONTRACTS)
+
+    const paginatedClientsWithContracts = {
+      totalItems: 2,
+      totalPages: 1,
+      currentPage: 0,
+      clients: MOCK_CLIENTS_WITH_CONTRACTS
+    };
+
+    mockFetchClientsWithContracts.mockResolvedValue(paginatedClientsWithContracts)
   });
 
   it('should display the clients page', async () => {
@@ -32,7 +47,7 @@ describe('<ClientsPage />', () => {
   it('shows no clients if the fetch is empty', async () => {
 
     // Given: No due clients will be fetched
-    mockFetchClientsWithContracts.mockResolvedValue([]);
+    mockFetchClientsWithContracts.mockResolvedValue(PAGINATED_EMPTY_CLIENTS);
 
     // When: The ClientsPage renders
     render(<ClientsPage/>);
@@ -71,7 +86,7 @@ describe('<ClientsPage />', () => {
   it('opens the Add Client modal', async () => {
 
     // Given: The ClientsPage renders
-    mockFetchClientsWithContracts.mockResolvedValue([]);
+    mockFetchClientsWithContracts.mockResolvedValue(PAGINATED_EMPTY_CLIENTS);
     render(<ClientsPage/>);
 
     // When: The Add Client button is pressed

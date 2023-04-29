@@ -17,10 +17,17 @@ describe('<ClientsTable />', () => {
   });
 
   const mockHandleOpenViewAssociatedContractsModal = jest.fn();
+  const mockHandleChangePage = jest.fn();
+  const mockHandleChangeRowsPerPage = jest.fn();
 
   test('it should mount', () => {
     render(<ClientsTable
       clients={[]}
+      totalClients={0}
+      clientsPerPage={25}
+      currentPage={0}
+      handleChangePage={mockHandleChangePage}
+      handleChangeRowsPerPage={mockHandleChangeRowsPerPage}
       handleOpenViewAssociatedContractsModal={mockHandleOpenViewAssociatedContractsModal}
     />);
 
@@ -34,6 +41,11 @@ describe('<ClientsTable />', () => {
     // When: the Due Services Table is rendered with services
     render(<ClientsTable
       clients={clientsWithContracts}
+      totalClients={clientsWithContracts.length}
+      clientsPerPage={25}
+      currentPage={0}
+      handleChangePage={mockHandleChangePage}
+      handleChangeRowsPerPage={mockHandleChangeRowsPerPage}
       handleOpenViewAssociatedContractsModal={mockHandleOpenViewAssociatedContractsModal}
     />);
 
@@ -49,6 +61,11 @@ describe('<ClientsTable />', () => {
     // When: the Due Services Table is rendered without any services
     render(<ClientsTable
       clients={[]}
+      totalClients={0}
+      clientsPerPage={25}
+      currentPage={0}
+      handleChangePage={mockHandleChangePage}
+      handleChangeRowsPerPage={mockHandleChangeRowsPerPage}
       handleOpenViewAssociatedContractsModal={mockHandleOpenViewAssociatedContractsModal}
     />);
 
@@ -63,6 +80,11 @@ describe('<ClientsTable />', () => {
     // Given: The table has client rows
     render(<ClientsTable
       clients={clientsWithContracts}
+      totalClients={clientsWithContracts.length}
+      clientsPerPage={25}
+      currentPage={0}
+      handleChangePage={mockHandleChangePage}
+      handleChangeRowsPerPage={mockHandleChangeRowsPerPage}
       handleOpenViewAssociatedContractsModal={mockHandleOpenViewAssociatedContractsModal}
     />);
     const clientOfInterest = clientsWithContracts[0];
