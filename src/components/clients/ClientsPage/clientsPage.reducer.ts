@@ -9,7 +9,13 @@ interface ClientsState {
   isAddClientError: boolean;
   isAddContractError: boolean;
   isUpdateContractError: boolean;
+  pageNumber: number;
+  itemsPerPage: number;
+  totalItems: number
 }
+
+const ITEMS_PER_PAGE_OPTIONS: number[] = [25, 50, 100];
+const defaultItemsPerPage = ITEMS_PER_PAGE_OPTIONS[0];
 
 const initialClientsState: ClientsState = {
   isLoading: false,
@@ -17,7 +23,10 @@ const initialClientsState: ClientsState = {
   isFetchError: false,
   isAddClientError: false,
   isAddContractError: false,
-  isUpdateContractError: false
+  isUpdateContractError: false,
+  pageNumber: 0,
+  itemsPerPage: defaultItemsPerPage,
+  totalItems: 0
 }
 
 interface ClientsFetchInitAction {
@@ -69,6 +78,21 @@ interface CancelContractFailureAction {
   type: 'CLIENTS_CANCEL_CONTRACT_FAILURE'
 }
 
+interface ChangePageNumberAction {
+  type: 'CLIENTS_CHANGE_PAGE_NUMBER';
+  payload: number;
+}
+
+interface ChangeItemsPerPageAction {
+  type: 'CLIENTS_CHANGE_ITEMS_PER_PAGE';
+  payload: number;
+}
+
+interface SetTotalItemsAction {
+  type: 'CLIENTS_SET_TOTAL_ITEMS';
+  payload: number;
+}
+
 type ClientsAction =
   ClientsFetchInitAction
   | ClientsFetchSuccessAction
@@ -81,6 +105,9 @@ type ClientsAction =
   | StartContractFailureAction
   | CancelContractSuccessAction
   | CancelContractFailureAction
+  | ChangePageNumberAction
+  | ChangeItemsPerPageAction
+  | SetTotalItemsAction
 
 const clientsReducer = (state: ClientsState, action: ClientsAction) => {
 
@@ -166,6 +193,24 @@ const clientsReducer = (state: ClientsState, action: ClientsAction) => {
         isUpdateContractError: true
       }
       return cancelContractFailureState;
+    case "CLIENTS_CHANGE_PAGE_NUMBER":
+      const updatedChangePageState: ClientsState = {
+        ...state,
+        pageNumber: action.payload
+      };
+      return updatedChangePageState;
+    case "CLIENTS_CHANGE_ITEMS_PER_PAGE":
+      const updatedChangeItemsPerPageState: ClientsState = {
+        ...state,
+        itemsPerPage: action.payload
+      };
+      return updatedChangeItemsPerPageState
+    case "CLIENTS_SET_TOTAL_ITEMS":
+      const updatedTotalItemsState: ClientsState = {
+        ...state,
+        totalItems: action.payload
+      }
+      return updatedTotalItemsState
     default:
       throw new Error(`Illegal Client action was provided`);
   }
@@ -274,5 +319,5 @@ const updateContracts = (contracts: Contract[], contractToBeUpdated: Contract) =
   ];
 };
 
-export {initialClientsState, clientsReducer}
+export {initialClientsState, clientsReducer, ITEMS_PER_PAGE_OPTIONS}
 export type {ClientsAction, ClientsState}

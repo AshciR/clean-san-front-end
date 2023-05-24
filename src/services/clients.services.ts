@@ -7,20 +7,36 @@ import Client from "../shared/Client.model";
 /**
  * Fetches the clients from the backend
  */
-const fetchClientsWithContracts = async () => {
+const fetchClientsWithContracts = async (page?: number, itemsPerPage?: number) => {
+
+  const params = {
+    page: page,
+    itemsPerPage: itemsPerPage
+  };
 
   try {
 
-    const response = await axios.get<GetClientsResponse>('/v1/clients')
-    const clients = response.data.clients.map(response => convertClientResponseToClientWithContracts(response))
-
-    return clients || [];
+    const response = await axios.get<GetClientsResponse>('/v1/clients', {params})
+    return convertGetClientsResponseToPaginatedClientsWithContracts(response.data)
 
   } catch (error) {
     throw error;
   }
 
 }
+
+const convertGetClientsResponseToPaginatedClientsWithContracts = (response: GetClientsResponse) => {
+
+  const clientsWithContracts = response.clients.map(response => convertClientResponseToClientWithContracts(response));
+
+  return {
+    totalItems: response.totalItems,
+    totalPages: response.totalPages,
+    currentPage: response.currentPage,
+    clients: clientsWithContracts
+  };
+
+};
 
 /**
  * Helper method to convert the ClientResponse response into the ClientWithContracts domain model
@@ -132,6 +148,9 @@ const updateContract = async (contract: Contract): Promise<Contract> => {
 }
 
 type GetClientsResponse = {
+  totalItems: number;
+  totalPages: number;
+  currentPage: number;
   clients: GetClientResponse[];
 };
 

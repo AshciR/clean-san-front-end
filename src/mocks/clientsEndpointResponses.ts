@@ -1,4 +1,7 @@
 const getClientsResponse = {
+  "totalItems": 4,
+  "totalPages": 1,
+  "currentPage": 0,
   "clients": [
     {
       "id": 1,

@@ -4,6 +4,7 @@ import {
   AddClientRequest,
   AddClientResponse,
   AddContractRequest,
+  GetClientResponse,
   GetClientsResponse,
   UpdateContractRequest
 } from "../services/clients.services";
@@ -13,12 +14,30 @@ import {ContractStatus} from "../shared/Contract.model";
 
 const getClientsHandler = rest.get('*/v1/clients', (req, res, context) => {
 
+  const page = Number(req.url.searchParams.get('page')) || 0;
+  const itemsPerPage = Number(req.url.searchParams.get('itemsPerPage')) || 50;
+
+  const response: GetClientsResponse = {
+    currentPage: page,
+    totalItems: getClientsResponse.clients.length,
+    totalPages: Math.ceil(getClientsResponse.clients.length / itemsPerPage),
+    clients: paginate(getClientsResponse.clients, page, itemsPerPage)
+  }
+
   return res(
     context.status(200),
-    context.json(getClientsResponse)
+    context.json(response)
   )
 
 });
+
+const paginate = (clients: GetClientResponse[], page: number, itemsPerPage: number) => {
+
+  const startIndex = page * itemsPerPage;
+  const endIndex = startIndex + Number(itemsPerPage);
+
+  return clients.slice(startIndex, endIndex);
+};
 
 const addClientHandler = rest.post('*/v1/clients', (req, res, context) => {
 

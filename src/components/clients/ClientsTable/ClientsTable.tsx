@@ -1,18 +1,43 @@
 import React, {FC} from 'react';
 import styles from './ClientsTable.module.scss';
-import {Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography} from "@mui/material";
+import {
+  Box,
+  Button,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TablePagination,
+  TableRow,
+  Typography
+} from "@mui/material";
 import {ClientWithContracts} from "../../../shared/ClientWithContracts.model";
 import ClientStatusChip from "../ClientStatusChip/ClientStatusChip";
+import {ITEMS_PER_PAGE_OPTIONS} from "../../dashboard/DashboardPage/dashboardPage.reducer";
 
 
 const STATUS_CHIP_WIDTH = 120;
 
 interface ClientsTableProps {
   clients: ClientWithContracts[]
+  totalClients: number
+  clientsPerPage: number
+  currentPage: number
   handleOpenViewAssociatedContractsModal: (client: ClientWithContracts) => void
+  handleChangePage: (newPageNumber: number) => void
+  handleChangeRowsPerPage: (newRowsPerPage: number) => void
 }
 
-const ClientsTable: FC<ClientsTableProps> = ({clients, handleOpenViewAssociatedContractsModal}: ClientsTableProps) => {
+const ClientsTable: FC<ClientsTableProps> = ({
+                                               clients,
+                                               totalClients,
+                                               clientsPerPage,
+                                               currentPage,
+                                               handleOpenViewAssociatedContractsModal,
+                                               handleChangePage,
+                                               handleChangeRowsPerPage
+                                             }: ClientsTableProps) => {
 
   const hasClients = clients.length !== 0;
 
@@ -20,7 +45,13 @@ const ClientsTable: FC<ClientsTableProps> = ({clients, handleOpenViewAssociatedC
     <div className={styles.ClientsTable} data-testid="clients-table">
       {hasClients ? <VisibleClientsTable
           clients={clients}
-          handleOpenViewAssociatedContractsModal={handleOpenViewAssociatedContractsModal}/> :
+          totalClients={totalClients}
+          clientsPerPage={clientsPerPage}
+          currentPage={currentPage}
+          handleOpenViewAssociatedContractsModal={handleOpenViewAssociatedContractsModal}
+          handleChangePage={handleChangePage}
+          handleChangeRowsPerPage={handleChangeRowsPerPage}
+        /> :
         <NoClientsDisplay/>}
     </div>
   );
@@ -28,30 +59,61 @@ const ClientsTable: FC<ClientsTableProps> = ({clients, handleOpenViewAssociatedC
 
 interface VisibleClientsTableProps {
   clients: ClientWithContracts[]
+  totalClients: number
+  clientsPerPage: number
+  currentPage: number
   handleOpenViewAssociatedContractsModal: (client: ClientWithContracts) => void
+  handleChangePage: (newPageNumber: number) => void
+  handleChangeRowsPerPage: (newRowsPerPage: number) => void
 }
 
-const VisibleClientsTable = ({clients, handleOpenViewAssociatedContractsModal}: VisibleClientsTableProps) => (
-  <TableContainer data-testid="visible-clients-table">
-    <Table aria-label="clients table">
-      <TableHead>
-        <TableRow>
-          <TableCell sx={{width: 100}}>Client Id</TableCell>
-          <TableCell>Name</TableCell>
-          <TableCell>Email</TableCell>
-          <TableCell sx={{width: STATUS_CHIP_WIDTH}}>Active</TableCell>
-        </TableRow>
-      </TableHead>
-      <TableBody>
-        {clients.map(client =>
-          <ClientRow
-            key={client.id}
-            client={client}
-            handleOpenViewAssociatedContractsModal={handleOpenViewAssociatedContractsModal}/>)
-        }
-      </TableBody>
-    </Table>
-  </TableContainer>
+const VisibleClientsTable = ({
+                               clients,
+                               totalClients,
+                               clientsPerPage,
+                               currentPage,
+                               handleOpenViewAssociatedContractsModal,
+                               handleChangePage,
+                               handleChangeRowsPerPage
+                             }: VisibleClientsTableProps) => (
+
+  <Box>
+    <TableContainer data-testid="visible-clients-table">
+      <Table aria-label="clients table">
+        <TableHead>
+          <TableRow>
+            <TableCell sx={{width: 100}}>Client Id</TableCell>
+            <TableCell>Name</TableCell>
+            <TableCell>Email</TableCell>
+            <TableCell sx={{width: STATUS_CHIP_WIDTH}}>Active</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {clients.map(client =>
+            <ClientRow
+              key={client.id}
+              client={client}
+              handleOpenViewAssociatedContractsModal={handleOpenViewAssociatedContractsModal}/>)
+          }
+        </TableBody>
+      </Table>
+    </TableContainer>
+    <TablePagination
+      rowsPerPageOptions={ITEMS_PER_PAGE_OPTIONS}
+      component="div"
+      count={totalClients}
+      rowsPerPage={clientsPerPage}
+      page={currentPage}
+      onPageChange={(event, newPage) => {
+        handleChangePage(newPage);
+      }}
+      onRowsPerPageChange={(event) => {
+        const newRowsPerPage = parseInt(event.target.value, 10);
+        handleChangeRowsPerPage(newRowsPerPage)
+      }}
+    />
+  </Box>
+
 );
 
 interface ClientRowProps {

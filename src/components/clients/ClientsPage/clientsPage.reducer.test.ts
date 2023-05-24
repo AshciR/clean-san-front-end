@@ -1,4 +1,10 @@
-import {ClientsAction, clientsReducer, ClientsState, initialClientsState} from "./clientsPage.reducer";
+import {
+  ClientsAction,
+  clientsReducer,
+  ClientsState,
+  initialClientsState,
+  ITEMS_PER_PAGE_OPTIONS
+} from "./clientsPage.reducer";
 import MOCK_CLIENTS_WITH_CONTRACTS from "../../../shared/mockClientsWithContractsData";
 import {createClient} from "../../../shared/Client.model";
 import {createClientWithContracts} from "../../../shared/ClientWithContracts.model";
@@ -25,7 +31,10 @@ describe('ClientPage Reducer', () => {
       isFetchError: false,
       isAddClientError: false,
       isAddContractError: false,
-      isUpdateContractError: false
+      isUpdateContractError: false,
+      pageNumber: 0,
+      itemsPerPage: ITEMS_PER_PAGE_OPTIONS[0],
+      totalItems: 0
     }
     expect(updatedState).toStrictEqual(expectedState);
   });
@@ -49,7 +58,10 @@ describe('ClientPage Reducer', () => {
       isFetchError: false,
       isAddClientError: false,
       isAddContractError: false,
-      isUpdateContractError: false
+      isUpdateContractError: false,
+      pageNumber: 0,
+      itemsPerPage: ITEMS_PER_PAGE_OPTIONS[0],
+      totalItems: 0
     }
     expect(updatedState).toStrictEqual(expectedState);
   });
@@ -72,7 +84,10 @@ describe('ClientPage Reducer', () => {
       isFetchError: true,
       isAddClientError: false,
       isAddContractError: false,
-      isUpdateContractError: false
+      isUpdateContractError: false,
+      pageNumber: 0,
+      itemsPerPage: ITEMS_PER_PAGE_OPTIONS[0],
+      totalItems: 0
     }
     expect(updatedState).toStrictEqual(expectedState);
   });
@@ -101,7 +116,10 @@ describe('ClientPage Reducer', () => {
       isFetchError: true,
       isAddClientError: false,
       isAddContractError: false,
-      isUpdateContractError: false
+      isUpdateContractError: false,
+      pageNumber: 0,
+      itemsPerPage: ITEMS_PER_PAGE_OPTIONS[0],
+      totalItems: 0
     };
 
     expect(updatedState).toStrictEqual(expectedState);
@@ -141,7 +159,10 @@ describe('ClientPage Reducer', () => {
       isFetchError: false,
       isAddClientError: false,
       isAddContractError: false,
-      isUpdateContractError: false
+      isUpdateContractError: false,
+      pageNumber: 0,
+      itemsPerPage: ITEMS_PER_PAGE_OPTIONS[0],
+      totalItems: 0
     }
 
     expect(updatedState).toStrictEqual(expectedState);
@@ -165,7 +186,10 @@ describe('ClientPage Reducer', () => {
       isFetchError: false,
       isAddClientError: true,
       isAddContractError: false,
-      isUpdateContractError: false
+      isUpdateContractError: false,
+      pageNumber: 0,
+      itemsPerPage: ITEMS_PER_PAGE_OPTIONS[0],
+      totalItems: 0
     }
 
     expect(updatedState).toStrictEqual(expectedState);
@@ -195,7 +219,10 @@ describe('ClientPage Reducer', () => {
       isFetchError: false,
       isAddClientError: false,
       isAddContractError: false,
-      isUpdateContractError: false
+      isUpdateContractError: false,
+      pageNumber: 0,
+      itemsPerPage: ITEMS_PER_PAGE_OPTIONS[0],
+      totalItems: 0
     };
 
     // And: We have an action
@@ -230,7 +257,10 @@ describe('ClientPage Reducer', () => {
       isFetchError: false,
       isAddClientError: false,
       isAddContractError: false,
-      isUpdateContractError: false
+      isUpdateContractError: false,
+      pageNumber: 0,
+      itemsPerPage: ITEMS_PER_PAGE_OPTIONS[0],
+      totalItems: 0
     }
 
     expect(updatedState).toStrictEqual(expectedState);
@@ -254,7 +284,10 @@ describe('ClientPage Reducer', () => {
       isFetchError: false,
       isAddClientError: false,
       isAddContractError: true,
-      isUpdateContractError: false
+      isUpdateContractError: false,
+      pageNumber: 0,
+      itemsPerPage: ITEMS_PER_PAGE_OPTIONS[0],
+      totalItems: 0
     }
 
     expect(updatedState).toStrictEqual(expectedState);
@@ -287,7 +320,10 @@ describe('ClientPage Reducer', () => {
       isFetchError: false,
       isAddClientError: false,
       isAddContractError: false,
-      isUpdateContractError: false
+      isUpdateContractError: false,
+      pageNumber: 0,
+      itemsPerPage: ITEMS_PER_PAGE_OPTIONS[0],
+      totalItems: 0
     };
 
     // And: We have an action
@@ -315,7 +351,10 @@ describe('ClientPage Reducer', () => {
       isFetchError: false,
       isAddClientError: false,
       isAddContractError: false,
-      isUpdateContractError: false
+      isUpdateContractError: false,
+      pageNumber: 0,
+      itemsPerPage: ITEMS_PER_PAGE_OPTIONS[0],
+      totalItems: 0
     };
 
     expect(updatedState).toStrictEqual(expectedState);
@@ -340,7 +379,10 @@ describe('ClientPage Reducer', () => {
       isFetchError: false,
       isAddClientError: false,
       isAddContractError: false,
-      isUpdateContractError: true
+      isUpdateContractError: true,
+      pageNumber: 0,
+      itemsPerPage: ITEMS_PER_PAGE_OPTIONS[0],
+      totalItems: 0
     }
 
     expect(updatedState).toStrictEqual(expectedState);
@@ -373,7 +415,10 @@ describe('ClientPage Reducer', () => {
       isFetchError: false,
       isAddClientError: false,
       isAddContractError: false,
-      isUpdateContractError: false
+      isUpdateContractError: false,
+      pageNumber: 0,
+      itemsPerPage: ITEMS_PER_PAGE_OPTIONS[0],
+      totalItems: 0
     };
 
     // And: We have an action
@@ -401,7 +446,10 @@ describe('ClientPage Reducer', () => {
       isFetchError: false,
       isAddClientError: false,
       isAddContractError: false,
-      isUpdateContractError: false
+      isUpdateContractError: false,
+      pageNumber: 0,
+      itemsPerPage: ITEMS_PER_PAGE_OPTIONS[0],
+      totalItems: 0
     };
 
     expect(updatedState).toStrictEqual(expectedState);
@@ -426,7 +474,100 @@ describe('ClientPage Reducer', () => {
       isFetchError: false,
       isAddClientError: false,
       isAddContractError: false,
-      isUpdateContractError: true
+      isUpdateContractError: true,
+      pageNumber: 0,
+      itemsPerPage: ITEMS_PER_PAGE_OPTIONS[0],
+      totalItems: 0
+    }
+
+    expect(updatedState).toStrictEqual(expectedState);
+  });
+
+  it('sets the page number correctly', () => {
+
+    // Given: We have an initial state
+    const state = initialClientsState
+    const pageNumber = 1;
+
+    const action: ClientsAction = {
+      type: 'CLIENTS_CHANGE_PAGE_NUMBER',
+      payload: pageNumber
+    };
+
+    // When: We update the page number
+    const updatedState = clientsReducer(state, action)
+
+    // Then: The page number is updated correctly
+    const expectedState: ClientsState = {
+      isLoading: false,
+      clients: [],
+      isFetchError: false,
+      isAddClientError: false,
+      isAddContractError: false,
+      isUpdateContractError: false,
+      pageNumber: pageNumber,
+      itemsPerPage: ITEMS_PER_PAGE_OPTIONS[0],
+      totalItems: 0
+    }
+
+    expect(updatedState).toStrictEqual(expectedState);
+
+  });
+
+  it('sets the items per page correctly', () => {
+
+    // Given: We have an initial state
+    const state = initialClientsState
+    const itemsPerPage = 100;
+
+    const action: ClientsAction = {
+      type: 'CLIENTS_CHANGE_ITEMS_PER_PAGE',
+      payload: itemsPerPage
+    };
+
+    // When: We update the page number
+    const updatedState = clientsReducer(state, action)
+
+    // Then: The page number is updated correctly
+    const expectedState: ClientsState = {
+      isLoading: false,
+      clients: [],
+      isFetchError: false,
+      isAddClientError: false,
+      isAddContractError: false,
+      isUpdateContractError: false,
+      pageNumber: 0,
+      itemsPerPage: itemsPerPage,
+      totalItems: 0
+    }
+
+    expect(updatedState).toStrictEqual(expectedState);
+  });
+
+  it('sets the total items correctly', () => {
+    // Given: We have an initial state
+    const state = initialClientsState
+    const totalItems = 100;
+
+    const action: ClientsAction = {
+      type: 'CLIENTS_SET_TOTAL_ITEMS',
+      payload: totalItems
+    };
+
+    // When: We update the page number
+    const updatedState = clientsReducer(state, action)
+
+    // Then: The page number is updated correctly
+    const expectedState: ClientsState = {
+      isLoading: false,
+      clients: [],
+      isFetchError: false,
+      isAddClientError: false,
+      isAddContractError: false,
+      isUpdateContractError: false,
+      pageNumber: 0,
+      itemsPerPage: ITEMS_PER_PAGE_OPTIONS[0],
+      totalItems: totalItems
     }
 
     expect(updatedState).toStrictEqual(expectedState);
