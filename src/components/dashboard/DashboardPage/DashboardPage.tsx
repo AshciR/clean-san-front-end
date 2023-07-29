@@ -10,7 +10,11 @@ import SnackbarNotification from '../../shared/SnackbarNotification/SnackbarNoti
 import snackbarNotificationReducer, {
   initialSnackbarNotificationState
 } from '../../shared/SnackbarNotification/snackbarNotification.reducer';
-import dueServicesReducer, {initialDueServicesState} from './dashboardPage.reducer';
+import dueServicesReducer, {
+  DashboardOrderByOptions,
+  initialDueServicesState,
+  OrderByOptions
+} from './dashboardPage.reducer';
 import {fetchDueServices, fetchServicesForContract, submitUpdatedServices} from '../../../services/services.services';
 import NavBarWrapper from "../../shared/NavBarWrapper/NavBarWrapper";
 import {NAV_BAR_HEIGHT} from "../../shared/NavBar/NavBar";
@@ -264,10 +268,12 @@ const DashboardPageContent: FC<DashboardPageContentProps> = ({distanceFromNavBar
                   totalServices={dueServicesState.totalItems}
                   servicesPerPage={dueServicesState.itemsPerPage}
                   currentPage={dueServicesState.pageNumber}
+                  sortOrder={{orderBy: DashboardOrderByOptions.CLIENT, direction: OrderByOptions.ASC}} //TODO: Replace with reducer values
                   handleUpdateService={handleUpdateService}
                   handleOpenViewAssociatedServicesModal={handleOpenViewAssociatedServicesModal}
                   handleChangePage={handleChangePage}
                   handleChangeRowsPerPage={handleChangeRowsPerPage}
+                  handleSortBy={() => {}} //TODO: Replace with handle function
                 />
           }
         </Box>
