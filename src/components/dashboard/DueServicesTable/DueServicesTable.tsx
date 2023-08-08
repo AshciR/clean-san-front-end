@@ -11,6 +11,7 @@ import {
   TableHead,
   TablePagination,
   TableRow,
+  TableSortLabel,
   Typography
 } from '@mui/material';
 import {DateTime} from 'luxon';
@@ -20,7 +21,7 @@ import ServiceStatus from '../../../shared/ServiceStatus.model';
 import styles from './DueServicesTable.module.scss';
 import ServiceStatusChip, {STATUS_CHIP_WIDTH} from "../ServiceStatusChip/ServiceStatusChip";
 import ServiceFrequencyChip from "../../shared/ServiceFrequencyChip/ServiceFrequencyChip";
-import {ITEMS_PER_PAGE_OPTIONS} from "../DashboardPage/dashboardPage.reducer";
+import {DashboardOrderByOptions, ITEMS_PER_PAGE_OPTIONS, SortOrder} from "../DashboardPage/dashboardPage.reducer";
 
 const SERVICE_ID_WIDTH = 100;
 const STATUS_COLUMN_WIDTH = STATUS_CHIP_WIDTH + 60;
@@ -30,10 +31,12 @@ interface DueServicesTableProps {
   totalServices: number
   servicesPerPage: number
   currentPage: number
+  sortOrder: SortOrder
   handleUpdateService: (updatedService: DueService) => void
   handleOpenViewAssociatedServicesModal: (selectedService: DueService) => void
   handleChangePage: (newPageNumber: number) => void
   handleChangeRowsPerPage: (newRowsPerPage: number) => void
+  handleSortBy: (sortColumn: string) => void
 }
 
 const DueServicesTable: FC<DueServicesTableProps> = ({
@@ -41,10 +44,12 @@ const DueServicesTable: FC<DueServicesTableProps> = ({
                                                        totalServices,
                                                        servicesPerPage,
                                                        currentPage,
+                                                       sortOrder,
                                                        handleUpdateService,
                                                        handleOpenViewAssociatedServicesModal,
                                                        handleChangePage,
-                                                       handleChangeRowsPerPage
+                                                       handleChangeRowsPerPage,
+                                                       handleSortBy
                                                      }: DueServicesTableProps) => {
 
   const hasServices = dueServices.length !== 0;
@@ -56,10 +61,12 @@ const DueServicesTable: FC<DueServicesTableProps> = ({
           totalServices={totalServices}
           servicesPerPage={servicesPerPage}
           currentPage={currentPage}
+          sortOrder={sortOrder}
           handleUpdateService={handleUpdateService}
           handleOpenViewAssociatedServicesModal={handleOpenViewAssociatedServicesModal}
           handleChangePage={handleChangePage}
           handleChangeRowsPerPage={handleChangeRowsPerPage}
+          handleSortBy={handleSortBy}
         /> :
         <NoDueServicesDisplay/>}
     </div>
@@ -71,10 +78,12 @@ interface VisibleDueServiceTableProps {
   totalServices: number
   servicesPerPage: number
   currentPage: number
+  sortOrder: SortOrder
   handleUpdateService: (updatedService: DueService) => void
   handleOpenViewAssociatedServicesModal: (selectedService: DueService) => void
   handleChangePage: (newPageNumber: number) => void
   handleChangeRowsPerPage: (newRowsPerPage: number) => void
+  handleSortBy: (sortColumn: string) => void
 }
 
 const VisibleDueServiceTable = ({
@@ -82,10 +91,12 @@ const VisibleDueServiceTable = ({
                                   totalServices,
                                   servicesPerPage,
                                   currentPage,
+                                  sortOrder,
                                   handleUpdateService,
                                   handleOpenViewAssociatedServicesModal,
                                   handleChangePage,
-                                  handleChangeRowsPerPage
+                                  handleChangeRowsPerPage,
+                                  handleSortBy
                                 }: VisibleDueServiceTableProps) => (
 
   <Box>
@@ -100,7 +111,14 @@ const VisibleDueServiceTable = ({
         <TableHead>
           <TableRow>
             <TableCell sx={{width: SERVICE_ID_WIDTH}}>Service Id</TableCell>
-            <TableCell>Client</TableCell>
+            <TableCell>
+              <TableSortLabel
+                active={sortOrder.orderBy === DashboardOrderByOptions.CLIENT}
+                direction={sortOrder.direction}
+                onClick={() => handleSortBy(DashboardOrderByOptions.CLIENT)}
+              />
+              Client
+            </TableCell>
             <TableCell>Frequency</TableCell>
             <TableCell>Due Date</TableCell>
             <TableCell sx={{width: STATUS_COLUMN_WIDTH}}>Current Status</TableCell>

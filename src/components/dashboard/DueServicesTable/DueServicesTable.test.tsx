@@ -6,6 +6,7 @@ import DueService from '../../../shared/DueService.model';
 import ServiceStatus from '../../../shared/ServiceStatus.model';
 import {getDueServicesResponse} from "../../../mocks/servicesEndpointResponses";
 import {convertServicesQueryResponseToDueService} from "../../../services/services.services";
+import {DashboardOrderByOptions, OrderByOptions, SortOrder} from "../DashboardPage/dashboardPage.reducer";
 
 
 describe('<DueServicesTable />', () => {
@@ -13,6 +14,11 @@ describe('<DueServicesTable />', () => {
   const MOCK_DUE_SERVICES = getDueServicesResponse.services.map(service =>
     convertServicesQueryResponseToDueService(service)
   );
+
+  const SORT_BY_CLIENT_ASC: SortOrder = {
+    orderBy: DashboardOrderByOptions.CLIENT,
+    direction: OrderByOptions.ASC
+  }
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -22,6 +28,7 @@ describe('<DueServicesTable />', () => {
   const mockHandleOpenViewAssociatedServicesModal = jest.fn();
   const mockHandleChangePage = jest.fn();
   const mockHandleChangeRowsPerPage = jest.fn();
+  const mockHandleSortBy = jest.fn();
 
   it('should mount', () => {
     render(<DueServicesTable
@@ -33,6 +40,8 @@ describe('<DueServicesTable />', () => {
       handleOpenViewAssociatedServicesModal={mockHandleOpenViewAssociatedServicesModal}
       handleChangePage={mockHandleChangePage}
       handleChangeRowsPerPage={mockHandleChangeRowsPerPage}
+      sortOrder={SORT_BY_CLIENT_ASC}
+      handleSortBy={mockHandleSortBy}
     />);
 
     const dueServicesTable = screen.getByTestId('due-services-table');
@@ -52,6 +61,8 @@ describe('<DueServicesTable />', () => {
       handleOpenViewAssociatedServicesModal={mockHandleOpenViewAssociatedServicesModal}
       handleChangePage={mockHandleChangePage}
       handleChangeRowsPerPage={mockHandleChangeRowsPerPage}
+      sortOrder={SORT_BY_CLIENT_ASC}
+      handleSortBy={mockHandleSortBy}
     />);
 
     // Then: All the rows should have the correct info
@@ -73,6 +84,8 @@ describe('<DueServicesTable />', () => {
       handleOpenViewAssociatedServicesModal={mockHandleOpenViewAssociatedServicesModal}
       handleChangePage={mockHandleChangePage}
       handleChangeRowsPerPage={mockHandleChangeRowsPerPage}
+      sortOrder={SORT_BY_CLIENT_ASC}
+      handleSortBy={mockHandleSortBy}
     />);
 
     // Then: The no services display message should be present
@@ -93,6 +106,8 @@ describe('<DueServicesTable />', () => {
       handleOpenViewAssociatedServicesModal={mockHandleOpenViewAssociatedServicesModal}
       handleChangePage={mockHandleChangePage}
       handleChangeRowsPerPage={mockHandleChangeRowsPerPage}
+      sortOrder={SORT_BY_CLIENT_ASC}
+      handleSortBy={mockHandleSortBy}
     />);
     const serviceToUpdate = MOCK_DUE_SERVICES[0];
     const newStatusDropdown = screen.getAllByDisplayValue(serviceToUpdate.currentStatus)[0]
@@ -124,6 +139,8 @@ describe('<DueServicesTable />', () => {
       handleOpenViewAssociatedServicesModal={mockHandleOpenViewAssociatedServicesModal}
       handleChangePage={mockHandleChangePage}
       handleChangeRowsPerPage={mockHandleChangeRowsPerPage}
+      sortOrder={SORT_BY_CLIENT_ASC}
+      handleSortBy={mockHandleSortBy}
     />);
     const serviceOfInterest = dueServices[3]; // service id: 4, contract id: 1
     const serviceButton = screen.getByRole('button', {name: `${serviceOfInterest.id}`})
@@ -151,6 +168,8 @@ describe('<DueServicesTable />', () => {
       handleOpenViewAssociatedServicesModal={mockHandleOpenViewAssociatedServicesModal}
       handleChangePage={mockHandleChangePage}
       handleChangeRowsPerPage={mockHandleChangeRowsPerPage}
+      sortOrder={SORT_BY_CLIENT_ASC}
+      handleSortBy={mockHandleSortBy}
     />);
 
     const nextPageButton = screen.getByRole('button', {name: 'Go to next page'});
@@ -178,6 +197,8 @@ describe('<DueServicesTable />', () => {
       handleOpenViewAssociatedServicesModal={mockHandleOpenViewAssociatedServicesModal}
       handleChangePage={mockHandleChangePage}
       handleChangeRowsPerPage={mockHandleChangeRowsPerPage}
+      sortOrder={SORT_BY_CLIENT_ASC}
+      handleSortBy={mockHandleSortBy}
     />);
 
     const previousPageButton = screen.getByRole('button', {name: 'Go to previous page'});

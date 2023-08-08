@@ -8,7 +8,23 @@ interface DueServicesState {
   isSubmitUpdateError: boolean;
   pageNumber: number;
   itemsPerPage: number;
-  totalItems: number
+  totalItems: number;
+}
+
+interface SortOrder {
+  orderBy: DashboardOrderByOptions;
+  direction: OrderByOptions;
+}
+
+enum DashboardOrderByOptions {
+  CLIENT = 'client',
+  STATUS = 'status',
+  DUE_DATE = 'due_date'
+}
+
+enum OrderByOptions {
+  ASC = 'asc',
+  DESC = 'desc'
 }
 
 const ITEMS_PER_PAGE_OPTIONS: number[] = [25, 50, 100];
@@ -186,6 +202,6 @@ const updateServicesAfterSubmittal = (dueServicesBeforeSubmittal: DueService[], 
 }
 
 export default dueServicesReducer;
-export {initialDueServicesState, dueServicesReducer, ITEMS_PER_PAGE_OPTIONS};
-export type {DueServicesAction as DashboardAction, DueServicesState}
+export {initialDueServicesState, dueServicesReducer, ITEMS_PER_PAGE_OPTIONS, DashboardOrderByOptions, OrderByOptions};
+export type {DueServicesAction as DashboardAction, DueServicesState, SortOrder}
 
