@@ -9,6 +9,7 @@ interface DueServicesState {
   pageNumber: number;
   itemsPerPage: number;
   totalItems: number;
+  sortOrder: SortOrder;
 }
 
 interface SortOrder {
@@ -29,6 +30,10 @@ enum OrderByOptions {
 
 const ITEMS_PER_PAGE_OPTIONS: number[] = [25, 50, 100];
 const defaultItemsPerPage = ITEMS_PER_PAGE_OPTIONS[0];
+const defaultSortOrder: SortOrder = {
+  orderBy: DashboardOrderByOptions.DUE_DATE,
+  direction: OrderByOptions.DESC
+};
 
 const initialDueServicesState: DueServicesState = {
   isLoading: false,
@@ -37,7 +42,8 @@ const initialDueServicesState: DueServicesState = {
   isSubmitUpdateError: false,
   pageNumber: 0,
   itemsPerPage: defaultItemsPerPage,
-  totalItems: 0
+  totalItems: 0,
+  sortOrder: defaultSortOrder
 };
 
 interface DueServicesFetchInitAction {
@@ -82,6 +88,11 @@ interface DueServicesSetTotalItemsAction {
   payload: number;
 }
 
+interface DueServicesSetSortOrderAction {
+  type: 'DUE_SERVICES_SET_SORT_ORDER';
+  payload: DashboardOrderByOptions;
+}
+
 type DueServicesAction =
   | DueServicesFetchInitAction
   | DueServicesFetchSuccessAction
@@ -92,6 +103,7 @@ type DueServicesAction =
   | DueServicesChangePageNumberAction
   | DueServicesChangeItemsPerPageAction
   | DueServicesSetTotalItemsAction
+  | DueServicesSetSortOrderAction
 
 const dueServicesReducer = (
   state: DueServicesState,
@@ -159,6 +171,12 @@ const dueServicesReducer = (
         totalItems: action.payload
       }
       return updatedTotalItemsState
+    case "DUE_SERVICES_SET_SORT_ORDER":
+      const updatedSortOrderState: DueServicesState = {
+        ...state,
+        sortOrder: updateSortOrder(state.sortOrder, action.payload)
+      }
+      return updatedSortOrderState
     default:
       throw new Error(`Illegal Dashboard action was provided`);
   }
@@ -201,7 +219,25 @@ const updateServicesAfterSubmittal = (dueServicesBeforeSubmittal: DueService[], 
 
 }
 
+const updateSortOrder = (currentSortOrder: SortOrder, newOrderBy: DashboardOrderByOptions) => {
+
+  if (currentSortOrder.orderBy === newOrderBy) {
+    const newDirection = currentSortOrder.direction === OrderByOptions.ASC ? OrderByOptions.DESC : OrderByOptions.ASC;
+    return {orderBy: newOrderBy, direction: newDirection};
+  }
+
+  return {orderBy: newOrderBy, direction: OrderByOptions.ASC};
+
+};
+
 export default dueServicesReducer;
-export {initialDueServicesState, dueServicesReducer, ITEMS_PER_PAGE_OPTIONS, DashboardOrderByOptions, OrderByOptions};
+export {
+  initialDueServicesState,
+  dueServicesReducer,
+  ITEMS_PER_PAGE_OPTIONS,
+  DashboardOrderByOptions,
+  OrderByOptions,
+  defaultSortOrder
+};
 export type {DueServicesAction as DashboardAction, DueServicesState, SortOrder}
 

@@ -3,9 +3,13 @@ import ServiceStatus from "../../../shared/ServiceStatus.model";
 import MOCK_DUE_SERVICES from "../../../shared/mockDueServicesData";
 import dueServicesReducer, {
   DashboardAction,
+  DashboardOrderByOptions,
+  defaultSortOrder,
   DueServicesState,
   initialDueServicesState,
-  ITEMS_PER_PAGE_OPTIONS
+  ITEMS_PER_PAGE_OPTIONS,
+  OrderByOptions,
+  SortOrder
 } from "./dashboardPage.reducer";
 
 describe('DashboardPage Reducer', () => {
@@ -22,14 +26,15 @@ describe('DashboardPage Reducer', () => {
     const updatedState = dueServicesReducer(state, action);
 
     // Then: The expected state should be produced
-    const expectedState = {
+    const expectedState: DueServicesState = {
       dueServices: [],
       isLoading: true,
       isFetchError: false,
       isSubmitUpdateError: false,
       pageNumber: 0,
-      itemsPerPage:ITEMS_PER_PAGE_OPTIONS[0],
-      totalItems: 0
+      itemsPerPage: ITEMS_PER_PAGE_OPTIONS[0],
+      totalItems: 0,
+      sortOrder: defaultSortOrder
     };
 
     expect(updatedState).toStrictEqual(expectedState);
@@ -49,14 +54,15 @@ describe('DashboardPage Reducer', () => {
     const updatedState = dueServicesReducer(state, action);
 
     // Then: The expected state should be produced
-    const expectedState = {
+    const expectedState: DueServicesState = {
       dueServices: MOCK_DUE_SERVICES,
       isLoading: false,
       isFetchError: false,
       isSubmitUpdateError: false,
       pageNumber: 0,
-      itemsPerPage:ITEMS_PER_PAGE_OPTIONS[0],
-      totalItems: 0
+      itemsPerPage: ITEMS_PER_PAGE_OPTIONS[0],
+      totalItems: 0,
+      sortOrder: defaultSortOrder
     };
 
     expect(updatedState).toStrictEqual(expectedState);
@@ -75,14 +81,15 @@ describe('DashboardPage Reducer', () => {
     const updatedState = dueServicesReducer(state, action);
 
     // Then: The expected state should be produced
-    const expectedState = {
+    const expectedState: DueServicesState = {
       dueServices: [],
       isLoading: false,
       isFetchError: true,
       isSubmitUpdateError: false,
       pageNumber: 0,
-      itemsPerPage:ITEMS_PER_PAGE_OPTIONS[0],
-      totalItems: 0
+      itemsPerPage: ITEMS_PER_PAGE_OPTIONS[0],
+      totalItems: 0,
+      sortOrder: defaultSortOrder
     };
 
     expect(updatedState).toStrictEqual(expectedState);
@@ -107,14 +114,15 @@ describe('DashboardPage Reducer', () => {
     const updatedState = dueServicesReducer(stateWithDueServices, failAction);
 
     // Then: The expected state should be produced
-    const expectedState = {
+    const expectedState: DueServicesState = {
       dueServices: [],
       isLoading: false,
       isFetchError: true,
       isSubmitUpdateError: false,
       pageNumber: 0,
-      itemsPerPage:ITEMS_PER_PAGE_OPTIONS[0],
-      totalItems: 0
+      itemsPerPage: ITEMS_PER_PAGE_OPTIONS[0],
+      totalItems: 0,
+      sortOrder: defaultSortOrder
     };
 
     expect(updatedState).toStrictEqual(expectedState);
@@ -130,8 +138,9 @@ describe('DashboardPage Reducer', () => {
       isFetchError: false,
       isSubmitUpdateError: false,
       pageNumber: 0,
-      itemsPerPage:ITEMS_PER_PAGE_OPTIONS[0],
-      totalItems: 0
+      itemsPerPage: ITEMS_PER_PAGE_OPTIONS[0],
+      totalItems: 0,
+      sortOrder: defaultSortOrder
     };
 
     // And: We have the service we want to update
@@ -149,14 +158,15 @@ describe('DashboardPage Reducer', () => {
     const updatedState = dueServicesReducer(currentState, updateAction);
 
     // Then: The expected state should be produced
-    const expectedState = {
+    const expectedState: DueServicesState = {
       dueServices: [updatedService, ...MOCK_DUE_SERVICES.slice(1)],
       isLoading: false,
       isFetchError: false,
       isSubmitUpdateError: false,
       pageNumber: 0,
-      itemsPerPage:ITEMS_PER_PAGE_OPTIONS[0],
-      totalItems: 0
+      itemsPerPage: ITEMS_PER_PAGE_OPTIONS[0],
+      totalItems: 0,
+      sortOrder: defaultSortOrder
     };
 
     expect(updatedState).toStrictEqual(expectedState);
@@ -172,8 +182,9 @@ describe('DashboardPage Reducer', () => {
       isFetchError: false,
       isSubmitUpdateError: false,
       pageNumber: 0,
-      itemsPerPage:ITEMS_PER_PAGE_OPTIONS[0],
-      totalItems: 0
+      itemsPerPage: ITEMS_PER_PAGE_OPTIONS[0],
+      totalItems: 0,
+      sortOrder: defaultSortOrder
     };
 
     // And: We want to update the 3rd service
@@ -192,7 +203,7 @@ describe('DashboardPage Reducer', () => {
     const updatedState = dueServicesReducer(currentState, updateAction);
 
     // Then: The expected state should be produced
-    const expectedState = {
+    const expectedState: DueServicesState = {
       dueServices: [
         ...MOCK_DUE_SERVICES.slice(0, updatedServiceIndex),
         updatedService,
@@ -202,8 +213,9 @@ describe('DashboardPage Reducer', () => {
       isFetchError: false,
       isSubmitUpdateError: false,
       pageNumber: 0,
-      itemsPerPage:ITEMS_PER_PAGE_OPTIONS[0],
-      totalItems: 0
+      itemsPerPage: ITEMS_PER_PAGE_OPTIONS[0],
+      totalItems: 0,
+      sortOrder: defaultSortOrder
     };
 
     expect(updatedState).toStrictEqual(expectedState);
@@ -218,8 +230,9 @@ describe('DashboardPage Reducer', () => {
       isFetchError: false,
       isSubmitUpdateError: false,
       pageNumber: 0,
-      itemsPerPage:ITEMS_PER_PAGE_OPTIONS[0],
-      totalItems: 0
+      itemsPerPage: ITEMS_PER_PAGE_OPTIONS[0],
+      totalItems: 0,
+      sortOrder: defaultSortOrder
     };
 
     // And: We have the services after a successful submittal
@@ -244,7 +257,7 @@ describe('DashboardPage Reducer', () => {
     const updatedState = dueServicesReducer(currentState, updateAction);
 
     // Then: The expected state should be produced
-    const expectedState = {
+    const expectedState: DueServicesState = {
       dueServices: [
         MOCK_DUE_SERVICES[1],
       ],
@@ -252,8 +265,9 @@ describe('DashboardPage Reducer', () => {
       isFetchError: false,
       isSubmitUpdateError: false,
       pageNumber: 0,
-      itemsPerPage:ITEMS_PER_PAGE_OPTIONS[0],
-      totalItems: 0
+      itemsPerPage: ITEMS_PER_PAGE_OPTIONS[0],
+      totalItems: 0,
+      sortOrder: defaultSortOrder
     };
 
     expect(updatedState).toStrictEqual(expectedState);
@@ -269,8 +283,9 @@ describe('DashboardPage Reducer', () => {
       isFetchError: false,
       isSubmitUpdateError: false,
       pageNumber: 0,
-      itemsPerPage:ITEMS_PER_PAGE_OPTIONS[0],
-      totalItems: 0
+      itemsPerPage: ITEMS_PER_PAGE_OPTIONS[0],
+      totalItems: 0,
+      sortOrder: defaultSortOrder
     };
 
     // And: There was a submittal failure
@@ -282,14 +297,15 @@ describe('DashboardPage Reducer', () => {
     const updatedState = dueServicesReducer(currentState, updateAction);
 
     // Then: The expected state should be produced
-    const expectedState = {
+    const expectedState: DueServicesState = {
       dueServices: MOCK_DUE_SERVICES,
       isLoading: false,
       isFetchError: false,
       isSubmitUpdateError: true,
       pageNumber: 0,
-      itemsPerPage:ITEMS_PER_PAGE_OPTIONS[0],
-      totalItems: 0
+      itemsPerPage: ITEMS_PER_PAGE_OPTIONS[0],
+      totalItems: 0,
+      sortOrder: defaultSortOrder
     };
 
     expect(updatedState).toStrictEqual(expectedState);
@@ -311,14 +327,15 @@ describe('DashboardPage Reducer', () => {
     const updatedState = dueServicesReducer(state, action);
 
     // Then: The page number is updated correctly
-    const expectedState = {
+    const expectedState: DueServicesState = {
       isLoading: false,
       dueServices: [],
       isFetchError: false,
       isSubmitUpdateError: false,
       pageNumber: pageNumber,
-      itemsPerPage:ITEMS_PER_PAGE_OPTIONS[0],
-      totalItems: 0
+      itemsPerPage: ITEMS_PER_PAGE_OPTIONS[0],
+      totalItems: 0,
+      sortOrder: defaultSortOrder
     };
 
     expect(updatedState).toStrictEqual(expectedState);
@@ -340,14 +357,15 @@ describe('DashboardPage Reducer', () => {
     const updatedState = dueServicesReducer(state, action);
 
     // Then: The page number is updated correctly
-    const expectedState = {
+    const expectedState: DueServicesState = {
       isLoading: false,
       dueServices: [],
       isFetchError: false,
       isSubmitUpdateError: false,
       pageNumber: 0,
       itemsPerPage: itemsPerPage,
-      totalItems: 0
+      totalItems: 0,
+      sortOrder: defaultSortOrder
     };
 
     expect(updatedState).toStrictEqual(expectedState);
@@ -369,14 +387,75 @@ describe('DashboardPage Reducer', () => {
     const updatedState = dueServicesReducer(state, action);
 
     // Then: The page number is updated correctly
-    const expectedState = {
+    const expectedState: DueServicesState = {
       isLoading: false,
       dueServices: [],
       isFetchError: false,
       isSubmitUpdateError: false,
       pageNumber: 0,
-      itemsPerPage:ITEMS_PER_PAGE_OPTIONS[0],
-      totalItems: totalItems
+      itemsPerPage: ITEMS_PER_PAGE_OPTIONS[0],
+      totalItems: totalItems,
+      sortOrder: defaultSortOrder
+    };
+
+    expect(updatedState).toStrictEqual(expectedState);
+
+  });
+
+  it('only toggles the sort direction when order by does not change', () => {
+
+    // Given: We have an initial state
+    const state = initialDueServicesState
+    const newOrderBy: DashboardOrderByOptions = DashboardOrderByOptions.DUE_DATE // Default  order by is DUE_DATE
+
+    const action: DashboardAction = {
+      type: 'DUE_SERVICES_SET_SORT_ORDER',
+      payload: newOrderBy
+    };
+
+    // When: We update the sort order
+    const updatedState = dueServicesReducer(state, action);
+
+    // Then: The direction is updated correctly
+    const expectedState: DueServicesState = {
+      isLoading: false,
+      dueServices: [],
+      isFetchError: false,
+      isSubmitUpdateError: false,
+      pageNumber: 0,
+      itemsPerPage: ITEMS_PER_PAGE_OPTIONS[0],
+      totalItems: 0,
+      sortOrder: {orderBy: DashboardOrderByOptions.DUE_DATE, direction: OrderByOptions.ASC}
+    };
+
+    expect(updatedState).toStrictEqual(expectedState);
+
+  });
+
+  it('sorts the direction to ASC when order by changes', () => {
+
+    // Given: We have an initial state
+    const state = initialDueServicesState
+    const newOrderBy: DashboardOrderByOptions = DashboardOrderByOptions.STATUS
+
+    const action: DashboardAction = {
+      type: 'DUE_SERVICES_SET_SORT_ORDER',
+      payload: newOrderBy
+    };
+
+    // When: We update the sort order
+    const updatedState = dueServicesReducer(state, action);
+
+    // Then: The order by is updated correctly and in ASC
+    const expectedState: DueServicesState = {
+      isLoading: false,
+      dueServices: [],
+      isFetchError: false,
+      isSubmitUpdateError: false,
+      pageNumber: 0,
+      itemsPerPage: ITEMS_PER_PAGE_OPTIONS[0],
+      totalItems: 0,
+      sortOrder: {orderBy: DashboardOrderByOptions.STATUS, direction: OrderByOptions.ASC}
     };
 
     expect(updatedState).toStrictEqual(expectedState);
