@@ -213,6 +213,33 @@ describe('<DueServicesTable />', () => {
 
   });
 
+  it('should sort the table when column is selected', () => {
+
+    // Given: We have a table
+    render(<DueServicesTable
+      dueServices={MOCK_DUE_SERVICES}
+      totalServices={200}
+      servicesPerPage={50}
+      currentPage={0}
+      handleUpdateService={mockHandleUpdateService}
+      handleOpenViewAssociatedServicesModal={mockHandleOpenViewAssociatedServicesModal}
+      handleChangePage={mockHandleChangePage}
+      handleChangeRowsPerPage={mockHandleChangeRowsPerPage}
+      sortOrder={SORT_BY_CLIENT_ASC}
+      handleSortBy={mockHandleSortBy}
+    />);
+
+    const clientSortButton = screen.getAllByTestId('ArrowDownwardIcon')[0];
+
+    // When: the client sort is clicked
+    fireEvent.click(clientSortButton);
+
+    // Then: the table should be sorted by column
+    expect(mockHandleSortBy).toBeCalledTimes(1);
+    expect(mockHandleSortBy).toBeCalledWith(DashboardOrderByOptions.CLIENT);
+
+  });
+
   const assertRowContent = (row: HTMLElement, service: DueService) => {
 
     const idColumn = row.getElementsByTagName('td')[0];

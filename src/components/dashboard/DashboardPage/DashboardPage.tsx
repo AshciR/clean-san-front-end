@@ -10,11 +10,7 @@ import SnackbarNotification from '../../shared/SnackbarNotification/SnackbarNoti
 import snackbarNotificationReducer, {
   initialSnackbarNotificationState
 } from '../../shared/SnackbarNotification/snackbarNotification.reducer';
-import dueServicesReducer, {
-  DashboardOrderByOptions,
-  initialDueServicesState,
-  OrderByOptions
-} from './dashboardPage.reducer';
+import dueServicesReducer, {DashboardOrderByOptions, initialDueServicesState} from './dashboardPage.reducer';
 import {fetchDueServices, fetchServicesForContract, submitUpdatedServices} from '../../../services/services.services';
 import NavBarWrapper from "../../shared/NavBarWrapper/NavBarWrapper";
 import {NAV_BAR_HEIGHT} from "../../shared/NavBar/NavBar";
@@ -166,6 +162,13 @@ const DashboardPageContent: FC<DashboardPageContentProps> = ({distanceFromNavBar
 
   };
 
+  const handleSortBy = (orderBy: DashboardOrderByOptions) => {
+    dispatchDueServices({
+      type: 'DUE_SERVICES_SET_SORT_ORDER',
+      payload: orderBy
+    });
+  }
+
   // Effects
   // @ts-ignore
   React.useEffect(() => {
@@ -182,6 +185,7 @@ const DashboardPageContent: FC<DashboardPageContentProps> = ({distanceFromNavBar
           dueServicesDate || DateTime.now(),
           dueServicesState.pageNumber,
           dueServicesState.itemsPerPage
+          //TODO: Add params for sort order
         );
 
         if (isSubscribed) {
@@ -268,12 +272,12 @@ const DashboardPageContent: FC<DashboardPageContentProps> = ({distanceFromNavBar
                   totalServices={dueServicesState.totalItems}
                   servicesPerPage={dueServicesState.itemsPerPage}
                   currentPage={dueServicesState.pageNumber}
-                  sortOrder={{orderBy: DashboardOrderByOptions.CLIENT, direction: OrderByOptions.ASC}} //TODO: Replace with reducer values
+                  sortOrder={dueServicesState.sortOrder}
                   handleUpdateService={handleUpdateService}
                   handleOpenViewAssociatedServicesModal={handleOpenViewAssociatedServicesModal}
                   handleChangePage={handleChangePage}
                   handleChangeRowsPerPage={handleChangeRowsPerPage}
-                  handleSortBy={() => {}} //TODO: Replace with handle function
+                  handleSortBy={handleSortBy}
                 />
           }
         </Box>
