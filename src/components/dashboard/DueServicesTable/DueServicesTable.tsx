@@ -21,7 +21,12 @@ import ServiceStatus from '../../../shared/ServiceStatus.model';
 import styles from './DueServicesTable.module.scss';
 import ServiceStatusChip, {STATUS_CHIP_WIDTH} from "../ServiceStatusChip/ServiceStatusChip";
 import ServiceFrequencyChip from "../../shared/ServiceFrequencyChip/ServiceFrequencyChip";
-import {DashboardOrderByOptions, ITEMS_PER_PAGE_OPTIONS, SortOrder} from "../DashboardPage/dashboardPage.reducer";
+import {
+  DashboardOrderByOptions,
+  ITEMS_PER_PAGE_OPTIONS,
+  OrderByOptions,
+  SortOrder
+} from "../DashboardPage/dashboardPage.reducer";
 
 const SERVICE_ID_WIDTH = 100;
 const STATUS_COLUMN_WIDTH = STATUS_CHIP_WIDTH + 60;
@@ -36,7 +41,7 @@ interface DueServicesTableProps {
   handleOpenViewAssociatedServicesModal: (selectedService: DueService) => void
   handleChangePage: (newPageNumber: number) => void
   handleChangeRowsPerPage: (newRowsPerPage: number) => void
-  handleSortBy: (sortColumn: string) => void
+  handleSortBy: (orderBy: DashboardOrderByOptions) => void
 }
 
 const DueServicesTable: FC<DueServicesTableProps> = ({
@@ -83,7 +88,7 @@ interface VisibleDueServiceTableProps {
   handleOpenViewAssociatedServicesModal: (selectedService: DueService) => void
   handleChangePage: (newPageNumber: number) => void
   handleChangeRowsPerPage: (newRowsPerPage: number) => void
-  handleSortBy: (sortColumn: string) => void
+  handleSortBy: (orderBy: DashboardOrderByOptions) => void
 }
 
 const VisibleDueServiceTable = ({
@@ -114,7 +119,7 @@ const VisibleDueServiceTable = ({
             <TableCell>
               <TableSortLabel
                 active={sortOrder.orderBy === DashboardOrderByOptions.CLIENT}
-                direction={sortOrder.direction}
+                direction={sortOrder.orderBy === DashboardOrderByOptions.CLIENT ? sortOrder.direction : OrderByOptions.ASC}
                 onClick={() => handleSortBy(DashboardOrderByOptions.CLIENT)}
               />
               Client
