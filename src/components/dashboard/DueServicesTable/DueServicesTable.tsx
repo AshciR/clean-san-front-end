@@ -117,16 +117,30 @@ const VisibleDueServiceTable = ({
           <TableRow>
             <TableCell sx={{width: SERVICE_ID_WIDTH}}>Service Id</TableCell>
             <TableCell>
+              Client
               <TableSortLabel
                 active={sortOrder.orderBy === DashboardOrderByOptions.CLIENT}
                 direction={sortOrder.orderBy === DashboardOrderByOptions.CLIENT ? sortOrder.direction : OrderByOptions.ASC}
                 onClick={() => handleSortBy(DashboardOrderByOptions.CLIENT)}
               />
-              Client
             </TableCell>
             <TableCell>Frequency</TableCell>
-            <TableCell>Due Date</TableCell>
-            <TableCell sx={{width: STATUS_COLUMN_WIDTH}}>Current Status</TableCell>
+            <TableCell>
+              Due Date
+              <TableSortLabel
+                active={sortOrder.orderBy === DashboardOrderByOptions.DUE_DATE}
+                direction={sortOrder.orderBy === DashboardOrderByOptions.DUE_DATE ? sortOrder.direction : OrderByOptions.ASC}
+                onClick={() => handleSortBy(DashboardOrderByOptions.DUE_DATE)}
+              />
+            </TableCell>
+            <TableCell sx={{width: STATUS_COLUMN_WIDTH}}>
+              Current Status
+              <TableSortLabel
+                active={sortOrder.orderBy === DashboardOrderByOptions.STATUS}
+                direction={sortOrder.orderBy === DashboardOrderByOptions.STATUS ? sortOrder.direction : OrderByOptions.ASC}
+                onClick={() => handleSortBy(DashboardOrderByOptions.STATUS)}
+              />
+            </TableCell>
             <TableCell sx={{width: STATUS_COLUMN_WIDTH}}>New Status</TableCell>
           </TableRow>
         </TableHead>

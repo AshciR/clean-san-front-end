@@ -426,7 +426,7 @@ describe('DashboardPage Reducer', () => {
       pageNumber: 0,
       itemsPerPage: ITEMS_PER_PAGE_OPTIONS[0],
       totalItems: 0,
-      sortOrder: {orderBy: DashboardOrderByOptions.DUE_DATE, direction: OrderByOptions.ASC}
+      sortOrder: {orderBy: DashboardOrderByOptions.DUE_DATE, direction: OrderByOptions.DESC}
     };
 
     expect(updatedState).toStrictEqual(expectedState);

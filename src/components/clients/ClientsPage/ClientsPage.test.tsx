@@ -54,7 +54,7 @@ describe('<ClientsPage />', () => {
 
     // Then: We expect no due services message to be displayed
     expect(fetchClientsWithContracts).toHaveBeenCalledTimes(1);
-    await screen.findByText("There are no clients to display. Consider adding clients to the system.");
+    await screen.findByText("There are no clients to display. Add clients with the \"Add Clients\" Button.");
 
   });
 

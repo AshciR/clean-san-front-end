@@ -56,7 +56,7 @@ describe('<ClientsTable />', () => {
 
   });
 
-  it('should display message when there are no due services', () => {
+  it('should display message when there are no clients', () => {
 
     // When: the Due Services Table is rendered without any services
     render(<ClientsTable
@@ -70,7 +70,7 @@ describe('<ClientsTable />', () => {
     />);
 
     // Then: The no services display message should be present
-    const noClientsDisplay = screen.getByText('There are no clients to display. Consider adding clients to the system.');
+    const noClientsDisplay = screen.getByText('There are no clients to display. Add clients with the "Add Clients" Button.');
     expect(noClientsDisplay).toBeInTheDocument();
 
   });
