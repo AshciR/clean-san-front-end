@@ -10,7 +10,11 @@ import SnackbarNotification from '../../shared/SnackbarNotification/SnackbarNoti
 import snackbarNotificationReducer, {
   initialSnackbarNotificationState
 } from '../../shared/SnackbarNotification/snackbarNotification.reducer';
-import dueServicesReducer, {DashboardOrderByOptions, initialDueServicesState} from './dashboardPage.reducer';
+import dueServicesReducer, {
+  convertSortOrderToQueryParam,
+  DashboardOrderByOptions,
+  initialDueServicesState
+} from './dashboardPage.reducer';
 import {fetchDueServices, fetchServicesForContract, submitUpdatedServices} from '../../../services/services.services';
 import NavBarWrapper from "../../shared/NavBarWrapper/NavBarWrapper";
 import {NAV_BAR_HEIGHT} from "../../shared/NavBar/NavBar";
@@ -184,8 +188,8 @@ const DashboardPageContent: FC<DashboardPageContentProps> = ({distanceFromNavBar
         const dueServices = await fetchDueServices(
           dueServicesDate || DateTime.now(),
           dueServicesState.pageNumber,
-          dueServicesState.itemsPerPage
-          //TODO: Add params for sort order
+          dueServicesState.itemsPerPage,
+          convertSortOrderToQueryParam(dueServicesState.sortOrder)
         );
 
         if (isSubscribed) {
@@ -213,7 +217,7 @@ const DashboardPageContent: FC<DashboardPageContentProps> = ({distanceFromNavBar
     // Cancel subscription to useEffect
     return () => (isSubscribed = false)
 
-  }, [dueServicesDate, dueServicesState.itemsPerPage, dueServicesState.pageNumber]);
+  }, [dueServicesDate, dueServicesState.itemsPerPage, dueServicesState.pageNumber, dueServicesState.sortOrder]);
 
   // Rendered components
   return (

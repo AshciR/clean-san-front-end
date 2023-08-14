@@ -12,13 +12,15 @@ const servicesEndpoint = '/v1/services';
  * @param beforeDate services due before and on this date
  * @param page the paginated page for service
  * @param itemsPerPage the number of items per page
+ * @param sort sort by
  */
-const fetchDueServices = async (beforeDate?: DateTime, page?: number, itemsPerPage?: number) => {
+const fetchDueServices = async (beforeDate?: DateTime, page?: number, itemsPerPage?: number, sort?: string) => {
 
   const params = (beforeDate) ? {
     dueDate: beforeDate.toISODate(),
     page: page,
-    itemsPerPage: itemsPerPage
+    itemsPerPage: itemsPerPage,
+    sort: sort
   } : null
 
   try {

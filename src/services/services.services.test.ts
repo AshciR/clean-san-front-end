@@ -66,6 +66,23 @@ describe('Due Services Services', () => {
 
   });
 
+  it('fetches due services with sort order', async () => {
+
+    // Given: We have the query params
+    const dueDate = DateTime.fromISO(getDueServicesResponse.services[3].dueDate);
+    const sort = "client:desc"
+
+    // When: the due services are fetched
+    const dueServices = await fetchDueServices(dueDate,0,25, sort);
+
+    // Then: The services should be present
+    expect(dueServices.services.length).toEqual(5);
+    expect(dueServices.services[0]).toStrictEqual(convertServicesQueryResponseToDueService(getDueServicesResponse.services[0]));
+    expect(dueServices.services[2]).toStrictEqual(convertServicesQueryResponseToDueService(getDueServicesResponse.services[1]));
+    expect(dueServices.services[4]).toStrictEqual(convertServicesQueryResponseToDueService(getDueServicesResponse.services[2]));
+
+  });
+
   it('fetches the services for a contract', async () => {
 
     // Given: We have the contract id

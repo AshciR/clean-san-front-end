@@ -230,6 +230,8 @@ const updateSortOrder = (currentSortOrder: SortOrder, newOrderBy: DashboardOrder
 
 };
 
+const convertSortOrderToQueryParam = (sort: SortOrder) => `${sort.orderBy}:${sort.direction}`
+
 export default dueServicesReducer;
 export {
   initialDueServicesState,
@@ -237,7 +239,8 @@ export {
   ITEMS_PER_PAGE_OPTIONS,
   DashboardOrderByOptions,
   OrderByOptions,
-  defaultSortOrder
+  defaultSortOrder,
+  convertSortOrderToQueryParam
 };
 export type {DueServicesAction as DashboardAction, DueServicesState, SortOrder}
 
