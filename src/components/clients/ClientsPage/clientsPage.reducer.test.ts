@@ -1,9 +1,12 @@
 import {
   ClientsAction,
+  ClientsPageOrderByOptions,
   clientsReducer,
   ClientsState,
+  defaultSortOrder,
   initialClientsState,
-  ITEMS_PER_PAGE_OPTIONS
+  ITEMS_PER_PAGE_OPTIONS,
+  OrderByOptions
 } from "./clientsPage.reducer";
 import MOCK_CLIENTS_WITH_CONTRACTS from "../../../shared/mockClientsWithContractsData";
 import {createClient} from "../../../shared/Client.model";
@@ -34,7 +37,8 @@ describe('ClientPage Reducer', () => {
       isUpdateContractError: false,
       pageNumber: 0,
       itemsPerPage: ITEMS_PER_PAGE_OPTIONS[0],
-      totalItems: 0
+      totalItems: 0,
+      sortOrder: defaultSortOrder
     }
     expect(updatedState).toStrictEqual(expectedState);
   });
@@ -61,7 +65,8 @@ describe('ClientPage Reducer', () => {
       isUpdateContractError: false,
       pageNumber: 0,
       itemsPerPage: ITEMS_PER_PAGE_OPTIONS[0],
-      totalItems: 0
+      totalItems: 0,
+      sortOrder: defaultSortOrder
     }
     expect(updatedState).toStrictEqual(expectedState);
   });
@@ -87,7 +92,8 @@ describe('ClientPage Reducer', () => {
       isUpdateContractError: false,
       pageNumber: 0,
       itemsPerPage: ITEMS_PER_PAGE_OPTIONS[0],
-      totalItems: 0
+      totalItems: 0,
+      sortOrder: defaultSortOrder
     }
     expect(updatedState).toStrictEqual(expectedState);
   });
@@ -119,7 +125,8 @@ describe('ClientPage Reducer', () => {
       isUpdateContractError: false,
       pageNumber: 0,
       itemsPerPage: ITEMS_PER_PAGE_OPTIONS[0],
-      totalItems: 0
+      totalItems: 0,
+      sortOrder: defaultSortOrder
     };
 
     expect(updatedState).toStrictEqual(expectedState);
@@ -162,7 +169,8 @@ describe('ClientPage Reducer', () => {
       isUpdateContractError: false,
       pageNumber: 0,
       itemsPerPage: ITEMS_PER_PAGE_OPTIONS[0],
-      totalItems: 0
+      totalItems: 0,
+      sortOrder: defaultSortOrder
     }
 
     expect(updatedState).toStrictEqual(expectedState);
@@ -189,7 +197,8 @@ describe('ClientPage Reducer', () => {
       isUpdateContractError: false,
       pageNumber: 0,
       itemsPerPage: ITEMS_PER_PAGE_OPTIONS[0],
-      totalItems: 0
+      totalItems: 0,
+      sortOrder: defaultSortOrder
     }
 
     expect(updatedState).toStrictEqual(expectedState);
@@ -222,7 +231,8 @@ describe('ClientPage Reducer', () => {
       isUpdateContractError: false,
       pageNumber: 0,
       itemsPerPage: ITEMS_PER_PAGE_OPTIONS[0],
-      totalItems: 0
+      totalItems: 0,
+      sortOrder: defaultSortOrder
     };
 
     // And: We have an action
@@ -260,7 +270,8 @@ describe('ClientPage Reducer', () => {
       isUpdateContractError: false,
       pageNumber: 0,
       itemsPerPage: ITEMS_PER_PAGE_OPTIONS[0],
-      totalItems: 0
+      totalItems: 0,
+      sortOrder: defaultSortOrder
     }
 
     expect(updatedState).toStrictEqual(expectedState);
@@ -287,7 +298,8 @@ describe('ClientPage Reducer', () => {
       isUpdateContractError: false,
       pageNumber: 0,
       itemsPerPage: ITEMS_PER_PAGE_OPTIONS[0],
-      totalItems: 0
+      totalItems: 0,
+      sortOrder: defaultSortOrder
     }
 
     expect(updatedState).toStrictEqual(expectedState);
@@ -323,7 +335,8 @@ describe('ClientPage Reducer', () => {
       isUpdateContractError: false,
       pageNumber: 0,
       itemsPerPage: ITEMS_PER_PAGE_OPTIONS[0],
-      totalItems: 0
+      totalItems: 0,
+      sortOrder: defaultSortOrder
     };
 
     // And: We have an action
@@ -354,7 +367,8 @@ describe('ClientPage Reducer', () => {
       isUpdateContractError: false,
       pageNumber: 0,
       itemsPerPage: ITEMS_PER_PAGE_OPTIONS[0],
-      totalItems: 0
+      totalItems: 0,
+      sortOrder: defaultSortOrder
     };
 
     expect(updatedState).toStrictEqual(expectedState);
@@ -382,7 +396,8 @@ describe('ClientPage Reducer', () => {
       isUpdateContractError: true,
       pageNumber: 0,
       itemsPerPage: ITEMS_PER_PAGE_OPTIONS[0],
-      totalItems: 0
+      totalItems: 0,
+      sortOrder: defaultSortOrder
     }
 
     expect(updatedState).toStrictEqual(expectedState);
@@ -418,7 +433,8 @@ describe('ClientPage Reducer', () => {
       isUpdateContractError: false,
       pageNumber: 0,
       itemsPerPage: ITEMS_PER_PAGE_OPTIONS[0],
-      totalItems: 0
+      totalItems: 0,
+      sortOrder: defaultSortOrder
     };
 
     // And: We have an action
@@ -449,7 +465,8 @@ describe('ClientPage Reducer', () => {
       isUpdateContractError: false,
       pageNumber: 0,
       itemsPerPage: ITEMS_PER_PAGE_OPTIONS[0],
-      totalItems: 0
+      totalItems: 0,
+      sortOrder: defaultSortOrder
     };
 
     expect(updatedState).toStrictEqual(expectedState);
@@ -477,7 +494,8 @@ describe('ClientPage Reducer', () => {
       isUpdateContractError: true,
       pageNumber: 0,
       itemsPerPage: ITEMS_PER_PAGE_OPTIONS[0],
-      totalItems: 0
+      totalItems: 0,
+      sortOrder: defaultSortOrder
     }
 
     expect(updatedState).toStrictEqual(expectedState);
@@ -507,7 +525,8 @@ describe('ClientPage Reducer', () => {
       isUpdateContractError: false,
       pageNumber: pageNumber,
       itemsPerPage: ITEMS_PER_PAGE_OPTIONS[0],
-      totalItems: 0
+      totalItems: 0,
+      sortOrder: defaultSortOrder
     }
 
     expect(updatedState).toStrictEqual(expectedState);
@@ -538,7 +557,8 @@ describe('ClientPage Reducer', () => {
       isUpdateContractError: false,
       pageNumber: 0,
       itemsPerPage: itemsPerPage,
-      totalItems: 0
+      totalItems: 0,
+      sortOrder: defaultSortOrder
     }
 
     expect(updatedState).toStrictEqual(expectedState);
@@ -567,7 +587,39 @@ describe('ClientPage Reducer', () => {
       isUpdateContractError: false,
       pageNumber: 0,
       itemsPerPage: ITEMS_PER_PAGE_OPTIONS[0],
-      totalItems: totalItems
+      totalItems: totalItems,
+      sortOrder: defaultSortOrder
+    }
+
+    expect(updatedState).toStrictEqual(expectedState);
+  });
+
+  it('only toggles the sort direction when order by does not change', () => {
+
+    // Given: We have an initial state
+    const state = initialClientsState
+    const newOrderBy: ClientsPageOrderByOptions = ClientsPageOrderByOptions.NAME // Default  order by is NAME
+
+    const action: ClientsAction = {
+      type: 'CLIENTS_SET_SORT_ORDER',
+      payload: newOrderBy
+    };
+
+    // When: We update the sort order
+    const updatedState = clientsReducer(state, action);
+
+    // Then: The direction is updated correctly
+    const expectedState: ClientsState = {
+      isLoading: false,
+      clients: [],
+      isFetchError: false,
+      isAddClientError: false,
+      isAddContractError: false,
+      isUpdateContractError: false,
+      pageNumber: 0,
+      itemsPerPage: ITEMS_PER_PAGE_OPTIONS[0],
+      totalItems: 0,
+      sortOrder: {orderBy: ClientsPageOrderByOptions.NAME, direction: OrderByOptions.DESC}
     }
 
     expect(updatedState).toStrictEqual(expectedState);

@@ -10,11 +10,13 @@ import {
   TableHead,
   TablePagination,
   TableRow,
+  TableSortLabel,
   Typography
 } from "@mui/material";
 import {ClientWithContracts} from "../../../shared/ClientWithContracts.model";
 import ClientStatusChip from "../ClientStatusChip/ClientStatusChip";
 import {ITEMS_PER_PAGE_OPTIONS} from "../../dashboard/DashboardPage/dashboardPage.reducer";
+import {ClientsPageOrderByOptions, SortOrder} from "../ClientsPage/clientsPage.reducer";
 
 
 const STATUS_CHIP_WIDTH = 120;
@@ -24,9 +26,11 @@ interface ClientsTableProps {
   totalClients: number
   clientsPerPage: number
   currentPage: number
+  sortOrder: SortOrder
   handleOpenViewAssociatedContractsModal: (client: ClientWithContracts) => void
   handleChangePage: (newPageNumber: number) => void
   handleChangeRowsPerPage: (newRowsPerPage: number) => void
+  handleSortBy: (sortColumn: string) => void
 }
 
 const ClientsTable: FC<ClientsTableProps> = ({
@@ -34,9 +38,11 @@ const ClientsTable: FC<ClientsTableProps> = ({
                                                totalClients,
                                                clientsPerPage,
                                                currentPage,
+                                               sortOrder,
                                                handleOpenViewAssociatedContractsModal,
                                                handleChangePage,
-                                               handleChangeRowsPerPage
+                                               handleChangeRowsPerPage,
+                                               handleSortBy
                                              }: ClientsTableProps) => {
 
   const hasClients = clients.length !== 0;
@@ -48,9 +54,11 @@ const ClientsTable: FC<ClientsTableProps> = ({
           totalClients={totalClients}
           clientsPerPage={clientsPerPage}
           currentPage={currentPage}
+          sortOrder={sortOrder}
           handleOpenViewAssociatedContractsModal={handleOpenViewAssociatedContractsModal}
           handleChangePage={handleChangePage}
           handleChangeRowsPerPage={handleChangeRowsPerPage}
+          handleSortBy={handleSortBy}
         /> :
         <NoClientsDisplay/>}
     </div>
@@ -62,9 +70,11 @@ interface VisibleClientsTableProps {
   totalClients: number
   clientsPerPage: number
   currentPage: number
+  sortOrder: SortOrder
   handleOpenViewAssociatedContractsModal: (client: ClientWithContracts) => void
   handleChangePage: (newPageNumber: number) => void
   handleChangeRowsPerPage: (newRowsPerPage: number) => void
+  handleSortBy: (sortColumn: string) => void
 }
 
 const VisibleClientsTable = ({
@@ -72,9 +82,11 @@ const VisibleClientsTable = ({
                                totalClients,
                                clientsPerPage,
                                currentPage,
+                               sortOrder,
                                handleOpenViewAssociatedContractsModal,
                                handleChangePage,
-                               handleChangeRowsPerPage
+                               handleChangeRowsPerPage,
+                               handleSortBy
                              }: VisibleClientsTableProps) => (
 
   <Box>
@@ -83,7 +95,14 @@ const VisibleClientsTable = ({
         <TableHead>
           <TableRow>
             <TableCell sx={{width: 100}}>Client Id</TableCell>
-            <TableCell>Name</TableCell>
+            <TableCell>
+              Name
+              <TableSortLabel
+                active={sortOrder.orderBy === ClientsPageOrderByOptions.NAME}
+                direction={sortOrder.direction}
+                onClick={() => handleSortBy(ClientsPageOrderByOptions.NAME)}
+              />
+            </TableCell>
             <TableCell>Email</TableCell>
             <TableCell sx={{width: STATUS_CHIP_WIDTH}}>Active</TableCell>
           </TableRow>

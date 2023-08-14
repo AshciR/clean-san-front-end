@@ -5,12 +5,18 @@ import ClientsTable from './ClientsTable';
 import Client from "../../../shared/Client.model";
 import {convertClientResponseToClientWithContracts} from "../../../services/clients.services";
 import {getClientsResponse} from "../../../mocks/clientsEndpointResponses";
+import {ClientsPageOrderByOptions, OrderByOptions, SortOrder} from "../ClientsPage/clientsPage.reducer";
 
 describe('<ClientsTable />', () => {
 
   const clientsWithContracts = getClientsResponse.clients.map(client =>
     convertClientResponseToClientWithContracts(client)
   )
+
+  const SORT_BY_NAME_ASC: SortOrder = {
+    orderBy: ClientsPageOrderByOptions.NAME,
+    direction: OrderByOptions.ASC
+  }
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -19,6 +25,7 @@ describe('<ClientsTable />', () => {
   const mockHandleOpenViewAssociatedContractsModal = jest.fn();
   const mockHandleChangePage = jest.fn();
   const mockHandleChangeRowsPerPage = jest.fn();
+  const mockHandleSortBy = jest.fn();
 
   test('it should mount', () => {
     render(<ClientsTable
@@ -29,6 +36,8 @@ describe('<ClientsTable />', () => {
       handleChangePage={mockHandleChangePage}
       handleChangeRowsPerPage={mockHandleChangeRowsPerPage}
       handleOpenViewAssociatedContractsModal={mockHandleOpenViewAssociatedContractsModal}
+      sortOrder={SORT_BY_NAME_ASC}
+      handleSortBy={mockHandleSortBy}
     />);
 
     const clientsTable = screen.getByTestId('clients-table');
@@ -47,6 +56,8 @@ describe('<ClientsTable />', () => {
       handleChangePage={mockHandleChangePage}
       handleChangeRowsPerPage={mockHandleChangeRowsPerPage}
       handleOpenViewAssociatedContractsModal={mockHandleOpenViewAssociatedContractsModal}
+      sortOrder={SORT_BY_NAME_ASC}
+      handleSortBy={mockHandleSortBy}
     />);
 
     // Then: All the rows should have the correct info
@@ -67,6 +78,8 @@ describe('<ClientsTable />', () => {
       handleChangePage={mockHandleChangePage}
       handleChangeRowsPerPage={mockHandleChangeRowsPerPage}
       handleOpenViewAssociatedContractsModal={mockHandleOpenViewAssociatedContractsModal}
+      sortOrder={SORT_BY_NAME_ASC}
+      handleSortBy={mockHandleSortBy}
     />);
 
     // Then: The no services display message should be present
@@ -86,6 +99,8 @@ describe('<ClientsTable />', () => {
       handleChangePage={mockHandleChangePage}
       handleChangeRowsPerPage={mockHandleChangeRowsPerPage}
       handleOpenViewAssociatedContractsModal={mockHandleOpenViewAssociatedContractsModal}
+      sortOrder={SORT_BY_NAME_ASC}
+      handleSortBy={mockHandleSortBy}
     />);
     const clientOfInterest = clientsWithContracts[0];
     const clientButton = screen.getByRole('button', {name: `${clientOfInterest.id}`})
