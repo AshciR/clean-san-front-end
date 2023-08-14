@@ -16,7 +16,7 @@ import {
 import {ClientWithContracts} from "../../../shared/ClientWithContracts.model";
 import ClientStatusChip from "../ClientStatusChip/ClientStatusChip";
 import {ITEMS_PER_PAGE_OPTIONS} from "../../dashboard/DashboardPage/dashboardPage.reducer";
-import {ClientsPageOrderByOptions, SortOrder} from "../ClientsPage/clientsPage.reducer";
+import {ClientsPageOrderByOptions, OrderByOptions, SortOrder} from "../ClientsPage/clientsPage.reducer";
 
 
 const STATUS_CHIP_WIDTH = 120;
@@ -30,7 +30,7 @@ interface ClientsTableProps {
   handleOpenViewAssociatedContractsModal: (client: ClientWithContracts) => void
   handleChangePage: (newPageNumber: number) => void
   handleChangeRowsPerPage: (newRowsPerPage: number) => void
-  handleSortBy: (sortColumn: string) => void
+  handleSortBy: (orderBy: ClientsPageOrderByOptions) => void
 }
 
 const ClientsTable: FC<ClientsTableProps> = ({
@@ -74,7 +74,7 @@ interface VisibleClientsTableProps {
   handleOpenViewAssociatedContractsModal: (client: ClientWithContracts) => void
   handleChangePage: (newPageNumber: number) => void
   handleChangeRowsPerPage: (newRowsPerPage: number) => void
-  handleSortBy: (sortColumn: string) => void
+  handleSortBy: (orderBy: ClientsPageOrderByOptions) => void
 }
 
 const VisibleClientsTable = ({
@@ -99,7 +99,7 @@ const VisibleClientsTable = ({
               Name
               <TableSortLabel
                 active={sortOrder.orderBy === ClientsPageOrderByOptions.NAME}
-                direction={sortOrder.direction}
+                direction={sortOrder.orderBy === ClientsPageOrderByOptions.NAME ? sortOrder.direction : OrderByOptions.ASC}
                 onClick={() => handleSortBy(ClientsPageOrderByOptions.NAME)}
               />
             </TableCell>

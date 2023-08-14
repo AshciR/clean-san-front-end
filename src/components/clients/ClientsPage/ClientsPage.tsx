@@ -2,7 +2,7 @@ import React, {FC} from 'react';
 import {Backdrop, Box, Container, Fab, Skeleton, Typography} from "@mui/material";
 import NavBarWrapper from "../../shared/NavBarWrapper/NavBarWrapper";
 import {NAV_BAR_HEIGHT} from "../../shared/NavBar/NavBar";
-import {ClientsPageOrderByOptions, clientsReducer, initialClientsState, OrderByOptions} from "./clientsPage.reducer";
+import {ClientsPageOrderByOptions, clientsReducer, initialClientsState} from "./clientsPage.reducer";
 import ClientsTable from "../ClientsTable/ClientsTable";
 import {
   addClient,
@@ -295,6 +295,13 @@ const ClientsPageContent: FC<ClientsPageContentProps> = ({distanceFromNavBar}) =
 
   };
 
+  const handleSortBy = (orderBy: ClientsPageOrderByOptions) => {
+    dispatchClients({
+      type: 'CLIENTS_SET_SORT_ORDER',
+      payload: orderBy
+    });
+  }
+
   // @ts-ignore
   React.useEffect(() => {
 
@@ -427,15 +434,11 @@ const ClientsPageContent: FC<ClientsPageContentProps> = ({distanceFromNavBar}) =
                     totalClients={clientsState.totalItems}
                     clientsPerPage={clientsState.itemsPerPage}
                     currentPage={clientsState.pageNumber}
-                    sortOrder={{
-                      orderBy: ClientsPageOrderByOptions.NAME,
-                      direction: OrderByOptions.ASC
-                    }} //TODO: Replace with reducer values
+                    sortOrder={clientsState.sortOrder}
                     handleOpenViewAssociatedContractsModal={handleOpenViewAssociatedContractsModal}
                     handleChangePage={handleChangePage}
                     handleChangeRowsPerPage={handleChangeRowsPerPage}
-                    handleSortBy={() => {
-                    }} //TODO: Replace with handle function
+                    handleSortBy={handleSortBy}
                   />
                 </>
           }
