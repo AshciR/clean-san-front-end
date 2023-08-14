@@ -115,6 +115,32 @@ describe('<ClientsTable />', () => {
 
   });
 
+  it('should sort the table when column is selected', () => {
+
+    // Given: We have a table
+    render(<ClientsTable
+      clients={clientsWithContracts}
+      totalClients={clientsWithContracts.length}
+      clientsPerPage={25}
+      currentPage={0}
+      handleChangePage={mockHandleChangePage}
+      handleChangeRowsPerPage={mockHandleChangeRowsPerPage}
+      handleOpenViewAssociatedContractsModal={mockHandleOpenViewAssociatedContractsModal}
+      sortOrder={SORT_BY_NAME_ASC}
+      handleSortBy={mockHandleSortBy}
+    />);
+
+    const clientSortButton = screen.getAllByTestId('ArrowDownwardIcon')[0];
+
+    // When: the client sort is clicked
+    fireEvent.click(clientSortButton);
+
+    // Then: the table should be sorted by column
+    expect(mockHandleSortBy).toBeCalledTimes(1);
+    expect(mockHandleSortBy).toBeCalledWith(ClientsPageOrderByOptions.NAME);
+
+  });
+
   const assertRowContent = (row: HTMLElement, client: Client) => {
     const idColumn = row.getElementsByTagName('td')[0];
     expect(idColumn.textContent).toBe(client.id.toString());
