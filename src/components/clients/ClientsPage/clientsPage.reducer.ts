@@ -11,11 +11,30 @@ interface ClientsState {
   isUpdateContractError: boolean;
   pageNumber: number;
   itemsPerPage: number;
-  totalItems: number
+  totalItems: number;
+  sortOrder: SortOrder;
+}
+
+interface SortOrder {
+  orderBy: ClientsPageOrderByOptions;
+  direction: OrderByOptions;
+}
+
+enum ClientsPageOrderByOptions {
+  NAME = 'name',
+}
+
+enum OrderByOptions {
+  ASC = 'asc',
+  DESC = 'desc'
 }
 
 const ITEMS_PER_PAGE_OPTIONS: number[] = [25, 50, 100];
 const defaultItemsPerPage = ITEMS_PER_PAGE_OPTIONS[0];
+const defaultSortOrder: SortOrder = {
+  orderBy: ClientsPageOrderByOptions.NAME,
+  direction: OrderByOptions.ASC
+};
 
 const initialClientsState: ClientsState = {
   isLoading: false,
@@ -26,7 +45,8 @@ const initialClientsState: ClientsState = {
   isUpdateContractError: false,
   pageNumber: 0,
   itemsPerPage: defaultItemsPerPage,
-  totalItems: 0
+  totalItems: 0,
+  sortOrder: defaultSortOrder
 }
 
 interface ClientsFetchInitAction {
@@ -93,6 +113,11 @@ interface SetTotalItemsAction {
   payload: number;
 }
 
+interface SetSortOrderAction {
+  type: 'CLIENTS_SET_SORT_ORDER';
+  payload: ClientsPageOrderByOptions;
+}
+
 type ClientsAction =
   ClientsFetchInitAction
   | ClientsFetchSuccessAction
@@ -108,6 +133,7 @@ type ClientsAction =
   | ChangePageNumberAction
   | ChangeItemsPerPageAction
   | SetTotalItemsAction
+  | SetSortOrderAction
 
 const clientsReducer = (state: ClientsState, action: ClientsAction) => {
 
@@ -211,6 +237,12 @@ const clientsReducer = (state: ClientsState, action: ClientsAction) => {
         totalItems: action.payload
       }
       return updatedTotalItemsState
+    case "CLIENTS_SET_SORT_ORDER":
+      const updatedSortOrderState: ClientsState = {
+        ...state,
+        sortOrder: updateSortOrder(state.sortOrder, action.payload)
+      }
+      return updatedSortOrderState
     default:
       throw new Error(`Illegal Client action was provided`);
   }
@@ -319,5 +351,24 @@ const updateContracts = (contracts: Contract[], contractToBeUpdated: Contract) =
   ];
 };
 
-export {initialClientsState, clientsReducer, ITEMS_PER_PAGE_OPTIONS}
-export type {ClientsAction, ClientsState}
+
+const updateSortOrder = (currentSortOrder: SortOrder, newOrderBy: ClientsPageOrderByOptions) => {
+
+  if (currentSortOrder.orderBy === newOrderBy) {
+    const newDirection = currentSortOrder.direction === OrderByOptions.ASC ? OrderByOptions.DESC : OrderByOptions.ASC;
+    return {orderBy: newOrderBy, direction: newDirection};
+  }
+
+  return {orderBy: newOrderBy, direction: OrderByOptions.ASC};
+
+};
+
+export {
+  initialClientsState,
+  clientsReducer,
+  ITEMS_PER_PAGE_OPTIONS,
+  ClientsPageOrderByOptions,
+  OrderByOptions,
+  defaultSortOrder
+}
+export type {ClientsAction, ClientsState, SortOrder}
