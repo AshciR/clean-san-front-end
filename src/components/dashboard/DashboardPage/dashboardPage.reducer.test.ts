@@ -2,6 +2,7 @@ import DueService from "../../../shared/DueService.model";
 import ServiceStatus from "../../../shared/ServiceStatus.model";
 import MOCK_DUE_SERVICES from "../../../shared/mockDueServicesData";
 import dueServicesReducer, {
+  convertSortOrderToQueryParam,
   DashboardAction,
   DashboardOrderByOptions,
   defaultSortOrder,
@@ -459,6 +460,26 @@ describe('DashboardPage Reducer', () => {
     };
 
     expect(updatedState).toStrictEqual(expectedState);
+
+  });
+
+  it.each([
+    [DashboardOrderByOptions.CLIENT, OrderByOptions.ASC, "client:asc"],
+    [DashboardOrderByOptions.STATUS, OrderByOptions.DESC, "status:desc"],
+    [DashboardOrderByOptions.DUE_DATE, OrderByOptions.ASC, "due_date:asc"],
+  ])('converts sort order to query param correctly', (orderBy, direction, expected) => {
+
+    // Given: We have a sort order
+    const sort: SortOrder = {
+      orderBy: orderBy,
+      direction: direction
+    };
+
+    // When: We convert it to a query param
+    const sortQueryParam = convertSortOrderToQueryParam(sort);
+
+    // Then: It should have the correct pattern
+    expect(sortQueryParam).toStrictEqual(expected)
 
   });
 
