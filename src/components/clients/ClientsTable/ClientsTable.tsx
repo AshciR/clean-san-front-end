@@ -141,8 +141,9 @@ const ClientRow = ({client, handleOpenViewAssociatedContractsModal}: ClientRowPr
 );
 
 const NoClientsDisplay = () => (
-  <Typography variant='h5' data-testid="no-clients-display">There are no clients to display. Consider adding clients to
-    the system.</Typography>
+  <Typography variant='h5' data-testid="no-clients-display">
+    There are no clients to display. Add clients with the "Add Clients" Button.
+  </Typography>
 );
 
 export default ClientsTable;

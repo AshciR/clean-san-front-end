@@ -32,7 +32,7 @@ const ITEMS_PER_PAGE_OPTIONS: number[] = [25, 50, 100];
 const defaultItemsPerPage = ITEMS_PER_PAGE_OPTIONS[0];
 const defaultSortOrder: SortOrder = {
   orderBy: DashboardOrderByOptions.DUE_DATE,
-  direction: OrderByOptions.DESC
+  direction: OrderByOptions.ASC
 };
 
 const initialDueServicesState: DueServicesState = {
