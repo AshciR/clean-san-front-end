@@ -27,7 +27,9 @@ describe('Clients Services', () => {
     )
 
     expect(paginatedClients.clients.length).toBe(expectedClients.length);
-    expect(paginatedClients.clients).toStrictEqual(expectedClients);
+
+    const compareByNameAsc = (a: ClientWithContracts, b: ClientWithContracts) => a.name.localeCompare(b.name);
+    expect(paginatedClients.clients).toStrictEqual(expectedClients.sort(compareByNameAsc));
 
   });
 
@@ -48,6 +50,21 @@ describe('Clients Services', () => {
     }
 
     expect(paginatedClients).toStrictEqual(expectedClientsResponse)
+
+  });
+
+  it('fetches the clients with sort order', async () => {
+
+    // Given: We have the query params
+    const sort = "name:desc"
+
+    // When: the clients are fetched using pagination
+    const sortedClients = await fetchClientsWithContracts(0, 25, sort);
+
+    // Then: The clients should be sorted
+    expect(sortedClients.clients.length).toEqual(4)
+    expect(sortedClients.clients[0]).toStrictEqual(convertClientResponseToClientWithContracts(getClientsResponse.clients[3]))
+    expect(sortedClients.clients[3]).toStrictEqual(convertClientResponseToClientWithContracts(getClientsResponse.clients[2]))
 
   });
 

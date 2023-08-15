@@ -363,12 +363,15 @@ const updateSortOrder = (currentSortOrder: SortOrder, newOrderBy: ClientsPageOrd
 
 };
 
+const convertSortOrderToQueryParam = (sort: SortOrder) => `${sort.orderBy}:${sort.direction}`
+
 export {
   initialClientsState,
   clientsReducer,
   ITEMS_PER_PAGE_OPTIONS,
   ClientsPageOrderByOptions,
   OrderByOptions,
-  defaultSortOrder
+  defaultSortOrder,
+  convertSortOrderToQueryParam
 }
 export type {ClientsAction, ClientsState, SortOrder}

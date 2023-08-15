@@ -16,12 +16,16 @@ const getClientsHandler = rest.get('*/v1/clients', (req, res, context) => {
 
   const page = Number(req.url.searchParams.get('page')) || 0;
   const itemsPerPage = Number(req.url.searchParams.get('itemsPerPage')) || 50;
+  const sort = req.url.searchParams.get('sort') || 'name:asc';
+
+  const paginatedClients = paginate(getClientsResponse.clients, page, itemsPerPage);
+  const sortedClients = sortClients(paginatedClients, sort);
 
   const response: GetClientsResponse = {
     currentPage: page,
     totalItems: getClientsResponse.clients.length,
     totalPages: Math.ceil(getClientsResponse.clients.length / itemsPerPage),
-    clients: paginate(getClientsResponse.clients, page, itemsPerPage)
+    clients: sortedClients
   }
 
   return res(
@@ -30,6 +34,28 @@ const getClientsHandler = rest.get('*/v1/clients', (req, res, context) => {
   )
 
 });
+
+const sortClients = (paginatedClients: GetClientResponse[], sort: string) => {
+  const parts = sort.split(":");
+  const orderBy = parts[0] || "name";
+  const direction = parts[1] || "asc";
+
+  const sortCondition = {
+    "name": sortByName,
+  }
+
+  // @ts-ignore
+  const comparator = sortCondition[orderBy](direction);
+  return paginatedClients.sort(comparator);
+
+}
+
+const sortByName = (direction: string) => (a: GetClientResponse, b: GetClientResponse) => {
+  const nameA = a.name.toLowerCase();
+  const nameB = b.name.toLowerCase();
+  const compareResult = nameA.localeCompare(nameB);
+  return direction === "asc" ? compareResult : -compareResult;
+};
 
 const paginate = (clients: GetClientResponse[], page: number, itemsPerPage: number) => {
 

@@ -2,11 +2,12 @@ import {
   ClientsAction,
   ClientsPageOrderByOptions,
   clientsReducer,
-  ClientsState,
+  ClientsState, convertSortOrderToQueryParam,
   defaultSortOrder,
   initialClientsState,
   ITEMS_PER_PAGE_OPTIONS,
-  OrderByOptions
+  OrderByOptions,
+  SortOrder
 } from "./clientsPage.reducer";
 import MOCK_CLIENTS_WITH_CONTRACTS from "../../../shared/mockClientsWithContractsData";
 import {createClient} from "../../../shared/Client.model";
@@ -623,6 +624,22 @@ describe('ClientPage Reducer', () => {
     }
 
     expect(updatedState).toStrictEqual(expectedState);
+  });
+
+  it('converts sort order to query param correctly', () => {
+
+    // Given: We have a sort order
+    const sort: SortOrder = {
+      orderBy: ClientsPageOrderByOptions.NAME,
+      direction: OrderByOptions.ASC
+    };
+
+    // When: We convert it to a query param
+    const sortQueryParam = convertSortOrderToQueryParam(sort);
+
+    // Then: It should have the correct pattern
+    expect(sortQueryParam).toStrictEqual("name:asc")
+
   });
 
 });
