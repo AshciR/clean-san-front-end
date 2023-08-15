@@ -7,11 +7,12 @@ import Client from "../shared/Client.model";
 /**
  * Fetches the clients from the backend
  */
-const fetchClientsWithContracts = async (page?: number, itemsPerPage?: number) => {
+const fetchClientsWithContracts = async (page?: number, itemsPerPage?: number, sort?:string) => {
 
   const params = {
     page: page,
-    itemsPerPage: itemsPerPage
+    itemsPerPage: itemsPerPage,
+    sort: sort
   };
 
   try {

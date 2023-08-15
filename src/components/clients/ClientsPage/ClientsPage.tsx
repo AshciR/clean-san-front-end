@@ -2,7 +2,12 @@ import React, {FC} from 'react';
 import {Backdrop, Box, Container, Fab, Skeleton, Typography} from "@mui/material";
 import NavBarWrapper from "../../shared/NavBarWrapper/NavBarWrapper";
 import {NAV_BAR_HEIGHT} from "../../shared/NavBar/NavBar";
-import {ClientsPageOrderByOptions, clientsReducer, initialClientsState} from "./clientsPage.reducer";
+import {
+  ClientsPageOrderByOptions,
+  clientsReducer,
+  convertSortOrderToQueryParam,
+  initialClientsState
+} from "./clientsPage.reducer";
 import ClientsTable from "../ClientsTable/ClientsTable";
 import {
   addClient,
@@ -315,7 +320,8 @@ const ClientsPageContent: FC<ClientsPageContentProps> = ({distanceFromNavBar}) =
       try {
         const paginatedClients = await fetchClientsWithContracts(
           clientsState.pageNumber,
-          clientsState.itemsPerPage
+          clientsState.itemsPerPage,
+          convertSortOrderToQueryParam(clientsState.sortOrder)
         );
 
         if (isSubscribed) {
@@ -341,7 +347,7 @@ const ClientsPageContent: FC<ClientsPageContentProps> = ({distanceFromNavBar}) =
 
     // Cancel subscription to useEffect
     return () => (isSubscribed = false)
-  }, [clientsState.itemsPerPage, clientsState.pageNumber]);
+  }, [clientsState.itemsPerPage, clientsState.pageNumber, clientsState.sortOrder]);
 
   return (
     <Box
