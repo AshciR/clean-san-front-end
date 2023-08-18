@@ -141,6 +141,9 @@ describe('ClientPage Reducer', () => {
     const submittedProspectiveClient = createClient({
       id: 1,
       name: "Rick",
+      primaryContactFirstName: "Morty",
+      primaryContactLastName: "Smith",
+      telephoneNumber: "8761112222",
       email: "rick@gmail.com",
       isActive: false,
     });
@@ -156,7 +159,7 @@ describe('ClientPage Reducer', () => {
     const addedClientWithEmptyContract = createClientWithContracts({
       id: submittedProspectiveClient.id,
       name: submittedProspectiveClient.name,
-      email: submittedProspectiveClient.email,
+      email: submittedProspectiveClient.email || '',
       isActive: false,
       contracts: []
     })

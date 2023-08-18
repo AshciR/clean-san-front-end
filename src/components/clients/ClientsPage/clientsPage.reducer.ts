@@ -256,7 +256,7 @@ const addNewClientToTheCurrentList = (currentClients: ClientWithContracts[], new
   const newClientWithNoContract = createClientWithContracts({
     id: newlyAddedClient.id,
     name: newlyAddedClient.name,
-    email: newlyAddedClient.email,
+    email: newlyAddedClient.email || "",
     isActive: false,
     contracts: []
   });

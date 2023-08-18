@@ -121,6 +121,9 @@ describe('Clients Services', () => {
     const addClientResponse: AddClientResponse = {
       id: 1,
       name: "Morty",
+      primaryContactFirstName: "Rick",
+      primaryContactLastName: "Sanchez",
+      telephoneNumber: "9191110000",
       email: "morty@adultswim.com"
     }
 
@@ -131,6 +134,9 @@ describe('Clients Services', () => {
     const expectedClient: Client = {
       id: 1,
       name: "Morty",
+      primaryContactFirstName: "Rick",
+      primaryContactLastName: "Sanchez",
+      telephoneNumber: "9191110000",
       email: "morty@adultswim.com",
       isActive: false
     };
