@@ -80,6 +80,9 @@ const convertServicesQueryResponseToDueService = (response: ServiceQueryResponse
   const convertClientResponseToClient = (client: ClientResponse): Client => ({
     id: client.id,
     name: client.name,
+    primaryContactFirstName: client.primaryContactFirstName,
+    primaryContactLastName: client.primaryContactLastName,
+    telephoneNumber: client.telephoneNumber,
     email: client.email,
     isActive: true // if there's a due service, the client has to be active
   });
@@ -198,7 +201,10 @@ type ServiceQueryResponse = {
 type ClientResponse = {
   id: number;
   name: string;
-  email: string;
+  primaryContactFirstName: string;
+  primaryContactLastName: string;
+  telephoneNumber?: string;
+  email?: string;
 };
 
 type ServiceHistoryResponse = {

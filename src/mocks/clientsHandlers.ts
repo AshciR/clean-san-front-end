@@ -75,6 +75,9 @@ const addClientHandler = rest.post('*/v1/clients', (req, res, context) => {
   const response: AddClientResponse = {
     id: determineNextId(getClientsResponse),
     name: addClientRequest.name,
+    primaryContactFirstName: addClientRequest.primaryContactFirstName,
+    primaryContactLastName: addClientRequest.primaryContactLastName,
+    telephoneNumber: addClientRequest.telephoneNumber,
     email: addClientRequest.email
   };
 

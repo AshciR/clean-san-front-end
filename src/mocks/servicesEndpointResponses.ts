@@ -10,7 +10,10 @@ const getDueServicesResponse: GetDueServicesResponse = {
       "client": {
         "id": 1,
         "name": "Sash",
-        "email": "sash@gmail.com"
+        "primaryContactFirstName": "Richard",
+        "primaryContactLastName": "Henry",
+        "telephoneNumber":"8761234567",
+        "email": "sash@gmail.com",
       },
       "contract": {
         "id": 1,
@@ -35,6 +38,9 @@ const getDueServicesResponse: GetDueServicesResponse = {
       "client": {
         "id": 2,
         "name": "Richie",
+        "primaryContactFirstName": "Kyle",
+        "primaryContactLastName": "Brown",
+        "telephoneNumber":"8768889999",
         "email": "rich@gmail.com"
       },
       "contract": {
@@ -60,6 +66,9 @@ const getDueServicesResponse: GetDueServicesResponse = {
       "client": {
         "id": 3,
         "name": "Morty",
+        "primaryContactFirstName": "Rick",
+        "primaryContactLastName": "Sanchez",
+        "telephoneNumber":"8760001111",
         "email": "mort@gmail.com"
       },
       "contract": {
@@ -90,6 +99,9 @@ const getDueServicesResponse: GetDueServicesResponse = {
       "client": {
         "id": 1,
         "name": "Sash",
+        "primaryContactFirstName": "Richard",
+        "primaryContactLastName": "Henry",
+        "telephoneNumber":"8761234567",
         "email": "sash@gmail.com"
       },
       "contract": {
@@ -120,6 +132,9 @@ const getDueServicesResponse: GetDueServicesResponse = {
       "client": {
         "id": 1,
         "name": "Sash",
+        "primaryContactFirstName": "Richard",
+        "primaryContactLastName": "Henry",
+        "telephoneNumber":"8761234567",
         "email": "sash@gmail.com"
       },
       "contract": {
@@ -145,6 +160,9 @@ const getDueServicesResponse: GetDueServicesResponse = {
       "client": {
         "id": 1,
         "name": "Sash",
+        "primaryContactFirstName": "Richard",
+        "primaryContactLastName": "Henry",
+        "telephoneNumber":"8761234567",
         "email": "sash@gmail.com"
       },
       "contract": {
@@ -170,6 +188,9 @@ const getDueServicesResponse: GetDueServicesResponse = {
       "client": {
         "id": 1,
         "name": "Sash",
+        "primaryContactFirstName": "Richard",
+        "primaryContactLastName": "Henry",
+        "telephoneNumber":"8761234567",
         "email": "sash@gmail.com"
       },
       "contract": {
@@ -195,6 +216,9 @@ const getDueServicesResponse: GetDueServicesResponse = {
       "client": {
         "id": 2,
         "name": "Richie",
+        "primaryContactFirstName": "Kyle",
+        "primaryContactLastName": "Brown",
+        "telephoneNumber":"8768889999",
         "email": "rich@gmail.com"
       },
       "contract": {

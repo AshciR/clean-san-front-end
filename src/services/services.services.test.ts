@@ -73,7 +73,7 @@ describe('Due Services Services', () => {
     const sort = "client:desc"
 
     // When: the due services are fetched
-    const dueServices = await fetchDueServices(dueDate,0,25, sort);
+    const dueServices = await fetchDueServices(dueDate, 0, 25, sort);
 
     // Then: The services should be present
     expect(dueServices.services.length).toEqual(5);
@@ -135,7 +135,16 @@ describe('Due Services Services', () => {
     // Then: The domain should be mapped correctly
     const expectedDueService: DueService = {
       id: 1,
-      client: createClient({id: 1, name: 'Sash', email: 'sash@gmail.com', isActive: true}),
+      client: createClient({
+          id: 1,
+          name: 'Sash',
+          primaryContactFirstName: "Richard",
+          primaryContactLastName: "Henry",
+          telephoneNumber: "8761234567",
+          email: 'sash@gmail.com',
+          isActive: true
+        }
+      ),
       contract: createContract({
         id: 1,
         clientId: 1,
@@ -164,7 +173,16 @@ describe('Due Services Services', () => {
     // And: The corresponding service
     const correspondingService = {
       id: 3,
-      client: createClient({id: 1, name: 'Sash', email: 'sash@gmail.com', isActive: true}),
+      client: createClient({
+          id: 1,
+          name: 'Sash',
+          primaryContactFirstName: "Richard",
+          primaryContactLastName: "Henry",
+          telephoneNumber: "8761234567",
+          email: 'sash@gmail.com',
+          isActive: true
+        }
+      ),
       contract: createContract({
         id: 1,
         clientId: 1,
@@ -195,7 +213,16 @@ describe('Due Services Services', () => {
     // Then: The domain should be mapped correctly
     const expectedDueService: DueService = {
       id: 3,
-      client: createClient({id: 1, name: 'Sash', email: 'sash@gmail.com', isActive: true}),
+      client: createClient({
+          id: 1,
+          name: 'Sash',
+          primaryContactFirstName: "Richard",
+          primaryContactLastName: "Henry",
+          telephoneNumber: "8761234567",
+          email: 'sash@gmail.com',
+          isActive: true
+        }
+      ),
       contract: createContract({
         id: 1,
         clientId: 1,

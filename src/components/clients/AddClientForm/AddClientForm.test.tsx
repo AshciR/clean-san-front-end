@@ -21,8 +21,11 @@ describe('<AddClientForm />', () => {
       handleAddClient={mockHandleAddClient}
     />);
     const user = userEvent
-    await user.type(screen.getByLabelText('Client Name'), 'Rick');
-    await user.type(screen.getByLabelText('Client Email'), 'rick@gmail.com');
+    await user.type(screen.getByLabelText(/Company Name/), 'Rick');
+    await user.type(screen.getByLabelText(/Primary Contact First Name/), 'Morty');
+    await user.type(screen.getByLabelText(/Primary Contact Last Name/), 'Smith');
+    await user.type(screen.getByLabelText(/Telephone/), '8761234567');
+    await user.type(screen.getByLabelText(/Email/), 'rick@gmail.com');
 
     // When: We submit the form
     await user.click(screen.getByRole('button', {name: 'Submit'}));
@@ -32,6 +35,9 @@ describe('<AddClientForm />', () => {
       expect(mockHandleAddClient).toBeCalledWith({
         id: 0,
         name: 'Rick',
+        primaryContactFirstName: 'Morty',
+        primaryContactLastName: 'Smith',
+        telephoneNumber: '8761234567',
         email: 'rick@gmail.com',
         isActive: false
       });
@@ -69,7 +75,11 @@ describe('<AddClientForm />', () => {
     });
 
     await waitFor(() => {
-      expect(screen.getByText('ClientEmail is required')).toBeInTheDocument();
+      expect(screen.getByText('Primary Contact First Name is required')).toBeInTheDocument();
+    });
+
+    await waitFor(() => {
+      expect(screen.getByText('Primary Contact Last Name is required')).toBeInTheDocument();
     });
 
   });
@@ -82,8 +92,11 @@ describe('<AddClientForm />', () => {
       handleAddClient={mockHandleAddClient}
     />);
     const user = userEvent
-    await user.type(screen.getByLabelText('Client Name'), 'Rick');
-    await user.type(screen.getByLabelText('Client Email'), 'rick@gmail.com');
+    await user.type(screen.getByLabelText(/Company Name/), 'Rick');
+    await user.type(screen.getByLabelText(/Primary Contact First Name/), 'Morty');
+    await user.type(screen.getByLabelText(/Primary Contact Last Name/), 'Smith');
+    await user.type(screen.getByLabelText(/Telephone/), '8761234567');
+    await user.type(screen.getByLabelText(/Email/), 'rick@gmail.com');
 
     // When: We cancel the form
     await user.click(screen.getByRole('button', {name: 'Cancel'}));

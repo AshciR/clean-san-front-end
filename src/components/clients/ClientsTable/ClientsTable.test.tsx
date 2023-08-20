@@ -6,6 +6,7 @@ import Client from "../../../shared/Client.model";
 import {convertClientResponseToClientWithContracts} from "../../../services/clients.services";
 import {getClientsResponse} from "../../../mocks/clientsEndpointResponses";
 import {ClientsPageOrderByOptions, OrderByOptions, SortOrder} from "../ClientsPage/clientsPage.reducer";
+import {ClientWithContracts} from "../../../shared/ClientWithContracts.model";
 
 describe('<ClientsTable />', () => {
 
@@ -141,7 +142,7 @@ describe('<ClientsTable />', () => {
 
   });
 
-  const assertRowContent = (row: HTMLElement, client: Client) => {
+  const assertRowContent = (row: HTMLElement, client: ClientWithContracts) => {
     const idColumn = row.getElementsByTagName('td')[0];
     expect(idColumn.textContent).toBe(client.id.toString());
 

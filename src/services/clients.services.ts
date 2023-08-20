@@ -68,6 +68,9 @@ const addClient = async (prospectiveClient: Client): Promise<Client> => {
 
     const clientRequest: AddClientRequest = {
       name: prospectiveClient.name,
+      primaryContactFirstName: prospectiveClient.primaryContactFirstName,
+      primaryContactLastName: prospectiveClient.primaryContactLastName,
+      telephoneNumber: prospectiveClient.telephoneNumber,
       email: prospectiveClient.email
     }
 
@@ -91,6 +94,9 @@ const addClient = async (prospectiveClient: Client): Promise<Client> => {
 const convertAddedClientResponseToClient = (response: AddClientResponse): Client => ({
   id: response.id,
   name: response.name,
+  primaryContactFirstName: response.primaryContactFirstName,
+  primaryContactLastName: response.primaryContactLastName,
+  telephoneNumber: response.telephoneNumber,
   email: response.email,
   isActive: false
 });
@@ -164,13 +170,19 @@ type GetClientResponse = {
 
 type AddClientRequest = {
   name: string;
-  email: string;
+  primaryContactFirstName: string;
+  primaryContactLastName: string;
+  telephoneNumber?: string;
+  email?: string;
 };
 
 type AddClientResponse = {
   id: number;
   name: string;
-  email: string;
+  primaryContactFirstName: string;
+  primaryContactLastName: string;
+  telephoneNumber?: string;
+  email?: string;
 };
 
 type AddContractRequest = {
