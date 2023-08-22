@@ -3,7 +3,7 @@ import {
   AddClientResponse,
   addContractToClient,
   convertAddedClientResponseToClient,
-  convertClientResponseToClientWithContracts,
+  convertGetClientResponseToClientWithContracts,
   fetchClientsWithContracts,
   GetClientResponse,
   updateContract
@@ -23,12 +23,12 @@ describe('Clients Services', () => {
 
     // Then: The clients should be present
     const expectedClients = getClientsResponse.clients.map((clientResponse: GetClientResponse) =>
-      convertClientResponseToClientWithContracts(clientResponse)
+      convertGetClientResponseToClientWithContracts(clientResponse)
     )
 
     expect(paginatedClients.clients.length).toBe(expectedClients.length);
 
-    const compareByNameAsc = (a: ClientWithContracts, b: ClientWithContracts) => a.name.localeCompare(b.name);
+    const compareByNameAsc = (a: ClientWithContracts, b: ClientWithContracts) => a.client.name.localeCompare(b.client.name);
     expect(paginatedClients.clients).toStrictEqual(expectedClients.sort(compareByNameAsc));
 
   });
@@ -40,7 +40,7 @@ describe('Clients Services', () => {
 
     // Then: The clients should be present
     const expectedClients = getClientsResponse.clients.slice(-2)
-      .map(it => convertClientResponseToClientWithContracts(it))
+      .map(it => convertGetClientResponseToClientWithContracts(it))
 
     const expectedClientsResponse = {
       totalItems: 4,
@@ -63,8 +63,8 @@ describe('Clients Services', () => {
 
     // Then: The clients should be sorted
     expect(sortedClients.clients.length).toEqual(4)
-    expect(sortedClients.clients[0]).toStrictEqual(convertClientResponseToClientWithContracts(getClientsResponse.clients[3]))
-    expect(sortedClients.clients[3]).toStrictEqual(convertClientResponseToClientWithContracts(getClientsResponse.clients[2]))
+    expect(sortedClients.clients[0]).toStrictEqual(convertGetClientResponseToClientWithContracts(getClientsResponse.clients[3]))
+    expect(sortedClients.clients[3]).toStrictEqual(convertGetClientResponseToClientWithContracts(getClientsResponse.clients[2]))
 
   });
 
@@ -74,13 +74,19 @@ describe('Clients Services', () => {
     const clientResponse = getClientsResponse.clients[3];
 
     // When: We convert the response
-    const client = convertClientResponseToClientWithContracts(clientResponse);
+    const client = convertGetClientResponseToClientWithContracts(clientResponse);
 
     // Then: The domain should be mapped correctly
     const expectedClient: ClientWithContracts = {
-      id: 4,
-      name: "Space Ghost",
-      email: "spaceghost@gmail.com",
+      client: {
+        id: 4,
+        name: "Space Ghost",
+        primaryContactFirstName: "Cartoon",
+        primaryContactLastName: "Network",
+        email: undefined,
+        telephoneNumber: undefined,
+        isActive: false
+      },
       contracts: [
         createContract({
           id: 6,
@@ -107,7 +113,7 @@ describe('Clients Services', () => {
     const addedClient = await addClient(client);
 
     // Then: The client info should be correct
-    const idOfLastClient = getClientsResponse.clients[getClientsResponse.clients.length - 1].id;
+    const idOfLastClient = getClientsResponse.clients[getClientsResponse.clients.length - 1].client.id;
     expect(addedClient.id).toBe(idOfLastClient + 1);
     expect(addedClient.name).toBe(client.name);
     expect(addedClient.email).toBe(client.email);

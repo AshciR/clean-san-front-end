@@ -7,7 +7,7 @@ import Client from "../shared/Client.model";
 /**
  * Fetches the clients from the backend
  */
-const fetchClientsWithContracts = async (page?: number, itemsPerPage?: number, sort?:string) => {
+const fetchClientsWithContracts = async (page?: number, itemsPerPage?: number, sort?: string) => {
 
   const params = {
     page: page,
@@ -28,7 +28,7 @@ const fetchClientsWithContracts = async (page?: number, itemsPerPage?: number, s
 
 const convertGetClientsResponseToPaginatedClientsWithContracts = (response: GetClientsResponse) => {
 
-  const clientsWithContracts = response.clients.map(response => convertClientResponseToClientWithContracts(response));
+  const clientsWithContracts = response.clients.map(response => convertGetClientResponseToClientWithContracts(response));
 
   return {
     totalItems: response.totalItems,
@@ -43,18 +43,26 @@ const convertGetClientsResponseToPaginatedClientsWithContracts = (response: GetC
  * Helper method to convert the ClientResponse response into the ClientWithContracts domain model
  * @param response
  */
-const convertClientResponseToClientWithContracts = (response: GetClientResponse): ClientWithContracts => {
+const convertGetClientResponseToClientWithContracts = (response: GetClientResponse): ClientWithContracts => {
 
   const isAnyContractActive = (contracts: ContractResponse[]) => (
     contracts.some(contract => contract.status === ContractStatus.ACTIVE)
   );
 
+  const isActive = isAnyContractActive(response.contracts)
+
   return {
-    id: response.id,
-    name: response.name,
-    email: response.email,
+    client: {
+      id: response.client.id,
+      name: response.client.name,
+      primaryContactFirstName: response.client.primaryContactFirstName,
+      primaryContactLastName: response.client.primaryContactLastName,
+      telephoneNumber: response.client.telephoneNumber,
+      email: response.client.email,
+      isActive: isActive
+    },
     contracts: response.contracts.map(contract => convertContractResponseToContract(contract)),
-    isActive: isAnyContractActive(response.contracts)
+    isActive: isActive
   }
 };
 
@@ -162,11 +170,18 @@ type GetClientsResponse = {
 };
 
 type GetClientResponse = {
-  id: number;
-  name: string;
-  email: string;
+  client: ClientResponse
   contracts: ContractResponse[]
 };
+
+type ClientResponse = {
+  id: number;
+  name: string;
+  primaryContactFirstName: string;
+  primaryContactLastName: string;
+  telephoneNumber?: string;
+  email?: string;
+}
 
 type AddClientRequest = {
   name: string;
@@ -210,7 +225,7 @@ export type {
 }
 export {
   fetchClientsWithContracts,
-  convertClientResponseToClientWithContracts,
+  convertGetClientResponseToClientWithContracts,
   addClient,
   convertAddedClientResponseToClient,
   addContractToClient,

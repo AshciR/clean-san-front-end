@@ -2,7 +2,8 @@ import {
   ClientsAction,
   ClientsPageOrderByOptions,
   clientsReducer,
-  ClientsState, convertSortOrderToQueryParam,
+  ClientsState,
+  convertSortOrderToQueryParam,
   defaultSortOrder,
   initialClientsState,
   ITEMS_PER_PAGE_OPTIONS,
@@ -10,7 +11,7 @@ import {
   SortOrder
 } from "./clientsPage.reducer";
 import MOCK_CLIENTS_WITH_CONTRACTS from "../../../shared/mockClientsWithContractsData";
-import {createClient} from "../../../shared/Client.model";
+import {createClient, createDefaultClient} from "../../../shared/Client.model";
 import {createClientWithContracts} from "../../../shared/ClientWithContracts.model";
 import {ContractStatus, createContract, createDefaultContract, ServiceFrequency} from "../../../shared/Contract.model";
 import {DateTime} from "luxon";
@@ -157,9 +158,7 @@ describe('ClientPage Reducer', () => {
 
     // Then: The expected state should be produced
     const addedClientWithEmptyContract = createClientWithContracts({
-      id: submittedProspectiveClient.id,
-      name: submittedProspectiveClient.name,
-      email: submittedProspectiveClient.email || '',
+      client: submittedProspectiveClient,
       isActive: false,
       contracts: []
     })
@@ -215,16 +214,19 @@ describe('ClientPage Reducer', () => {
       isLoading: false,
       clients: [
         createClientWithContracts({
-          id: 1,
-          name: "Rick",
-          email: "rick@gmail.com",
+          client: createDefaultClient(),
           isActive: false,
           contracts: []
         }),
         createClientWithContracts({
-          id: 2,
-          name: "Morty",
-          email: "morty@gmail.com",
+          client: {
+            id: 2,
+            name: "Morty",
+            primaryContactLastName: "Bob",
+            primaryContactFirstName: "Sponge",
+            email: "morty@gmail.com",
+            isActive: false
+          },
           isActive: false,
           contracts: []
         })
@@ -254,16 +256,19 @@ describe('ClientPage Reducer', () => {
       isLoading: false,
       clients: [
         createClientWithContracts({
-          id: 1,
-          name: "Rick",
-          email: "rick@gmail.com",
+          client: createDefaultClient(),
           isActive: false,
           contracts: [newContract]
         }),
         createClientWithContracts({
-          id: 2,
-          name: "Morty",
-          email: "morty@gmail.com",
+          client: {
+            id: 2,
+            name: "Morty",
+            primaryContactLastName: "Bob",
+            primaryContactFirstName: "Sponge",
+            email: "morty@gmail.com",
+            isActive: false
+          },
           isActive: false,
           contracts: []
         })
@@ -326,9 +331,7 @@ describe('ClientPage Reducer', () => {
       isLoading: false,
       clients: [
         createClientWithContracts({
-          id: 1,
-          name: "Rick",
-          email: "rick@gmail.com",
+          client: createDefaultClient(),
           isActive: false,
           contracts: [inactiveContract, activeContract]
         }),
@@ -358,9 +361,7 @@ describe('ClientPage Reducer', () => {
       isLoading: false,
       clients: [
         createClientWithContracts({
-          id: 1,
-          name: "Rick",
-          email: "rick@gmail.com",
+          client: createDefaultClient(),
           isActive: true,
           contracts: [startedContract, activeContract]
         }),
@@ -424,9 +425,7 @@ describe('ClientPage Reducer', () => {
       isLoading: false,
       clients: [
         createClientWithContracts({
-          id: 1,
-          name: "Rick",
-          email: "rick@gmail.com",
+          client: createDefaultClient(),
           isActive: true,
           contracts: [activeContract, inactiveContract]
         }),
@@ -456,9 +455,7 @@ describe('ClientPage Reducer', () => {
       isLoading: false,
       clients: [
         createClientWithContracts({
-          id: 1,
-          name: "Rick",
-          email: "rick@gmail.com",
+          client: createDefaultClient(),
           isActive: false,
           contracts: [cancelledContract, inactiveContract]
         }),

@@ -2,8 +2,7 @@ import React from 'react';
 import {fireEvent, render, screen} from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import ClientsTable from './ClientsTable';
-import Client from "../../../shared/Client.model";
-import {convertClientResponseToClientWithContracts} from "../../../services/clients.services";
+import {convertGetClientResponseToClientWithContracts} from "../../../services/clients.services";
 import {getClientsResponse} from "../../../mocks/clientsEndpointResponses";
 import {ClientsPageOrderByOptions, OrderByOptions, SortOrder} from "../ClientsPage/clientsPage.reducer";
 import {ClientWithContracts} from "../../../shared/ClientWithContracts.model";
@@ -11,7 +10,7 @@ import {ClientWithContracts} from "../../../shared/ClientWithContracts.model";
 describe('<ClientsTable />', () => {
 
   const clientsWithContracts = getClientsResponse.clients.map(client =>
-    convertClientResponseToClientWithContracts(client)
+    convertGetClientResponseToClientWithContracts(client)
   )
 
   const SORT_BY_NAME_ASC: SortOrder = {
@@ -104,7 +103,7 @@ describe('<ClientsTable />', () => {
       handleSortBy={mockHandleSortBy}
     />);
     const clientOfInterest = clientsWithContracts[0];
-    const clientButton = screen.getByRole('button', {name: `${clientOfInterest.id}`})
+    const clientButton = screen.getByRole('button', {name: `${clientOfInterest.client.id}`})
 
     // When: the client id is clicked
     fireEvent.click(clientButton);
@@ -142,18 +141,26 @@ describe('<ClientsTable />', () => {
 
   });
 
-  const assertRowContent = (row: HTMLElement, client: ClientWithContracts) => {
+  const assertRowContent = (row: HTMLElement, clientWithContracts: ClientWithContracts) => {
     const idColumn = row.getElementsByTagName('td')[0];
-    expect(idColumn.textContent).toBe(client.id.toString());
+    expect(idColumn.textContent).toBe(clientWithContracts.client.id.toString());
 
     const nameColumn = row.getElementsByTagName('td')[1];
-    expect(nameColumn.textContent).toBe(client.name);
+    expect(nameColumn.textContent).toBe(clientWithContracts.client.name);
 
-    const emailColumn = row.getElementsByTagName('td')[2];
-    expect(emailColumn.textContent).toBe(client.email);
+    const primaryContactColumn = row.getElementsByTagName('td')[2];
+    expect(primaryContactColumn.textContent).toBe(`${clientWithContracts.client.primaryContactFirstName} ${clientWithContracts.client.primaryContactLastName}`);
 
-    const activeColumn = row.getElementsByTagName('td')[3];
-    expect(activeColumn.textContent).toBe(client.isActive ? 'Active' : 'Inactive');
+    const telephoneColumn = row.getElementsByTagName('td')[3];
+    const expectedTelephone = (clientWithContracts.client.telephoneNumber) || ""
+    expect(telephoneColumn.textContent).toBe(expectedTelephone);
+
+    const emailColumn = row.getElementsByTagName('td')[4];
+    const expectedEmail = (clientWithContracts.client.email) || ""
+    expect(emailColumn.textContent).toBe(expectedEmail);
+
+    const activeColumn = row.getElementsByTagName('td')[5];
+    expect(activeColumn.textContent).toBe(clientWithContracts.isActive ? 'Active' : 'Inactive');
   }
 
 });

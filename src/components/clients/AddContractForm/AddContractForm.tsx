@@ -53,7 +53,7 @@ const AddContractForm: FC<AddContractFormProps> = ({
         id: 0, // id will be assigned at time of creation
         // Falling back to 0, shouldn't happen though b/c we can't add a contract
         // without selecting a client prior
-        clientId: associatedClient?.id || 0,
+        clientId: associatedClient?.client?.id || 0,
         // We don't care about the time for the dates
         startDate: DateTime.fromJSDate(values.startDate).set({hour: 0, minute: 0, second: 0, millisecond: 0}),
         endDate: DateTime.fromJSDate(values.endDate).set({hour: 0, minute: 0, second: 0, millisecond: 0}),

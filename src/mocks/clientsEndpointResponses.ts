@@ -4,9 +4,14 @@ const getClientsResponse = {
   "currentPage": 0,
   "clients": [
     {
-      "id": 1,
-      "name": "Sash",
-      "email": "sash@gmail.com",
+      "client": {
+        "id": 1,
+        "name": "Sash",
+        "primaryContactFirstName": "Lulu",
+        "primaryContactLastName": "Gardner",
+        "telephoneNumber": "8761234567",
+        "email": "sash@gmail.com",
+      },
       "contracts": [
         {
           "id": 1,
@@ -35,9 +40,13 @@ const getClientsResponse = {
       ]
     },
     {
-      "id": 2,
-      "name": "Richie",
-      "email": "rich@gmail.com",
+      "client": {
+        "id": 2,
+        "name": "Richie",
+        "primaryContactFirstName": "Jasper",
+        "primaryContactLastName": "Walker",
+        "telephoneNumber": "9192224444",
+      },
       "contracts": [
         {
           "id": 2,
@@ -50,9 +59,13 @@ const getClientsResponse = {
       ]
     },
     {
-      "id": 3,
-      "name": "Morty",
-      "email": "mort@gmail.com",
+      "client": {
+        "id": 3,
+        "name": "Morty",
+        "primaryContactFirstName": "Rick",
+        "primaryContactLastName": "Sanchez",
+        "email": "mort@gmail.com",
+      },
       "contracts": [
         {
           "id": 3,
@@ -65,9 +78,12 @@ const getClientsResponse = {
       ]
     },
     {
-      "id": 4,
-      "name": "Space Ghost",
-      "email": "spaceghost@gmail.com",
+      "client": {
+        "id": 4,
+        "name": "Space Ghost",
+        "primaryContactFirstName": "Cartoon",
+        "primaryContactLastName": "Network",
+      },
       "contracts": [
         {
           "id": 6,

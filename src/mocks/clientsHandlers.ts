@@ -51,8 +51,8 @@ const sortClients = (paginatedClients: GetClientResponse[], sort: string) => {
 }
 
 const sortByName = (direction: string) => (a: GetClientResponse, b: GetClientResponse) => {
-  const nameA = a.name.toLowerCase();
-  const nameB = b.name.toLowerCase();
+  const nameA = a.client.name.toLowerCase();
+  const nameB = b.client.name.toLowerCase();
   const compareResult = nameA.localeCompare(nameB);
   return direction === "asc" ? compareResult : -compareResult;
 };
@@ -70,7 +70,7 @@ const addClientHandler = rest.post('*/v1/clients', (req, res, context) => {
   const addClientRequest = req.body as AddClientRequest;
 
   const determineNextId = (getClientsResponse: GetClientsResponse) =>
-    getClientsResponse.clients[getClientsResponse.clients.length - 1].id + 1;
+    getClientsResponse.clients[getClientsResponse.clients.length - 1].client.id + 1;
 
   const response: AddClientResponse = {
     id: determineNextId(getClientsResponse),
@@ -91,7 +91,7 @@ const addClientHandler = rest.post('*/v1/clients', (req, res, context) => {
 const addContractHandler = rest.post('*/v1/clients/:clientId/contracts', (req, res, context) => {
 
   const {clientId} = req.params;
-  const clientWithContract = getClientsResponse.clients.find(client => client.id === Number(clientId));
+  const clientWithContract = getClientsResponse.clients.find(client => client.client.id === Number(clientId));
 
   if (clientWithContract) {
 

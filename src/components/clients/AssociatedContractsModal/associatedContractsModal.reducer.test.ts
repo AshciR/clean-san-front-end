@@ -1,4 +1,4 @@
-import {convertClientResponseToClientWithContracts} from "../../../services/clients.services";
+import {convertGetClientResponseToClientWithContracts} from "../../../services/clients.services";
 import {getClientsResponse} from "../../../mocks/clientsEndpointResponses";
 import {
   AssociatedContractsAction,
@@ -9,7 +9,7 @@ import {
 
 describe('AssociatedContractsModal Reducer', () => {
 
-  const clientWithContracts = convertClientResponseToClientWithContracts(getClientsResponse.clients[0]);
+  const clientWithContracts = convertGetClientResponseToClientWithContracts(getClientsResponse.clients[0]);
 
   it('select the client with the associated contracts', () => {
 
