@@ -42,7 +42,7 @@ describe('<AddContractForm />', () => {
     await waitFor(() => {
       expect(mockHandleAddContract).toBeCalledWith({
         id: 0,
-        clientId: associatedClient.id,
+        clientId: associatedClient.client.id,
         startDate: DateTime.now().set({hour: 0, minute: 0, second: 0, millisecond: 0}),
         // Default the end date to be 1 year (exclusive) from now
         endDate: DateTime.now()
@@ -109,7 +109,7 @@ describe('<AddContractForm />', () => {
     await waitFor(() => {
       expect(mockHandleAddContract).toBeCalledWith({
         id: 0,
-        clientId: associatedClient.id,
+        clientId: associatedClient.client.id,
         startDate: newStartDate.set({hour: 0, minute: 0, second: 0, millisecond: 0}),
         endDate: newEndDate.set({hour: 0, minute: 0, second: 0, millisecond: 0}),
         serviceFrequency: "FORTNIGHTLY",

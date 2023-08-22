@@ -8,9 +8,14 @@ import {DateTime} from "luxon";
 
 const rickAndMorty = createDefaultClientWithContracts();
 const spaceGhost = createClientWithContracts({
-  id: 2,
-  name: 'Space Ghost',
-  email: 'space@gmail.com',
+  client: {
+    id: 2,
+    name: 'Space Ghost',
+    primaryContactFirstName: 'Cartoon',
+    primaryContactLastName: 'Network',
+    email: 'space@gmail.com',
+    isActive: false,
+  },
   isActive: false,
   contracts: [createContract({
     id: 2,

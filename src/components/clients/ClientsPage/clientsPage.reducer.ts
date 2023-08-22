@@ -1,5 +1,5 @@
 import {ClientWithContracts, createClientWithContracts} from "../../../shared/ClientWithContracts.model";
-import Client from "../../../shared/Client.model";
+import Client, {createClient} from "../../../shared/Client.model";
 import Contract, {ContractStatus} from "../../../shared/Contract.model";
 
 interface ClientsState {
@@ -254,9 +254,15 @@ const addNewClientToTheCurrentList = (currentClients: ClientWithContracts[], new
   // When we just add a client, it'll have no contracts associated with it.
   // The user will have to create the contract at a later point
   const newClientWithNoContract = createClientWithContracts({
-    id: newlyAddedClient.id,
-    name: newlyAddedClient.name,
-    email: newlyAddedClient.email || "",
+    client: createClient({
+      id: newlyAddedClient.id,
+      name: newlyAddedClient.name,
+      primaryContactFirstName: newlyAddedClient.primaryContactFirstName,
+      primaryContactLastName: newlyAddedClient.primaryContactLastName,
+      telephoneNumber: newlyAddedClient?.telephoneNumber || "",
+      email: newlyAddedClient?.email || "",
+      isActive: false,
+    }),
     isActive: false,
     contracts: []
   });
@@ -266,7 +272,7 @@ const addNewClientToTheCurrentList = (currentClients: ClientWithContracts[], new
 
 const addContractToClient = (currentClients: ClientWithContracts[], newlyAddedContract: Contract) => {
 
-  const associatedClient = currentClients.find(client => client.id === newlyAddedContract.clientId);
+  const associatedClient = currentClients.find(client => client.client.id === newlyAddedContract.clientId);
   const updatedClient = {
     ...associatedClient,
     // @ts-ignore There will be an associated client b/c the user had to click on it in the 1st place
@@ -279,7 +285,7 @@ const addContractToClient = (currentClients: ClientWithContracts[], newlyAddedCo
 
 const startContract = (currentClients: ClientWithContracts[], updatedContract: Contract) => {
 
-  const associatedClient = currentClients.find(client => client.id === updatedContract.clientId);
+  const associatedClient = currentClients.find(client => client.client.id === updatedContract.clientId);
 
   const updatedClient = {
     ...associatedClient,
@@ -304,7 +310,7 @@ const activateContract = (contracts: Contract[], activatedContract: Contract) =>
 };
 
 const cancelContract = (currentClients: ClientWithContracts[], contractToBeCancelled: Contract) => {
-  const associatedClient = currentClients.find(client => client.id === contractToBeCancelled.clientId);
+  const associatedClient = currentClients.find(client => client.client.id === contractToBeCancelled.clientId);
 
   const updatedClient = {
     ...associatedClient,
@@ -330,7 +336,7 @@ const deactivateContract = (contracts: Contract[], deactivatedContract: Contract
 
 const updateClients = (currentClients: ClientWithContracts[], updatedClient: ClientWithContracts) => {
 
-  const indexOfClient = currentClients.findIndex(client => client.id === updatedClient.id);
+  const indexOfClient = currentClients.findIndex(client => client.client.id === updatedClient.client.id);
 
   // We want to preserve the ordering of the clients
   return [

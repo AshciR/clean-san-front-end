@@ -1,31 +1,24 @@
 import Contract, {createDefaultContract} from "./Contract.model";
+import Client, {createDefaultClient} from "./Client.model";
 
 interface ClientWithContracts {
-  id: number;
-  name: string;
-  email: string;
+  client: Client
   contracts: Contract[];
   isActive: boolean;
 }
 
 const createClientWithContracts = ({
-                                     id,
-                                     name,
-                                     email,
+                                     client,
                                      isActive = true,
                                      contracts = []
                                    }: ClientWithContracts): ClientWithContracts => ({
-  id: id,
-  name: name,
-  email: email,
+  client: client,
   isActive: isActive,
   contracts: contracts
 });
 
 const createDefaultClientWithContracts = (): ClientWithContracts => createClientWithContracts({
-  id: 1,
-  name: 'Rick & Morty Adventures',
-  email: 'rickandmorty@adultswim.com',
+  client: createDefaultClient(),
   isActive: true,
   contracts: [createDefaultContract()]
 });

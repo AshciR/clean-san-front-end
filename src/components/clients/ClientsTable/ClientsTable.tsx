@@ -50,7 +50,7 @@ const ClientsTable: FC<ClientsTableProps> = ({
   return (
     <div className={styles.ClientsTable} data-testid="clients-table">
       {hasClients ? <VisibleClientsTable
-          clients={clients}
+          clientsWIthContracts={clients}
           totalClients={totalClients}
           clientsPerPage={clientsPerPage}
           currentPage={currentPage}
@@ -66,7 +66,7 @@ const ClientsTable: FC<ClientsTableProps> = ({
 };
 
 interface VisibleClientsTableProps {
-  clients: ClientWithContracts[]
+  clientsWIthContracts: ClientWithContracts[]
   totalClients: number
   clientsPerPage: number
   currentPage: number
@@ -78,7 +78,7 @@ interface VisibleClientsTableProps {
 }
 
 const VisibleClientsTable = ({
-                               clients,
+                               clientsWIthContracts,
                                totalClients,
                                clientsPerPage,
                                currentPage,
@@ -103,15 +103,17 @@ const VisibleClientsTable = ({
                 onClick={() => handleSortBy(ClientsPageOrderByOptions.NAME)}
               />
             </TableCell>
+            <TableCell>Primary Contact</TableCell>
+            <TableCell>Telephone</TableCell>
             <TableCell>Email</TableCell>
             <TableCell sx={{width: STATUS_CHIP_WIDTH}}>Active</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {clients.map(client =>
+          {clientsWIthContracts.map(clientWithContract =>
             <ClientRow
-              key={client.id}
-              client={client}
+              key={clientWithContract.client.id}
+              clientWithContracts={clientWithContract}
               handleOpenViewAssociatedContractsModal={handleOpenViewAssociatedContractsModal}/>)
           }
         </TableBody>
@@ -136,25 +138,27 @@ const VisibleClientsTable = ({
 );
 
 interface ClientRowProps {
-  client: ClientWithContracts
+  clientWithContracts: ClientWithContracts
   handleOpenViewAssociatedContractsModal: (client: ClientWithContracts) => void
 }
 
-const ClientRow = ({client, handleOpenViewAssociatedContractsModal}: ClientRowProps) => (
+const ClientRow = ({clientWithContracts, handleOpenViewAssociatedContractsModal}: ClientRowProps) => (
   <TableRow data-testid="client-table-row">
     <TableCell sx={{width: 100}}>
       <Button
         size="small"
         color="primary"
-        onClick={() => handleOpenViewAssociatedContractsModal(client)}
+        onClick={() => handleOpenViewAssociatedContractsModal(clientWithContracts)}
       >
-        {client.id}
+        {clientWithContracts.client.id}
       </Button>
     </TableCell>
-    <TableCell>{client.name}</TableCell>
-    <TableCell>{client.email}</TableCell>
+    <TableCell>{clientWithContracts.client.name}</TableCell>
+    <TableCell>{`${clientWithContracts.client.primaryContactFirstName} ${clientWithContracts.client.primaryContactLastName}`}</TableCell>
+    <TableCell>{clientWithContracts.client.telephoneNumber}</TableCell>
+    <TableCell>{clientWithContracts.client.email}</TableCell>
     <TableCell sx={{width: STATUS_CHIP_WIDTH}}>
-      <ClientStatusChip isActive={client.isActive} chipWidth={STATUS_CHIP_WIDTH}/>
+      <ClientStatusChip isActive={clientWithContracts.isActive} chipWidth={STATUS_CHIP_WIDTH}/>
     </TableCell>
   </TableRow>
 );

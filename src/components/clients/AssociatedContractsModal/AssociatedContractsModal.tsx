@@ -43,7 +43,7 @@ const AssociatedContractsModal: FC<AssociatedContractsModalProps> = ({
           color='primary'
           sx={{marginBottom: 1}}
         >
-          {`Contracts for ${modalState.clientWithContracts?.name}`}
+          {`Contracts for ${modalState.clientWithContracts?.client.name}`}
         </Typography>
         <Box
           sx={{

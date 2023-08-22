@@ -3,12 +3,12 @@ import {fireEvent, render, screen} from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import AssociatedContractsModal from './AssociatedContractsModal';
 import {getClientsResponse} from "../../../mocks/clientsEndpointResponses";
-import {convertClientResponseToClientWithContracts} from "../../../services/clients.services";
+import {convertGetClientResponseToClientWithContracts} from "../../../services/clients.services";
 import {AssociatedContractsModalState} from "./associatedContractsModal.reducer";
 
 describe('<AssociatedContractsModal />', () => {
 
-  const clientWithContracts = convertClientResponseToClientWithContracts(getClientsResponse.clients[0]);
+  const clientWithContracts = convertGetClientResponseToClientWithContracts(getClientsResponse.clients[0]);
   const modalState: AssociatedContractsModalState = {
     isOpen: true,
     clientWithContracts: clientWithContracts,
@@ -27,7 +27,7 @@ describe('<AssociatedContractsModal />', () => {
       handleOpenStartContractAlert={mockHandleOpenStartContractAlert}
       handleOpenCancelContractAlert={mockHandleOpenCancelContractAlert}
     />);
-    const clientName = screen.getByText(`Contracts for ${clientWithContracts.name}`);
+    const clientName = screen.getByText(`Contracts for ${clientWithContracts.client.name}`);
     expect(clientName).toBeInTheDocument();
   });
 
