@@ -1,13 +1,16 @@
 import React from 'react';
 import {fireEvent, render, screen, waitFor} from '@testing-library/react';
 import App from './App';
-import {MemoryRouter} from "react-router-dom";
-
+import {createMemoryRouter} from "react-router-dom";
+import routerConfig from "./routerConfig";
 
 describe('App', () => {
 
   it('renders the application', async () => {
-    render(<App/>, {wrapper: MemoryRouter});
+    const router = createMemoryRouter(routerConfig);
+
+    render(<App router={router}/>);
+
     const app = await screen.findByTestId('app');
     await waitFor(() => expect(app).toBeInTheDocument());
   });
@@ -15,7 +18,8 @@ describe('App', () => {
   it('navigates between pages', async () => {
 
     // Given: the app loads
-    render(<App/>, {wrapper: MemoryRouter});
+    const router = createMemoryRouter(routerConfig);
+    render(<App router={router}/>);
 
     // When: we navigate to the Clients page
     const menuButton = await screen.findByLabelText('menu');
@@ -34,13 +38,14 @@ describe('App', () => {
 
   it('navigates to the Not Found Page', () => {
 
-    // When: The App is navigated to a non-existent page
+    // Given: We have an invalid route
     const badRoute = '/not-a-valid-route';
-    render(
-      <MemoryRouter initialEntries={[badRoute]}>
-        <App/>
-      </MemoryRouter>,
-    );
+    const router = createMemoryRouter(routerConfig, {
+      initialEntries: [badRoute]
+    });
+
+    // When: The App is navigated to a non-existent page
+    render(<App router={router}/>);
 
     // Then: The Not Found page should be displayed
     expect(screen.getByTestId('NotFoundPage')).toBeInTheDocument();
