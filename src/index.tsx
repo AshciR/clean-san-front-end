@@ -2,9 +2,12 @@
 import {createRoot} from 'react-dom/client';
 import React from 'react';
 import './index.css';
-import App from './App';
 import reportWebVitals from './reportWebVitals';
-import {BrowserRouter} from "react-router-dom";
+import App from "./App";
+import {Router as RemixRouter} from "@remix-run/router/dist/router";
+import {createBrowserRouter} from "react-router-dom";
+import routerConfig from "./routerConfig";
+
 
 // We only want the mock service calls in the development env
 // and when disable MSW flag is off
@@ -13,12 +16,13 @@ if (process.env.NODE_ENV === 'development' && !process.env.REACT_APP_DISABLE_MSW
   worker.start()
 }
 
+const router: RemixRouter = createBrowserRouter(routerConfig);
+
 const container = document.getElementById('root')
 const root = createRoot(container);
-root.render(<React.StrictMode>
-    <BrowserRouter>
-      <App/>
-    </BrowserRouter>
+root.render(
+  <React.StrictMode>
+    <App router ={router}/>
   </React.StrictMode>
 )
 
