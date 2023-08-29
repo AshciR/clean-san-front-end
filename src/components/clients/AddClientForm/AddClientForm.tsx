@@ -1,6 +1,6 @@
 import React, {FC} from 'react';
 import styles from './AddClientForm.module.scss';
-import {Box, Button, Paper, TextField, Typography} from "@mui/material";
+import {Box, Button, Paper, Step, StepLabel, Stepper, TextField, Typography} from "@mui/material";
 import * as yup from 'yup';
 import {useFormik} from "formik";
 import Client from "../../../shared/Client.model";
@@ -47,6 +47,8 @@ const AddClientForm: FC<AddClientFormProps> = ({handleCloseAddClientModal, handl
     }
   });
 
+  const steps = ["Contact Information", "Primary Location"];
+
   return (
     <Box
       className={styles.AddClientForm}
@@ -64,8 +66,15 @@ const AddClientForm: FC<AddClientFormProps> = ({handleCloseAddClientModal, handl
           color='secondary'
           sx={{marginBottom: 2}}
         >
-          Enter Client Information
+          Add Client Information
         </Typography>
+        <Stepper activeStep={0} alternativeLabel>
+          {steps.map((label) => (
+            <Step key={label}>
+              <StepLabel>{label}</StepLabel>
+            </Step>
+          ))}
+        </Stepper>
         <form onSubmit={formik.handleSubmit}>
           <TextField
             fullWidth
@@ -80,7 +89,7 @@ const AddClientForm: FC<AddClientFormProps> = ({handleCloseAddClientModal, handl
             error={formik.touched.clientName && Boolean(formik.errors.clientName)}
             helperText={formik.touched.clientName && formik.errors.clientName}
           />
-          <Box sx={{display: 'flex', gap: 2 }}>
+          <Box sx={{display: 'flex', gap: 2}}>
             <TextField
               id="clientPrimaryContactFirstName"
               name="clientPrimaryContactFirstName"
@@ -106,7 +115,7 @@ const AddClientForm: FC<AddClientFormProps> = ({handleCloseAddClientModal, handl
               helperText={formik.touched.clientPrimaryContactLastName && formik.errors.clientPrimaryContactLastName}
             />
           </Box>
-          <Box sx={{display: 'flex', gap: 2 }}>
+          <Box sx={{display: 'flex', gap: 2}}>
             <TextField
               id="telephoneNumber"
               name="telephoneNumber"
