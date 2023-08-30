@@ -1,8 +1,8 @@
-import React, {FC} from 'react';
+import React, {FC, useState} from 'react';
 import styles from './AddClientForm.module.scss';
 import {Box, Button, Paper, Step, StepLabel, Stepper, TextField, Typography} from "@mui/material";
 import * as yup from 'yup';
-import {FormikConfig, FormikValues, useFormik} from "formik";
+import {useFormik} from "formik";
 import Client from "../../../shared/Client.model";
 
 interface AddClientFormProps {
@@ -47,7 +47,31 @@ const AddClientForm: FC<AddClientFormProps> = ({handleCloseAddClientModal, handl
     }
   });
 
+  // Form navigation handlers
   const steps = ["Contact Information", "Primary Location"];
+  const [activeStep, setActiveStep] = useState(0);
+
+  const handleNext = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+  };
+
+  const handleBack = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep - 1);
+  };
+
+  const renderStepContent = (step: number, formik: any) => {
+    switch (step) {
+      case 0:
+        return <ContactInformationStep formik={formik}/>;
+      case 1:
+        return <Typography>Add Primary Location.</Typography>;
+      default:
+        return <Typography>Whoops, and error occurred.</Typography>;
+    }
+  };
+
+  const isOnFirstStep = activeStep === 0;
+  const isOnLastStep = activeStep === steps.length - 1;
 
   return (
     <Box
@@ -68,7 +92,7 @@ const AddClientForm: FC<AddClientFormProps> = ({handleCloseAddClientModal, handl
         >
           Add Client Information
         </Typography>
-        <Stepper activeStep={0} alternativeLabel>
+        <Stepper activeStep={activeStep} alternativeLabel>
           {steps.map((label) => (
             <Step key={label}>
               <StepLabel>{label}</StepLabel>
@@ -100,14 +124,28 @@ const AddClientForm: FC<AddClientFormProps> = ({handleCloseAddClientModal, handl
             </Button>
             <Button
               color="primary"
+              variant="outlined"
+              disabled={isOnFirstStep}
+              sx={{
+                marginRight: 2,
+                marginLeft: 2
+              }}
+              onClick={() => {
+                handleBack();
+              }}
+            >
+              Back
+            </Button>
+            <Button
+              color="primary"
               variant="contained"
-              type="submit"
+              type={isOnLastStep ? "submit" : undefined}
               sx={{
                 marginRight: 2,
                 marginLeft: 2
               }}
             >
-              Submit
+              {isOnLastStep ? "Submit" : "Next"}
             </Button>
           </Box>
         </form>
