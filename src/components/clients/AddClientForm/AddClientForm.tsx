@@ -100,7 +100,7 @@ const AddClientForm: FC<AddClientFormProps> = ({handleCloseAddClientModal, handl
           ))}
         </Stepper>
         <form onSubmit={formik.handleSubmit}>
-          <ContactInformationStep formik={formik}/>
+          {renderStepContent(activeStep, formik)}
           <Box
             sx={{
               display: 'flex',
@@ -143,6 +143,9 @@ const AddClientForm: FC<AddClientFormProps> = ({handleCloseAddClientModal, handl
               sx={{
                 marginRight: 2,
                 marginLeft: 2
+              }}
+              onClick={() => {
+                handleNext();
               }}
             >
               {isOnLastStep ? "Submit" : "Next"}
