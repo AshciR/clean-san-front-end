@@ -2,7 +2,7 @@ import React, {FC, useState} from 'react';
 import styles from './AddClientForm.module.scss';
 import {Box, Button, Paper, Step, StepLabel, Stepper, TextField, Typography} from "@mui/material";
 import * as yup from 'yup';
-import {getIn, useFormik} from "formik";
+import {useFormik} from "formik";
 import Client from "../../../shared/Client.model";
 
 interface AddClientFormProps {
@@ -57,7 +57,7 @@ const AddClientForm: FC<AddClientFormProps> = ({handleCloseAddClientModal, handl
         isActive: false
       });
       handleCloseAddClientModal();
-      formik.resetForm()
+      formik.resetForm();
     }
   });
 
@@ -193,6 +193,7 @@ const ContactInformationStep: FC<ContactInformationStepProps> = ({formik}: Conta
         sx={{marginBottom: 2}}
         value={formik.values.client.clientName}
         onChange={formik.handleChange}
+        onBlur={formik.handleBlur}
         error={formik.touched.client?.clientName && Boolean(formik.errors.client?.clientName)}
         helperText={formik.touched.client?.clientName && Boolean(formik.errors.client?.clientName)}
       />
@@ -206,6 +207,7 @@ const ContactInformationStep: FC<ContactInformationStepProps> = ({formik}: Conta
           sx={{marginBottom: 2, flex: 1}}
           value={formik.values.client.clientPrimaryContactFirstName}
           onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
           error={formik.touched.client?.clientPrimaryContactFirstName && Boolean(formik.errors.client?.clientPrimaryContactFirstName)}
           helperText={formik.touched.client?.clientPrimaryContactFirstName && formik.errors.client?.clientPrimaryContactFirstName}
         />
@@ -218,6 +220,7 @@ const ContactInformationStep: FC<ContactInformationStepProps> = ({formik}: Conta
           sx={{marginBottom: 2, flex: 1}}
           value={formik.values.client.clientPrimaryContactLastName}
           onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
           error={formik.touched.client?.clientPrimaryContactLastName && Boolean(formik.errors.client?.clientPrimaryContactLastName)}
           helperText={formik.touched.client?.clientPrimaryContactLastName && formik.errors.client?.clientPrimaryContactLastName}
         />
@@ -231,6 +234,7 @@ const ContactInformationStep: FC<ContactInformationStepProps> = ({formik}: Conta
           sx={{marginBottom: 2, flex: 1}}
           value={formik.values.client.telephoneNumber}
           onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
           error={formik.touched.client?.telephoneNumber && Boolean(formik.errors.client?.telephoneNumber)}
           helperText={formik.touched.client?.telephoneNumber && formik.errors.client?.telephoneNumber}
         />
@@ -242,6 +246,7 @@ const ContactInformationStep: FC<ContactInformationStepProps> = ({formik}: Conta
           sx={{marginBottom: 2, flex: 1}}
           value={formik.values.client.clientEmail}
           onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
           error={formik.touched.client?.clientEmail && Boolean(formik.errors.client?.clientEmail)}
           helperText={formik.touched.client?.clientEmail && formik.errors.client?.clientEmail}
         />
@@ -268,6 +273,7 @@ const PrimaryLocationStep: FC<PrimaryLocationStepProps> = ({formik}: PrimaryLoca
           sx={{marginBottom: 2, flex: 1}}
           value={formik.values.primaryLocation.addressLine1}
           onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
           error={formik.touched.primaryLocation.addressLine1 && Boolean(formik.errors.primaryLocation.addressLine1)}
           helperText={formik.touched.primaryLocation.addressLine1 && formik.errors.primaryLocation.addressLine1}
         />
@@ -280,6 +286,7 @@ const PrimaryLocationStep: FC<PrimaryLocationStepProps> = ({formik}: PrimaryLoca
           sx={{marginBottom: 2, flex: 1}}
           value={formik.values.primaryLocation.addressLine2}
           onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
           error={formik.touched.primaryLocation.addressLine2 && Boolean(formik.errors.primaryLocation.addressLine2)}
           helperText={formik.touched.primaryLocation.addressLine2 && formik.errors.primaryLocation.addressLine2}
         />
@@ -292,6 +299,7 @@ const PrimaryLocationStep: FC<PrimaryLocationStepProps> = ({formik}: PrimaryLoca
           sx={{marginBottom: 2, flex: 1}}
           value={formik.values.primaryLocation.city}
           onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
           error={formik.touched.primaryLocation.city && Boolean(formik.errors.primaryLocation.city)}
           helperText={formik.touched.primaryLocation.city && formik.errors.primaryLocation.city}
         />
@@ -306,6 +314,7 @@ const PrimaryLocationStep: FC<PrimaryLocationStepProps> = ({formik}: PrimaryLoca
           sx={{marginBottom: 2, flex: 1}}
           value={formik.values.primaryLocation.parish}
           onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
           error={formik.touched.primaryLocation.parish && Boolean(formik.errors.primaryLocation.parish)}
           helperText={formik.touched.primaryLocation.parish && formik.errors.primaryLocation.parish}
         />
@@ -317,6 +326,7 @@ const PrimaryLocationStep: FC<PrimaryLocationStepProps> = ({formik}: PrimaryLoca
           sx={{marginBottom: 2, flex: 1}}
           value={formik.values.postalCode}
           onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
           error={formik.touched.postalCode && Boolean(formik.errors.postalCode)}
           helperText={formik.touched.postalCode && formik.errors.postalCode}
         />
