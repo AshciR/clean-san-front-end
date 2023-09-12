@@ -2,7 +2,7 @@ import React, {FC, useState} from 'react';
 import styles from './AddClientForm.module.scss';
 import {Box, Button, Paper, Step, StepLabel, Stepper, TextField, Typography} from "@mui/material";
 import * as yup from 'yup';
-import {useFormik} from "formik";
+import {getIn, useFormik} from "formik";
 import Client from "../../../shared/Client.model";
 
 interface AddClientFormProps {
@@ -15,31 +15,45 @@ const AddClientForm: FC<AddClientFormProps> = ({handleCloseAddClientModal, handl
   const phoneRegExp = /^\d{10}$/;
 
   const validationSchema = yup.object({
-    clientName: yup.string().required('Client Name is required'),
-    clientPrimaryContactFirstName: yup.string().required('Primary Contact First Name is required'),
-    clientPrimaryContactLastName: yup.string().required('Primary Contact Last Name is required'),
-    telephoneNumber: yup.string().matches(phoneRegExp, 'Phone number must be a 10-digit number'),
-    clientEmail: yup.string().email('Enter a valid email')
+    client: yup.object({
+        clientName: yup.string().required('Client Name is required'),
+        clientPrimaryContactFirstName: yup.string().required('Primary Contact First Name is required'),
+        clientPrimaryContactLastName: yup.string().required('Primary Contact Last Name is required'),
+        telephoneNumber: yup.string().matches(phoneRegExp, 'Phone number must be a 10-digit number'),
+        clientEmail: yup.string().email('Enter a valid email')
+      }),
+    primaryLocation: yup.object({
+
+    })
   });
 
   const formik = useFormik({
     initialValues: {
-      clientName: '',
-      clientPrimaryContactFirstName: '',
-      clientPrimaryContactLastName: '',
-      telephoneNumber: '',
-      clientEmail: ''
+      client: {
+        clientName: '',
+        clientPrimaryContactFirstName: '',
+        clientPrimaryContactLastName: '',
+        telephoneNumber: '',
+        clientEmail: ''
+      },
+      primaryLocation: {
+        addressLine1: '',
+        addressLine2: '',
+        city: '',
+        parish: '',
+        postalCode: ''
+      }
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
 
       handleAddClient({
         id: 0, // Using the value 0 b/c the true id will be assigned after creation
-        name: values.clientName,
-        primaryContactFirstName: values.clientPrimaryContactFirstName,
-        primaryContactLastName: values.clientPrimaryContactLastName,
-        telephoneNumber: values.telephoneNumber === '' ? undefined : values.telephoneNumber,
-        email: values.clientEmail === '' ? undefined : values.clientEmail,
+        name: values.client.clientName,
+        primaryContactFirstName: values.client.clientPrimaryContactFirstName,
+        primaryContactLastName: values.client.clientPrimaryContactLastName,
+        telephoneNumber: values.client.telephoneNumber === '' ? undefined : values.client.telephoneNumber,
+        email: values.client.clientEmail === '' ? undefined : values.client.clientEmail,
         isActive: false
       });
       handleCloseAddClientModal();
@@ -48,7 +62,7 @@ const AddClientForm: FC<AddClientFormProps> = ({handleCloseAddClientModal, handl
   });
 
   // Form navigation handlers
-  const steps = ["Contact Information", "Primary Location"];
+  const steps = ["Contact Information", "Primary Location", "Confirm & Submit"];
   const [activeStep, setActiveStep] = useState(0);
 
   const handleNext = () => {
@@ -64,7 +78,9 @@ const AddClientForm: FC<AddClientFormProps> = ({handleCloseAddClientModal, handl
       case 0:
         return <ContactInformationStep formik={formik}/>;
       case 1:
-        return <Typography>Add Primary Location.</Typography>;
+        return <PrimaryLocationStep formik={formik}/>
+      case 2:
+        return <Typography>Review and Submit.</Typography>;
       default:
         return <Typography>Whoops, and error occurred.</Typography>;
     }
@@ -99,7 +115,7 @@ const AddClientForm: FC<AddClientFormProps> = ({handleCloseAddClientModal, handl
             </Step>
           ))}
         </Stepper>
-        <form onSubmit={formik.handleSubmit}>
+        <form onSubmit={formik.handleSubmit} noValidate>
           {renderStepContent(activeStep, formik)}
           <Box
             sx={{
@@ -162,69 +178,147 @@ interface ContactInformationStepProps {
 }
 
 const ContactInformationStep: FC<ContactInformationStepProps> = ({formik}: ContactInformationStepProps) => {
+  console.log(formik)
+  // formik.touched.client?.clientName && formik.errors.client?.clientName
+  // error={formik.touched.client?.clientName && Boolean(formik.errors.client?.clientName)}
   return (
     <Box>
       <TextField
         fullWidth
         id="clientName"
-        name="clientName"
+        name="client.clientName"
         label="Company Name"
         variant="standard"
         required={true}
         sx={{marginBottom: 2}}
-        value={formik.values.clientName}
+        value={formik.values.client.clientName}
         onChange={formik.handleChange}
-        error={formik.touched.clientName && Boolean(formik.errors.clientName)}
-        helperText={formik.touched.clientName && formik.errors.clientName}
+        error={formik.touched.client?.clientName && Boolean(formik.errors.client?.clientName)}
+        helperText={formik.touched.client?.clientName && Boolean(formik.errors.client?.clientName)}
       />
       <Box sx={{display: 'flex', gap: 2}}>
         <TextField
           id="clientPrimaryContactFirstName"
-          name="clientPrimaryContactFirstName"
+          name="client.clientPrimaryContactFirstName"
           label="Primary Contact First Name"
           variant="standard"
           required={true}
           sx={{marginBottom: 2, flex: 1}}
-          value={formik.values.clientPrimaryContactFirstName}
+          value={formik.values.client.clientPrimaryContactFirstName}
           onChange={formik.handleChange}
-          error={formik.touched.clientPrimaryContactFirstName && Boolean(formik.errors.clientPrimaryContactFirstName)}
-          helperText={formik.touched.clientPrimaryContactFirstName && formik.errors.clientPrimaryContactFirstName}
+          error={formik.touched.client?.clientPrimaryContactFirstName && Boolean(formik.errors.client?.clientPrimaryContactFirstName)}
+          helperText={formik.touched.client?.clientPrimaryContactFirstName && formik.errors.client?.clientPrimaryContactFirstName}
         />
         <TextField
           id="clientPrimaryContactLastName"
-          name="clientPrimaryContactLastName"
+          name="client.clientPrimaryContactLastName"
           label="Primary Contact Last Name"
           variant="standard"
           required={true}
           sx={{marginBottom: 2, flex: 1}}
-          value={formik.values.clientPrimaryContactLastName}
+          value={formik.values.client.clientPrimaryContactLastName}
           onChange={formik.handleChange}
-          error={formik.touched.clientPrimaryContactLastName && Boolean(formik.errors.clientPrimaryContactLastName)}
-          helperText={formik.touched.clientPrimaryContactLastName && formik.errors.clientPrimaryContactLastName}
+          error={formik.touched.client?.clientPrimaryContactLastName && Boolean(formik.errors.client?.clientPrimaryContactLastName)}
+          helperText={formik.touched.client?.clientPrimaryContactLastName && formik.errors.client?.clientPrimaryContactLastName}
         />
       </Box>
       <Box sx={{display: 'flex', gap: 2}}>
         <TextField
           id="telephoneNumber"
-          name="telephoneNumber"
+          name="client.telephoneNumber"
           label="Telephone Number"
           variant="standard"
           sx={{marginBottom: 2, flex: 1}}
-          value={formik.values.telephoneNumber}
+          value={formik.values.client.telephoneNumber}
           onChange={formik.handleChange}
-          error={formik.touched.telephoneNumber && Boolean(formik.errors.telephoneNumber)}
-          helperText={formik.touched.telephoneNumber && formik.errors.telephoneNumber}
+          error={formik.touched.client?.telephoneNumber && Boolean(formik.errors.client?.telephoneNumber)}
+          helperText={formik.touched.client?.telephoneNumber && formik.errors.client?.telephoneNumber}
         />
         <TextField
           id="clientEmail"
-          name="clientEmail"
+          name="client.clientEmail"
           label="Email"
           variant="standard"
           sx={{marginBottom: 2, flex: 1}}
-          value={formik.values.clientEmail}
+          value={formik.values.client.clientEmail}
           onChange={formik.handleChange}
-          error={formik.touched.clientEmail && Boolean(formik.errors.clientEmail)}
-          helperText={formik.touched.clientEmail && formik.errors.clientEmail}
+          error={formik.touched.client?.clientEmail && Boolean(formik.errors.client?.clientEmail)}
+          helperText={formik.touched.client?.clientEmail && formik.errors.client?.clientEmail}
+        />
+      </Box>
+    </Box>
+  );
+}
+
+interface PrimaryLocationStepProps {
+  formik: any
+}
+
+const PrimaryLocationStep: FC<PrimaryLocationStepProps> = ({formik}: PrimaryLocationStepProps) => {
+  return (
+    <Box>
+      <Box sx={{display: 'flex', gap: 2}}>
+        <TextField
+          fullWidth
+          id="addressLine1"
+          name="addressLine1"
+          label="Address Line 1"
+          variant="standard"
+          required={true}
+          sx={{marginBottom: 2, flex: 1}}
+          value={formik.values.primaryLocation.addressLine1}
+          onChange={formik.handleChange}
+          error={formik.touched.primaryLocation.addressLine1 && Boolean(formik.errors.primaryLocation.addressLine1)}
+          helperText={formik.touched.primaryLocation.addressLine1 && formik.errors.primaryLocation.addressLine1}
+        />
+        <TextField
+          id="addressLine2"
+          name="addressLine2"
+          label="Address Line 2"
+          variant="standard"
+          required={true}
+          sx={{marginBottom: 2, flex: 1}}
+          value={formik.values.primaryLocation.addressLine2}
+          onChange={formik.handleChange}
+          error={formik.touched.primaryLocation.addressLine2 && Boolean(formik.errors.primaryLocation.addressLine2)}
+          helperText={formik.touched.primaryLocation.addressLine2 && formik.errors.primaryLocation.addressLine2}
+        />
+        <TextField
+          id="city"
+          name="city"
+          label="City"
+          variant="standard"
+          required={true}
+          sx={{marginBottom: 2, flex: 1}}
+          value={formik.values.primaryLocation.city}
+          onChange={formik.handleChange}
+          error={formik.touched.primaryLocation.city && Boolean(formik.errors.primaryLocation.city)}
+          helperText={formik.touched.primaryLocation.city && formik.errors.primaryLocation.city}
+        />
+      </Box>
+      <Box sx={{display: 'flex', gap: 2}}>
+        <TextField
+          id="parish"
+          name="parish"
+          label="Parish"
+          variant="standard"
+          required={true}
+          sx={{marginBottom: 2, flex: 1}}
+          value={formik.values.primaryLocation.parish}
+          onChange={formik.handleChange}
+          error={formik.touched.primaryLocation.parish && Boolean(formik.errors.primaryLocation.parish)}
+          helperText={formik.touched.primaryLocation.parish && formik.errors.primaryLocation.parish}
+        />
+        <TextField
+          id="postalCode"
+          name="postalCode"
+          label="Postal Code"
+          variant="standard"
+          sx={{marginBottom: 2, flex: 1}}
+          value={formik.values.postalCode}
+          onChange={formik.handleChange}
+          error={formik.touched.postalCode && Boolean(formik.errors.postalCode)}
+          helperText={formik.touched.postalCode && formik.errors.postalCode}
         />
       </Box>
     </Box>
