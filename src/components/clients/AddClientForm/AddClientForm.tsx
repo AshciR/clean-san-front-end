@@ -16,15 +16,13 @@ const AddClientForm: FC<AddClientFormProps> = ({handleCloseAddClientModal, handl
 
   const validationSchema = yup.object({
     client: yup.object({
-        clientName: yup.string().required('Client Name is required'),
-        clientPrimaryContactFirstName: yup.string().required('Primary Contact First Name is required'),
-        clientPrimaryContactLastName: yup.string().required('Primary Contact Last Name is required'),
-        telephoneNumber: yup.string().matches(phoneRegExp, 'Phone number must be a 10-digit number'),
-        clientEmail: yup.string().email('Enter a valid email')
-      }),
-    primaryLocation: yup.object({
-
-    })
+      clientName: yup.string().required('Client Name is required'),
+      clientPrimaryContactFirstName: yup.string().required('Primary Contact First Name is required'),
+      clientPrimaryContactLastName: yup.string().required('Primary Contact Last Name is required'),
+      telephoneNumber: yup.string().matches(phoneRegExp, 'Phone number must be a 10-digit number'),
+      clientEmail: yup.string().email('Enter a valid email')
+    }),
+    primaryLocation: yup.object({})
   });
 
   const formik = useFormik({
@@ -88,6 +86,7 @@ const AddClientForm: FC<AddClientFormProps> = ({handleCloseAddClientModal, handl
 
   const isOnFirstStep = activeStep === 0;
   const isOnLastStep = activeStep === steps.length - 1;
+  let isFormPristine = Object.keys(formik.touched).length === 0;
 
   return (
     <Box
@@ -156,6 +155,7 @@ const AddClientForm: FC<AddClientFormProps> = ({handleCloseAddClientModal, handl
               color="primary"
               variant="contained"
               type={isOnLastStep ? "submit" : undefined}
+              disabled={isFormPristine || !formik.isValid}
               sx={{
                 marginRight: 2,
                 marginLeft: 2
@@ -178,9 +178,7 @@ interface ContactInformationStepProps {
 }
 
 const ContactInformationStep: FC<ContactInformationStepProps> = ({formik}: ContactInformationStepProps) => {
-  console.log(formik)
-  // formik.touched.client?.clientName && formik.errors.client?.clientName
-  // error={formik.touched.client?.clientName && Boolean(formik.errors.client?.clientName)}
+
   return (
     <Box>
       <TextField
