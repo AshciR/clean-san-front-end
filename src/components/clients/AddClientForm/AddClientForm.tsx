@@ -22,7 +22,9 @@ const AddClientForm: FC<AddClientFormProps> = ({handleCloseAddClientModal, handl
       telephoneNumber: yup.string().matches(phoneRegExp, 'Phone number must be a 10-digit number'),
       clientEmail: yup.string().email('Enter a valid email')
     }),
-    primaryLocation: yup.object({})
+    primaryLocation: yup.object({
+
+    })
   });
 
   const formik = useFormik({
@@ -44,7 +46,7 @@ const AddClientForm: FC<AddClientFormProps> = ({handleCloseAddClientModal, handl
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-
+      alert(values);
       handleAddClient({
         id: 0, // Using the value 0 b/c the true id will be assigned after creation
         name: values.client.clientName,
@@ -264,69 +266,73 @@ const PrimaryLocationStep: FC<PrimaryLocationStepProps> = ({formik}: PrimaryLoca
         <TextField
           fullWidth
           id="addressLine1"
-          name="addressLine1"
+          name="primaryLocation.addressLine1"
           label="Address Line 1"
           variant="standard"
           required={true}
+          placeholder={"7 Richmond Crescent"}
           sx={{marginBottom: 2, flex: 1}}
           value={formik.values.primaryLocation.addressLine1}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
-          error={formik.touched.primaryLocation.addressLine1 && Boolean(formik.errors.primaryLocation.addressLine1)}
-          helperText={formik.touched.primaryLocation.addressLine1 && formik.errors.primaryLocation.addressLine1}
+          error={formik.touched.primaryLocation?.addressLine1 && Boolean(formik.errors.primaryLocation?.addressLine1)}
+          helperText={formik.touched.primaryLocation?.addressLine1 && formik.errors.primaryLocation?.addressLine1}
         />
         <TextField
           id="addressLine2"
-          name="addressLine2"
+          name="primaryLocation.addressLine2"
           label="Address Line 2"
+          placeholder={"Richmond Park"}
           variant="standard"
-          required={true}
           sx={{marginBottom: 2, flex: 1}}
           value={formik.values.primaryLocation.addressLine2}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
-          error={formik.touched.primaryLocation.addressLine2 && Boolean(formik.errors.primaryLocation.addressLine2)}
-          helperText={formik.touched.primaryLocation.addressLine2 && formik.errors.primaryLocation.addressLine2}
+          error={formik.touched.primaryLocation?.addressLine2 && Boolean(formik.errors.primaryLocation?.addressLine2)}
+          helperText={formik.touched.primaryLocation?.addressLine2 && formik.errors.primaryLocation?.addressLine2}
         />
         <TextField
           id="city"
-          name="city"
-          label="City"
+          name="primaryLocation.city"
+          label="City/Town"
+          placeholder={"Kingston"}
           variant="standard"
           required={true}
           sx={{marginBottom: 2, flex: 1}}
-          value={formik.values.primaryLocation.city}
+          value={formik.values.primaryLocation?.city}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
-          error={formik.touched.primaryLocation.city && Boolean(formik.errors.primaryLocation.city)}
-          helperText={formik.touched.primaryLocation.city && formik.errors.primaryLocation.city}
+          error={formik.touched.primaryLocation?.city && Boolean(formik.errors.primaryLocation?.city)}
+          helperText={formik.touched.primaryLocation?.city && formik.errors.primaryLocation?.city}
         />
       </Box>
       <Box sx={{display: 'flex', gap: 2}}>
         <TextField
           id="parish"
-          name="parish"
+          name="primaryLocation.parish"
           label="Parish"
+          placeholder={"St. Andrew"}
           variant="standard"
           required={true}
           sx={{marginBottom: 2, flex: 1}}
           value={formik.values.primaryLocation.parish}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
-          error={formik.touched.primaryLocation.parish && Boolean(formik.errors.primaryLocation.parish)}
-          helperText={formik.touched.primaryLocation.parish && formik.errors.primaryLocation.parish}
+          error={formik.touched.primaryLocation?.parish && Boolean(formik.errors.primaryLocation?.parish)}
+          helperText={formik.touched.primaryLocation?.parish && formik.errors.primaryLocation?.parish}
         />
         <TextField
           id="postalCode"
-          name="postalCode"
+          name="primaryLocation.postalCode"
           label="Postal Code"
+          placeholder={"Kingston 10"}
           variant="standard"
           sx={{marginBottom: 2, flex: 1}}
           value={formik.values.postalCode}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
-          error={formik.touched.postalCode && Boolean(formik.errors.postalCode)}
-          helperText={formik.touched.postalCode && formik.errors.postalCode}
+          error={formik.touched?.postalCode && Boolean(formik.errors?.postalCode)}
+          helperText={formik.touched?.postalCode && formik.errors?.postalCode}
         />
       </Box>
     </Box>
