@@ -23,7 +23,9 @@ const AddClientForm: FC<AddClientFormProps> = ({handleCloseAddClientModal, handl
       clientEmail: yup.string().email('Enter a valid email')
     }),
     primaryLocation: yup.object({
-
+      addressLine1:yup.string().required('Address Line 1 is required'),
+      city:yup.string().required('City is required'),
+      parish:yup.string().required('Parish is required'),
     })
   });
 
@@ -46,7 +48,7 @@ const AddClientForm: FC<AddClientFormProps> = ({handleCloseAddClientModal, handl
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      alert(values);
+      alert(JSON.stringify(values, null, 2));
       handleAddClient({
         id: 0, // Using the value 0 b/c the true id will be assigned after creation
         name: values.client.clientName,
@@ -86,9 +88,16 @@ const AddClientForm: FC<AddClientFormProps> = ({handleCloseAddClientModal, handl
     }
   };
 
+  const stepHasValidValues = (step: number, formik: any) => {
+    // TODO: Implement Me
+    return false
+  }
+
   const isOnFirstStep = activeStep === 0;
   const isOnLastStep = activeStep === steps.length - 1;
   let isFormPristine = Object.keys(formik.touched).length === 0;
+
+  console.log(formik)
 
   return (
     <Box
@@ -157,7 +166,8 @@ const AddClientForm: FC<AddClientFormProps> = ({handleCloseAddClientModal, handl
               color="primary"
               variant="contained"
               type={isOnLastStep ? "submit" : undefined}
-              disabled={isFormPristine || !formik.isValid}
+              // disabled={isFormPristine || !formik.isValid}
+              disabled={isFormPristine || !stepHasValidValues(activeStep, formik)}
               sx={{
                 marginRight: 2,
                 marginLeft: 2
