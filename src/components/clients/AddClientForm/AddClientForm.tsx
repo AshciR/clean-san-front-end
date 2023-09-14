@@ -23,9 +23,9 @@ const AddClientForm: FC<AddClientFormProps> = ({handleCloseAddClientModal, handl
       clientEmail: yup.string().email('Enter a valid email')
     }),
     primaryLocation: yup.object({
-      addressLine1:yup.string().required('Address Line 1 is required'),
-      city:yup.string().required('City is required'),
-      parish:yup.string().required('Parish is required'),
+      addressLine1: yup.string().required('Address Line 1 is required'),
+      city: yup.string().required('City is required'),
+      parish: yup.string().required('Parish is required'),
     })
   });
 
@@ -89,15 +89,21 @@ const AddClientForm: FC<AddClientFormProps> = ({handleCloseAddClientModal, handl
   };
 
   const stepHasValidValues = (step: number, formik: any) => {
-    // TODO: Implement Me
-    return false
+    switch (step) {
+      case 0:
+        return formik.errors.client === undefined;
+      case 1:
+        return formik.errors.primaryLocation === undefined;
+      case 2:
+        return true;
+      default:
+        return false
+    }
   }
 
   const isOnFirstStep = activeStep === 0;
   const isOnLastStep = activeStep === steps.length - 1;
   let isFormPristine = Object.keys(formik.touched).length === 0;
-
-  console.log(formik)
 
   return (
     <Box
@@ -166,7 +172,6 @@ const AddClientForm: FC<AddClientFormProps> = ({handleCloseAddClientModal, handl
               color="primary"
               variant="contained"
               type={isOnLastStep ? "submit" : undefined}
-              // disabled={isFormPristine || !formik.isValid}
               disabled={isFormPristine || !stepHasValidValues(activeStep, formik)}
               sx={{
                 marginRight: 2,
